@@ -2019,7 +2019,7 @@ function seed(){return{
   ziele:{woche:3,monat:10},
   bewerbungen:[
     {id:'b1',firma:'Beispiel AG',adresse:'Industriering 12, 3250 Lyss',kontakt:'Herr Peter Beispiel',stelle:'Lagermitarbeiter/in 100 %',datum:ago(2),kanal:'Inserat',status:'versendet',naechster:'In einer Woche telefonisch nachfragen',beispiel:true},
-    {id:'b2',firma:'Muster Logistik GmbH',adresse:'Bözingenstrasse 100, 2504 Biel',kontakt:'Frau Anna Muster',pensum:'teil',stelle:'Kommissionierer/in',datum:ago(6),kanal:'Initiativ',status:'gespraech',naechster:'Gespräch vorbereiten, Inserat ausdrucken',beispiel:true},
+    {id:'b2',firma:'Muster Aufzüge AG',adresse:'Industriestrasse 9, 8853 Lachen SZ',kontakt:'Frau Nadia Schuler',pensum:'voll',stelle:'Logistiker 100 %',datum:ago(4),kanal:'Inserat',status:'gespraech',naechster:'Gespräch vorbereiten, Inserat ausdrucken',beispiel:true},
     {id:'b3',firma:'Seeland Transporte',adresse:'Hauptstrasse 3, 2557 Studen',absagegrund:'Stelle intern besetzt',stelle:'Logistiker/in EFZ',datum:ago(12),kanal:'Netzwerk',status:'absage',naechster:'Feedback erfragen',beispiel:true},
     {id:'b4',firma:'Grenchner Verteilzentrum',adresse:'Solothurnstrasse 50, 2540 Grenchen',stelle:'Staplerfahrer/in',datum:ago(0),kanal:'Inserat',status:'arbeit',naechster:'Brief fertig schreiben',beispiel:true}],
   aufgaben:[
@@ -2095,15 +2095,15 @@ function exBrief(){return a4Doc(D=>{const{g,L,R}=D,acc='#e0821a',MW=R-L;
     D.t(line,x,y);return y+36};
   D.font(24,700);D.t(EXP.name,L,150);D.font(22,400,'#5d5650');
   [EXP.str,EXP.ort,'Tel. '+EXP.tel,EXP.mail].forEach((l,i)=>D.t(l,L,184+i*30));
-  D.font(24,400);['Muster Logistik GmbH','Frau Sandra Muster','Personalabteilung','Industriestrasse 5','2504 Biel/Bienne'].forEach((l,i)=>D.t(l,L,390+i*34));
-  const dt=new Date(today);dt.setDate(dt.getDate()-6);
+  D.font(24,400);['Muster Aufzüge AG','Frau Nadia Schuler','Leiterin Personal','Industriestrasse 9','8853 Lachen SZ'].forEach((l,i)=>D.t(l,L,390+i*34));
+  const dt=new Date(today);dt.setDate(dt.getDate()-4);
   D.font(24,400);D.t('Biel, '+dt.toLocaleDateString('de-CH',{day:'numeric',month:'long',year:'numeric'}),L,620);
-  D.font(28,700);D.t('Bewerbung als Kommissionierer 80–100 %',L,690);
+  D.font(28,700);D.t('Bewerbung als Logistiker 100 %',L,690);
   D.font(24,400,'#2a2622');let y=770;
-  D.t('Sehr geehrte Frau Muster',L,y);y+=56;
-  y=para('Sie','Die Muster Logistik GmbH beliefert die ganze Region zuverlässig und schnell. In Ihrem Inserat auf jobs.ch suchen Sie eine erfahrene Fachperson fürs Kommissionieren, die genau arbeitet und auch in Spitzenzeiten den Überblick behält.',y);y+=20;
-  y=para('Ich','Seit über zwanzig Jahren arbeite ich in der Logistik. Bei der Seeland Distribution AG in Lyss habe ich während sechs Jahren pro Schicht rund 180 Positionen mit dem Handscanner kommissioniert, Ware angenommen und neue Mitarbeitende eingearbeitet. Fehllieferungen waren bei mir die grosse Ausnahme. Den Staplerausweis besitze ich seit 2015, SAP kenne ich aus dem Alltag.',y);y+=20;
-  y=para('Wir','Gemeinsam sorgen wir dafür, dass Ihre Kundschaft die richtige Ware pünktlich erhält. Ich wohne in Biel und bin auch für Schichtarbeit flexibel. Gerne erzähle ich Ihnen in einem persönlichen Gespräch mehr und freue mich auf Ihre Einladung.',y);y+=34;
+  D.t('Sehr geehrte Frau Schuler',L,y);y+=56;
+  y=para('Sie','Als Schweizer Familienunternehmen baut die Muster Aufzüge AG Aufzüge vom Personenlift bis zum 7-Tonnen-Lastenaufzug, von der Konstruktion bis zum Service. In Ihrem Inserat auf jobs.ch suchen Sie einen Logistiker, der Wareneingang, Lager und Versand zuverlässig im Griff hat, damit Montage und Service reibungslos laufen.',y);y+=20;
+  y=para('Ich','Das ist seit über zwanzig Jahren mein Alltag. Bei der Seeland Distribution AG habe ich Lieferungen auf Menge, Qualität und Vollständigkeit geprüft, pro Schicht unzählige Positionen mit dem Handscanner kommissioniert, Lastwagen beladen und Warenein- und -ausgänge in SAP verbucht. Ich bin Logistiker EFZ, besitze den Staplerausweis und arbeite sorgfältig, auch wenn es schnell gehen muss.',y);y+=20;
+  y=para('Wir','Ihre Anlagen in der ganzen Schweiz brauchen jedes Bauteil pünktlich. Gemeinsam mit Ihren Servicetechnikern, Monteuren, Bauführern und Zulieferern sorge ich dafür, dass auf der Baustelle nichts fehlt. Gerne zeige ich Ihnen das in einem persönlichen Gespräch und bei einem Probearbeitstag.',y);y+=34;
   D.font(24,400,'#2a2622');D.t('Freundliche Grüsse',L,y);
   g.font='italic 46px "Segoe Script","Brush Script MT","Snell Roundhand",cursive';g.fillStyle='#0f1a3a';D.t('M. Beispiel',L,y+62);
   D.font(24,400);D.t(EXP.name,L,y+116)})}
@@ -2122,21 +2122,28 @@ function exZeugnis(){return a4Doc(D=>{const{g,L,R}=D,acc='#2f8f5b';
   y+=10;D.t('Lyss, 31. August 2025',L,y);y+=60;D.t('Seeland Distribution AG',L,y);
   g.font='italic 40px "Segoe Script","Brush Script MT","Snell Roundhand",cursive';g.fillStyle='#0f1a3a';D.t('A. Muster',L,y+64);
   D.font(22,400,'#5d5650');D.t('Anna Muster, Leiterin Personal',L,y+108)})}
+/* Beispiel-Inserat: nach einem echten Kursinserat, Firma anonymisiert, Text sinngemäss gekürzt */
+const EX_INSERAT='Logistiker/in 100 %\nMuster Aufzüge AG, Lachen SZ\nFestanstellung · Deutsch fliessend\n\nÜber uns\nSchweizer Familienunternehmen mit rund 100 Mitarbeitenden: Personen-, Auto- und Lastenaufzüge bis 7 Tonnen, von der Konstruktion bis zum Service.\n\nKontakt: Frau Nadia Schuler, Leiterin Personal\n\nIhre Aufgaben\n- Wareneingang: Lieferungen auf Menge, Qualität und Vollständigkeit prüfen\n- Einlagern und Lager bewirtschaften\n- Kundenaufträge kommissionieren, verpacken und für den Versand bereitstellen\n- Lastwagen be- und entladen\n- Warenein- und -ausgänge im ERP-System verbuchen\n- Inventuren\n- Ordnung, Sauberkeit und Sicherheit im Lager\n\nIhr Profil\n- Logistiker/in EFZ oder EBA oder mehrjährige Erfahrung in der Logistik\n- Erfahrung in Wareneingang, Lagerbewirtschaftung, Kommissionierung und Versand\n- Gute körperliche Verfassung\n- Staplerausweis von Vorteil\n- Gute Deutschkenntnisse in Wort und Schrift\n- Erfahrung mit ERP-Systemen und Handscannern von Vorteil\n- Selbständig, zuverlässig, sorgfältig, teamfähig und flexibel\n\nWir bieten\n- Abwechslungsreiche Arbeit, umfassende Einführung\n- Unabhängiges Familienunternehmen\n- 5 Wochen Ferien';
+const EX_B2={firma:'Muster Aufzüge AG',adresse:'Industriestrasse 9, 8853 Lachen SZ',kontakt:'Frau Nadia Schuler',pensum:'voll',stelle:'Logistiker 100 %',kanal:'Inserat'};
 /* Version der Beispieldokumente; erhöhen, wenn sich ihr Inhalt ändert */
-const EXV=6;
+const EXV=9;
 const EX_DOCS=[
   {kat:'cv',name:'Lebenslauf Marco Beispiel',fn:exLebenslauf,aktuell:true},
-  {kat:'brief',name:'Bewerbungsschreiben Muster Logistik',fn:exBrief,aktuell:true,bewerbungId:'b2'},
+  {kat:'brief',name:'Bewerbungsschreiben Muster Aufzüge',fn:exBrief,aktuell:true,bewerbungId:'b2'},
   {kat:'zeugnis',name:'Arbeitszeugnis Seeland Distribution',fn:exZeugnis}];
 async function seedDocs(){
   for(const e of EX_DOCS){const b=await e.fn();const id=uid();await blobPut(id,b);
     S.docs.push({id,name:e.name,kat:e.kat,typ:'image/png',size:b.size,datum:ago(3),aktuell:!!e.aktuell,bewerbungId:e.bewerbungId,thumb:await thumbFromBlob(b,'image/png'),beispiel:true,ex:EXV})}
-  const t='Kommissionierer/in 80–100 %\nMuster Logistik GmbH, Biel\n\nIhre Aufgaben\n- Kommissionieren mit Handscanner\n- Warenein- und -ausgang\n- Verpacken und Etikettieren\n\nIhr Profil\n- Erfahrung in der Logistik\n- Staplerausweis von Vorteil\n- Zuverlässig und teamfähig\n\nEintritt nach Vereinbarung';
-  S.docs.push({id:uid(),name:'Inserat Kommissionierer/in',kat:'inserat',typ:'text',text:t,datum:ago(6),bewerbungId:'b2',beispiel:true});
+  const t=EX_INSERAT;
+  S.docs.push({id:uid(),name:'Inserat Logistiker 100 %',kat:'inserat',typ:'text',text:t,datum:ago(6),bewerbungId:'b2',beispiel:true});
   save();
 }
 /* Alte Platzhalter-Beispiele (nur Linien) durch die echten ersetzen */
-async function upgradeExampleDocs(){const old=S.docs.filter(d=>d.beispiel&&d.typ==='image/png'&&(d.ex||0)<EXV);if(!old.length)return false;
+async function upgradeExampleDocs(){let changed=false;
+  const ins=S.docs.find(d=>d.beispiel&&d.kat==='inserat'&&d.text!==EX_INSERAT&&/Muster (Logistik|Aufzüge)/.test(d.text||''));
+  if(ins){ins.text=EX_INSERAT;ins.name='Inserat Logistiker 100 %';changed=true}
+  const b2=S.bewerbungen.find(x=>x.id==='b2'&&x.beispiel&&(x.firma==='Muster Logistik GmbH'||(x.firma==='Muster Aufzüge AG'&&!x.kontakt)));if(b2){Object.assign(b2,EX_B2);changed=true}
+  const old=S.docs.filter(d=>d.beispiel&&d.typ==='image/png'&&(d.ex||0)<EXV);if(!old.length){if(changed)save();return changed}
   for(const d of old)await blobDel(d.id).catch(()=>{});
   S.docs=S.docs.filter(d=>!old.includes(d));
   for(const e of EX_DOCS.filter(e=>old.some(d=>d.kat===e.kat))){const b=await e.fn();const id=uid();await blobPut(id,b);
