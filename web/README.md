@@ -24,6 +24,7 @@ Den ganzen Ordner als ZIP hochladen und entpacken, `index.html` als Startdatei w
 - pdf.js 3.11.174 (Apache-2.0), Mozilla
 - pdf-lib 1.17.1 (MIT)
 - JSZip 3.10.1 (MIT oder GPLv3)
+- qrcode-generator 1.4.4 (MIT), Kazuhiko Arase
 
 ---
 © 2026 Hugo Rohrbacher · Alle Rechte vorbehalten
