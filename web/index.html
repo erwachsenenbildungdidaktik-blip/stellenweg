@@ -977,6 +977,17 @@ html.selbst .eyebrow.kurs{display:none}
 .upd{display:flex;flex-direction:column;gap:12px;align-items:stretch}
 .upd-ic{width:56px;height:56px;border-radius:18px;display:grid;place-items:center;background:var(--accent);color:var(--accent-ink);box-shadow:0 12px 26px -10px var(--accent)}
 .upd-ic svg{width:28px;height:28px}
+/* Lebenslauf-Assistent */
+.cvmini{display:flex;gap:4px;width:100%;height:58px;border-radius:8px;background:#fff;padding:6px;margin-bottom:4px;box-shadow:0 2px 8px -4px rgba(0,0,0,.3)}
+.cvmini.r{flex-direction:row-reverse}
+.cvmini.top{flex-direction:column}
+.cvmini.top em{width:100%;height:14px;flex:none}
+.cvmini em{display:block;width:32%;border-radius:4px;opacity:.35}
+.cvmini i{display:block;flex:1;border-radius:3px;background:#e3ddd5;margin:4px 0}
+.cvmini i+i{display:none}
+.cv-lang{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:center}
+.cv-list{display:flex;flex-direction:column;gap:12px}
+.cv-item{display:flex;flex-direction:column;gap:10px;padding:12px;border-radius:18px;background:var(--lg-fill,var(--glass));box-shadow:var(--lg-inner,none)}
 /* App weitergeben */
 .sa{display:flex;flex-direction:column;gap:14px}
 .ospick{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -1537,6 +1548,11 @@ html.editing .tab:nth-child(2n){animation-delay:-.17s}
         <div class="txt"><b>Bewerbungsbrief auf ein Inserat</b><span>Brief schreiben oder aus ChatGPT einfügen, unterschreiben, als PDF senden. Landet automatisch im Stapel.</span></div>
         <div class="chips" style="flex:none"><button class="btn btn-primary" id="btn-brief">Starten</button></div>
       </div>
+      <div class="banner glass" data-dp="unterlagen">
+        <div class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 3v18M12.5 8h4M12.5 12h4M12.5 16h3"/></svg></div>
+        <div class="txt"><b>Lebenslauf erstellen</b><span>Zweispaltig, mit allen Angaben zur Person, gut lesbar für Bewerbungssysteme. Landet als PDF im Stapel.</span></div>
+        <div class="chips" style="flex:none"><button class="btn btn-primary" id="btn-cv">Starten</button></div>
+      </div>
       <div class="card glass" id="dos-check" data-dp="unterlagen"></div>
       <div class="card glass ext-card frs" data-dp="init" hidden id="dos-init"></div>
     </section>
@@ -2064,10 +2080,8 @@ function exLebenslauf(){return a4Doc(D=>{const{g,W,H}=D,acc='#e0821a',side='#f5e
   sh('Mobilität und Verfügbarkeit');
   li('Führerausweis Kat. B, eigenes Auto');li('Staplerausweis SUVA R1');li('Verfügbar per sofort, 80–100 %');li('Schichtarbeit möglich');y+=14;
   sh('Sprachen');
-  const lang=(l,lvl,n)=>{D.font(21,400,'#2a2622');D.t(l,SX,y);D.font(19,700,acc);D.tr(lvl,SX+SW,y);y+=14;
-    for(let i=0;i<6;i++){g.fillStyle=i<n?acc:'#e2d6c8';g.fillRect(SX+i*(SW/6),y,SW/6-6,7)}y+=34};
-  lang('Italienisch','Muttersprache',6);lang('Deutsch','C1',5);lang('Französisch','B1',3);lang('Englisch','A2',2);
-  D.font(16,400,'#8a7f74',true);D.t('Stufen nach dem Europäischen Sprachenportfolio',SX,y);y+=36;
+  li('Deutsch: C1');li('Italienisch: Muttersprache');li('Französisch: B1');li('Englisch: A2');
+  D.font(16,400,'#8a7f74',true);D.t('Stufen nach dem Europäischen Sprachenportfolio',SX,y+4);y+=40;
   sh('IKT-Kenntnisse');
   li('SAP (Lagerverwaltung, Wareneingang)');li('Handscanner, Lagerleitsystem');li('MS Office: Word, Excel (gut)');li('E-Mail, Job-Room, Online-Formulare');y+=14;
   sh('Engagement');li('Juniorentrainer FC Aurore, Biel');li('Begleitet Lernende im Betrieb');
@@ -2075,7 +2089,7 @@ function exLebenslauf(){return a4Doc(D=>{const{g,W,H}=D,acc='#e0821a',side='#f5e
   /* Rechte Spalte: Kurzprofil mit Slogan, Berufserfahrung, Aus- und Weiterbildung */
   y=150;D.font(62,700);D.t(EXP.name,RX,y);y+=48;D.font(28,400,'#5d5650');D.t('Logistiker EFZ · Staplerfahrer',RX,y);y+=56;
   g.fillStyle=acc;g.fillRect(RX,y-30,6,92);D.font(30,700,'#2a2622',true);y=D.wrap('«Die richtige Ware, zur richtigen Zeit, am richtigen Ort.»',RX+26,y,RW-26,40);y+=26;
-  D.font(22,400,'#2a2622');y=D.wrap('Erfahrener Logistiker mit über 20 Jahren Praxis in Lager und Verteilung. Arbeite genau und auch in Spitzenzeiten ruhig, kenne SAP und Handscanner aus dem Alltag und arbeite neue Kolleginnen und Kollegen gerne ein.',RX,y,RW,32);y+=34;
+  D.font(22,400,'#2a2622');y=D.wrap('Erfahrener Logistiker mit über 20 Jahren Praxis und SUVA-Staplerausweis. Genau, auch in Spitzenzeiten ruhig, sicher mit SAP und Handscanner.',RX,y,RW,32);y+=34;
   const rh=t=>{D.font(22,700,acc);D.t(t.toUpperCase(),RX,y);y+=12;D.rule(y,'#e6e1da',RX,RX+RW,2);y+=40};
   const job=(when,title,firm,pts)=>{D.font(20,400,'#7a6f64');D.t(when,RX,y);y+=30;D.font(25,700);D.t(title,RX,y);y+=31;if(firm){D.font(21,400,'#5d5650');D.t(firm,RX,y);y+=31}y+=4;
     D.font(21,400,'#2a2622');(pts||[]).forEach(p=>{D.t('–',RX,y);y=D.wrap(p,RX+24,y,RW-24,29)});y+=20};
@@ -2126,7 +2140,7 @@ function exZeugnis(){return a4Doc(D=>{const{g,L,R}=D,acc='#2f8f5b';
 const EX_INSERAT='Logistiker/in 100 %\nMuster Aufzüge AG, Lachen SZ\nFestanstellung · Deutsch fliessend\n\nÜber uns\nSchweizer Familienunternehmen mit rund 100 Mitarbeitenden: Personen-, Auto- und Lastenaufzüge bis 7 Tonnen, von der Konstruktion bis zum Service.\n\nKontakt: Frau Nadia Schuler, Leiterin Personal\n\nIhre Aufgaben\n- Wareneingang: Lieferungen auf Menge, Qualität und Vollständigkeit prüfen\n- Einlagern und Lager bewirtschaften\n- Kundenaufträge kommissionieren, verpacken und für den Versand bereitstellen\n- Lastwagen be- und entladen\n- Warenein- und -ausgänge im ERP-System verbuchen\n- Inventuren\n- Ordnung, Sauberkeit und Sicherheit im Lager\n\nIhr Profil\n- Logistiker/in EFZ oder EBA oder mehrjährige Erfahrung in der Logistik\n- Erfahrung in Wareneingang, Lagerbewirtschaftung, Kommissionierung und Versand\n- Gute körperliche Verfassung\n- Staplerausweis von Vorteil\n- Gute Deutschkenntnisse in Wort und Schrift\n- Erfahrung mit ERP-Systemen und Handscannern von Vorteil\n- Selbständig, zuverlässig, sorgfältig, teamfähig und flexibel\n\nWir bieten\n- Abwechslungsreiche Arbeit, umfassende Einführung\n- Unabhängiges Familienunternehmen\n- 5 Wochen Ferien';
 const EX_B2={firma:'Muster Aufzüge AG',adresse:'Industriestrasse 9, 8853 Lachen SZ',kontakt:'Frau Nadia Schuler',pensum:'voll',stelle:'Logistiker 100 %',kanal:'Inserat'};
 /* Version der Beispieldokumente; erhöhen, wenn sich ihr Inhalt ändert */
-const EXV=9;
+const EXV=11;
 const EX_DOCS=[
   {kat:'cv',name:'Lebenslauf Marco Beispiel',fn:exLebenslauf,aktuell:true},
   {kat:'brief',name:'Bewerbungsschreiben Muster Aufzüge',fn:exBrief,aktuell:true,bewerbungId:'b2'},
@@ -2377,6 +2391,7 @@ function bindSwipe(el,id){
   el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openDoc(id)}if(e.key==='ArrowRight')stackFlip(1);if(e.key==='ArrowLeft')stackFlip(-1)};
 }
 $('#btn-add-doc').onclick=()=>openUpload({kat:katFilter||'cv'});
+$('#btn-cv').onclick=()=>openCv();
 
 /* ================= Dossier: Hochladen ================= */
 function bewOptions(sel){return `<option value="">Keine</option>`+[...S.bewerbungen].sort((a,b)=>(b.datum||'').localeCompare(a.datum||'')).map(b=>`<option value="${b.id}" ${b.id===sel?'selected':''}>${esc(b.firma)}</option>`).join('')}
@@ -2791,22 +2806,24 @@ function layout(sigImg){
 }
 function strBytes(s){const a=new Uint8Array(s.length);for(let i=0;i<s.length;i++)a[i]=s.charCodeAt(i)&255;return a}
 const pdfStr=s=>'('+s.replace(/[\\()]/g,'\\$&')+')';const f2=n=>(Math.round(n*100)/100).toString();
-function buildPdf(pages,sigImg){
+function buildPdf(pages,sigImg,title){
   const objs=[];const add=parts=>{objs.push(parts);return objs.length};const catalog=add(null),pagesId=add(null);
   const fR=add(['<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>']);
   const fB=add(['<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>']);
+  const fT=add(['<< /Type /Font /Subtype /Type1 /BaseFont /Times-Roman /Encoding /WinAnsiEncoding >>']);
+  const fTB=add(['<< /Type /Font /Subtype /Type1 /BaseFont /Times-Bold /Encoding /WinAnsiEncoding >>']);
   let imId=0;if(sigImg){const bytes=b64ToBytes(sigImg.src.split(',')[1]);imId=add([`<< /Type /XObject /Subtype /Image /Width ${sigImg.w} /Height ${sigImg.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${bytes.length} >>\nstream\n`,bytes,'\nendstream'])}
   const kids=[];
   for(const ops of pages){let c='';
     for(const o of ops){const col=a=>a.map(v=>f2(v)).join(' ');
       if(o.t==='rect')c+=`${col(o.c)} rg ${f2(o.x)} ${f2(PH-o.y-o.h)} ${f2(o.w)} ${f2(o.h)} re f 0 g\n`;
-      else if(o.t==='text')c+=`BT ${o.c?col(o.c)+' rg ':''}/${o.bold?'F2':'F1'} ${o.size} Tf ${f2(o.x)} ${f2(PH-o.y)} Td ${pdfStr(o.s)} Tj ET${o.c?' 0 g':''}\n`;
+      else if(o.t==='text')c+=`BT ${o.c?col(o.c)+' rg ':''}/${o.serif?(o.bold?'F4':'F3'):(o.bold?'F2':'F1')} ${o.size} Tf ${f2(o.x)} ${f2(PH-o.y)} Td ${pdfStr(o.s)} Tj ET${o.c?' 0 g':''}\n`;
       else c+=`q ${f2(o.w)} 0 0 ${f2(o.h)} ${f2(o.x)} ${f2(PH-o.y-o.h)} cm /Im1 Do Q\n`}
     const cs=add([`<< /Length ${c.length} >>\nstream\n`,c,'\nendstream']);
-    const res=`<< /Font << /F1 ${fR} 0 R /F2 ${fB} 0 R >>${imId?` /XObject << /Im1 ${imId} 0 R >>`:''} >>`;
+    const res=`<< /Font << /F1 ${fR} 0 R /F2 ${fB} 0 R /F3 ${fT} 0 R /F4 ${fTB} 0 R >>${imId?` /XObject << /Im1 ${imId} 0 R >>`:''} >>`;
     kids.push(add([`<< /Type /Page /Parent ${pagesId} 0 R /MediaBox [0 0 ${PW} ${PH}] /Resources ${res} /Contents ${cs} 0 R >>`]))}
   objs[catalog-1]=[`<< /Type /Catalog /Pages ${pagesId} 0 R >>`];objs[pagesId-1]=[`<< /Type /Pages /Kids [${kids.map(k=>k+' 0 R').join(' ')}] /Count ${kids.length} >>`];
-  const info=add([`<< /Title ${pdfStr(enc('Bewerbung '+(S.profil.meName||'')))} /Producer (Stellenweg) >>`]);
+  const info=add([`<< /Title ${pdfStr(enc(title||'Bewerbung '+(S.profil.meName||'')))} /Producer (Stellenweg) >>`]);
   const out=[];let pos=0;const offs=[];const push=p=>{const b=typeof p==='string'?strBytes(p):p;out.push(b);pos+=b.length};
   push('%PDF-1.4\n%\xe2\xe3\xcf\xd3\n');objs.forEach((parts,i)=>{offs.push(pos);push(`${i+1} 0 obj\n`);parts.forEach(push);push('\nendobj\n')});
   const xref=pos;push(`xref\n0 ${objs.length+1}\n0000000000 65535 f \n`+offs.map(o=>String(o).padStart(10,'0')+' 00000 n \n').join(''));
@@ -2970,6 +2987,228 @@ async function bindPdf(){
     saveBlob(get(),briefName());toast('PDF gespeichert. Bitte in der E-Mail anhängen.');
     setTimeout(()=>{const a=document.createElement('a');a.href=mailtoBrief(to);a.rel='noopener';document.body.appendChild(a);a.click();a.remove()},400)};
   $('#bp-new').onclick=()=>{Object.assign(S.brief,{bewerbungId:undefined,fiName:'',fiKontakt:'',fiStrasse:'',fiPlzOrt:'',ort:'',betreff:'',text:'',datum:iso(today)});lastBrief=null;save();goStep(1)}}
+
+/* ================= Lebenslauf-Assistent ================= */
+/* Zweispaltig wie die Vorlage: links Angaben zur Person (gemäss Checkliste), rechts Kurzprofil, Berufserfahrung, Ausbildung.
+   ATS-tauglich: echter Text (Helvetica), keine Skalen oder Balken, übliche Überschriften, im PDF zuerst links, dann rechts. */
+const CV_STEPS=['Gestaltung','Person','Mobilität','Sprachen','Profil','Beruf','Bildung','PDF'];
+const CV_FA=['B','BE','C1','C','D1','A1','A'];
+const CV_LVL=['Muttersprache','C2','C1','B2','B1','A2','A1'];
+const CV_IKT=['SAP','MS Office','Word','Excel','Outlook','Handscanner','Lagerleitsystem','Kassensystem','ERP-System','E-Mail','Job-Room'];
+let cvStep=0,lastCv=null;
+function cvData(){S.cv=S.cv||{nat:'Schweiz',fa:[],langs:[{l:'Deutsch',n:'Muttersprache'}],ikt:[],jobs:[],bildung:[],verf:'per sofort',ref:true};return S.cv}
+const cvGet=path=>path.split('.').reduce((o,k)=>o==null?o:o[k],cvData());
+function cvSet(path,v){const ks=path.split('.'),last=ks.pop();let o=cvData();ks.forEach(k=>{o=o[k]});o[last]=v;save()}
+const cvF=(path,label,attrs='',ph='')=>`<div class="field"><label>${label}</label><input class="input" data-cv="${path}" value="${esc(cvGet(path)??'')}" ${ph?`placeholder="${esc(ph)}"`:''} ${attrs}></div>`;
+const cvT=(path,label,ph='',rows=3)=>`<div class="field"><label>${label}</label><textarea class="input" data-cv="${path}" rows="${rows}" placeholder="${esc(ph)}">${esc(cvGet(path)??'')}</textarea></div>`;
+const cvChips=(key,opts)=>`<div class="chips" data-cvchips="${key}">${opts.map(o=>`<button type="button" class="kat" data-v="${esc(o)}" aria-pressed="${(cvData()[key]||[]).includes(o)}">${esc(o)}</button>`).join('')}</div>`;
+/* Zum Ausprobieren: die Angaben von Marco Beispiel (erfundene Person) */
+function cvExample(){S.cv={geb:'14.03.1980',nat:'Italien',bew:'Niederlassungsbewilligung C',kinder:'Jahrgang 2014 und 2017',betreuung:true,fa:['B'],auto:true,stapler:'SUVA, Kategorie R1',
+  verf:'per sofort',pensum:'80–100 %',schicht:true,langs:[{l:'Deutsch',n:'C1'},{l:'Italienisch',n:'Muttersprache'},{l:'Französisch',n:'B1'},{l:'Englisch',n:'A2'}],
+  ikt:['SAP','Handscanner','Lagerleitsystem','MS Office'],iktFrei:'',titel:'Logistiker EFZ · Staplerfahrer',slogan:'Die richtige Ware, zur richtigen Zeit, am richtigen Ort.',
+  profil:'Erfahrener Logistiker mit über 20 Jahren Praxis und SUVA-Staplerausweis. Genau, auch in Spitzenzeiten ruhig, sicher mit SAP und Handscanner.',
+  jobs:[{von:'04.2019',bis:'08.2025',f:'Lagerist',firma:'Seeland Distribution AG',ort:'Lyss',pts:'Kommissionieren mit Handscanner\nWareneingang und Bestandesführung in SAP\nEinarbeitung neuer Mitarbeitender'},
+    {von:'03.2012',bis:'03.2019',f:'Mitarbeiter Logistik',firma:'Bauhandel Muster AG',ort:'Biel',pts:'Staplerfahren im Hochregallager\nTourenvorbereitung für Baustellenlieferungen'},
+    {von:'08.2001',bis:'02.2012',f:'Lagermitarbeiter',firma:'Grossverteiler Seeland',ort:'Nidau',pts:'Filialbelieferung, Verpacken und Etikettieren'}],
+  bildung:[{von:'2023',bis:'',f:'Lagerbewirtschaftung mit SAP',firma:'Logistikschule Bern',ort:'',pts:''},{von:'2015',bis:'',f:'Staplerausweis SUVA, Kategorie R1',firma:'SUVA',ort:'',pts:''},
+    {von:'1996',bis:'1999',f:'Lehre als Lagerist (heute Logistiker EFZ)',firma:'Berufsfachschule Biel',ort:'',pts:''}],
+  engag:'Juniorentrainer FC Aurore, Biel\nBegleitet Lernende im Betrieb',ref:true,foto:null};
+  if(!S.profil.meName){Object.assign(S.profil,{meName:EXP.name,meStrasse:EXP.str,mePlzOrt:EXP.ort,meTel:EXP.tel,meMail:EXP.mail})}save()}
+
+function openCv(){cvData();lastCv=null;cvStep=0;
+  openSheet('Lebenslauf',`<div class="seg glass" id="cv-steps" role="tablist">${CV_STEPS.map((s,i)=>`<button role="tab" data-st="${i}">${i+1} ${s}</button>`).join('')}</div><div id="cv-body" style="display:flex;flex-direction:column;gap:14px"></div>`,null);
+  $$('#cv-steps button').forEach(b=>b.onclick=()=>cvGo(+b.dataset.st));cvGo(0)}
+function cvGo(n){cvStep=n;$$('#cv-steps button').forEach((b,i)=>b.setAttribute('aria-selected',i===n));
+  const body=$('#cv-body');body.innerHTML=[cvS0,cvS1,cvS2,cvS3,cvS4,cvS5,cvS6,cvS7][n]()+(n<7?`<button class="btn btn-primary" data-cvnext style="align-self:flex-end">${n===6?'Zum PDF':'Weiter'} →</button>`:'');
+  $('#sheet-body').scrollTop=0;
+  body.querySelectorAll('[data-cv]').forEach(el=>{el.oninput=el.onchange=()=>cvSet(el.dataset.cv,el.type==='checkbox'?el.checked:el.value)});
+  body.querySelectorAll('[data-p]').forEach(el=>el.oninput=()=>{S.profil[el.dataset.p]=el.value;save()});
+  body.querySelectorAll('[data-cvchips]').forEach(box=>box.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{const k=box.dataset.cvchips,L=cvData()[k]=cvData()[k]||[],v=b.dataset.v,i=L.indexOf(v);
+    if(i>=0)L.splice(i,1);else L.push(v);b.setAttribute('aria-pressed',i<0);save()}));
+  const nx=body.querySelector('[data-cvnext]');if(nx)nx.onclick=()=>cvGo(n+1);
+  [cvB0,null,null,cvB3,null,()=>cvBList('jobs'),()=>cvBList('bildung'),cvB7][n]?.()}
+/* Gestaltung: Spalte links oder rechts, Farbe (Standard wie Briefkopf), Schrift */
+const cvAccent=()=>{const c=cvData(),P=S.profil;return c.color||(P.bar&&P.barColor?P.barColor:'#e0821a')};
+function cvS0(){const c=cvData(),right=c.side==='right',side=c.side||'left',font=c.font||'sans',cur=cvAccent(),own=c.color&&!BAR_COLORS.some(b=>b[0]===c.color)&&c.color!=='#e0821a';
+  const mini=r=>`<span class="cvmini ${r?'r':''}"><em style="background:${cur}"></em><i></i><i></i><i></i></span>`;
+  return `<p class="muted">Wählen Sie, wie Ihr Lebenslauf aussehen soll. Inhalt folgt in den nächsten Schritten.</p>
+  <div class="field"><label>Spalte mit den Angaben zur Person</label><div class="headpick" role="radiogroup">
+    <button type="button" role="radio" data-side="left" aria-checked="${side==='left'}">${mini(false)}<b>Links</b><small>Klassisch, häufig</small></button>
+    <button type="button" role="radio" data-side="right" aria-checked="${side==='right'}">${mini(true)}<b>Rechts</b><small>Lebenslauf zuerst</small></button></div></div>
+  <div class="field"><label>Farbe</label><div class="chips" id="cv-col">
+    <button type="button" class="kat" data-col="" aria-pressed="${!c.color}">Wie Briefkopf</button>
+    ${[['#e0821a'],...BAR_COLORS].map(b=>b[0]).filter((v,i,a)=>a.indexOf(v)===i).map(col=>`<button type="button" data-col="${col}" aria-label="Farbe ${col}" style="width:34px;height:34px;border-radius:50%;border:1px solid var(--hair);background:${col};cursor:pointer;outline-offset:2px;outline:${c.color===col?'3px solid var(--accent)':'none'}"></button>`).join('')}
+    <label class="sw-custom ${own?'on':''}" title="Eigene Farbe" style="--c:${cur}"><input type="color" value="${cur}" aria-label="Eigene Farbe wählen"></label></div></div>
+  <div class="field"><label>Schrift</label><div class="headpick" role="radiogroup">
+    <button type="button" role="radio" data-font="sans" aria-checked="${font==='sans'}"><span style="font:700 28px Helvetica,Arial,sans-serif">Aa</span><b>Modern</b><small>Ohne Serifen, klar</small></button>
+    <button type="button" role="radio" data-font="serif" aria-checked="${font==='serif'}"><span style="font:700 28px 'Times New Roman',Times,serif">Aa</span><b>Klassisch</b><small>Mit Serifen, seriös</small></button></div>
+    <span class="muted">Beides sind Standardschriften, die Bewerbungssysteme zuverlässig lesen.</span></div>
+  <div class="field"><label>Ab Seite 2 (falls der Lebenslauf länger wird)</label><div class="headpick" role="radiogroup">
+    <button type="button" role="radio" data-p2="bar" aria-checked="${(c.page2||'bar')==='bar'}"><span class="cvmini top"><em style="background:${cur}"></em><i></i></span><b>Kopfbalken</b><small>Empfohlen: Name, Kontakt und Slogan oben, Inhalt in voller Breite</small></button>
+    <button type="button" role="radio" data-p2="side" aria-checked="${c.page2==='side'}">${mini(right)}<b>Seitenspalte</b><small>Nicht empfohlen: wie Seite 1, Inhalt bleibt schmal</small></button></div></div>`}
+function cvB0(){const c=cvData();
+  $$('#cv-body [data-side]').forEach(b=>b.onclick=()=>{c.side=b.dataset.side;save();cvGo(0)});
+  $$('#cv-body [data-font]').forEach(b=>b.onclick=()=>{c.font=b.dataset.font;save();cvGo(0)});
+  $$('#cv-body [data-p2]').forEach(b=>b.onclick=()=>{c.page2=b.dataset.p2;save();cvGo(0)});
+  $$('#cv-col [data-col]').forEach(b=>b.onclick=()=>{c.color=b.dataset.col||null;save();cvGo(0)});
+  const inp=$('#cv-col input[type=color]');inp.onchange=()=>{c.color=inp.value;save();cvGo(0)}}
+function cvS1(){const c=cvData(),empty=!c.geb&&!(c.jobs||[]).length;return `
+  <p class="muted">Name, Adresse und Kontakt kommen aus „Meine Angaben“. Alles bleibt auf diesem Gerät.</p>
+  ${empty?'<button type="button" class="btn btn-glass" id="cv-ex" style="align-self:flex-start">Mit Beispiel ausfüllen (Marco Beispiel)</button>':''}
+  ${fld('cv-nm','Vorname und Name','p','meName','autocomplete="name"')}
+  <div class="grid2">${fld('cv-str','Strasse und Nummer','p','meStrasse')}${fld('cv-plz','PLZ und Ort','p','mePlzOrt')}</div>
+  <div class="grid2">${fld('cv-tel','Telefon','p','meTel','type="tel"')}${fld('cv-ml','E-Mail','p','meMail','type="email"')}</div>
+  <div class="grid2">${cvF('geb','Geburtsdatum','inputmode="numeric"','14.03.1980')}${cvF('nat','Nationalität','','Schweiz')}</div>
+  ${cvF('bew','Bewilligung (wenn nicht Schweiz)','','z.B. Niederlassungsbewilligung C')}
+  ${cvF('kinder','Kinder (nur Jahrgänge)','','z.B. Jahrgang 2014 und 2017')}
+  <label class="row" style="cursor:pointer;border:none"><input type="checkbox" class="check" data-cv="betreuung" ${c.betreuung?'checked':''}><div class="row-main"><div class="row-title">Betreuung gewährleistet</div><div class="row-sub">Wichtig bei kleinen Kindern, steht dann neben den Jahrgängen.</div></div></label>`}
+function cvS2(){const c=cvData();return `
+  <div class="field"><label>Führerausweis</label>${cvChips('fa',CV_FA)}</div>
+  <label class="row" style="cursor:pointer;border:none"><input type="checkbox" class="check" data-cv="auto" ${c.auto?'checked':''}><div class="row-main"><div class="row-title">Eigenes Fahrzeug</div></div></label>
+  ${cvF('stapler','Staplerausweis','','z.B. SUVA, Kategorie R1')}
+  <div class="grid2">${cvF('verf','Verfügbar','','per sofort')}${cvF('pensum','Pensum','','80–100 %')}</div>
+  <label class="row" style="cursor:pointer;border:none"><input type="checkbox" class="check" data-cv="schicht" ${c.schicht?'checked':''}><div class="row-main"><div class="row-title">Schichtarbeit möglich</div></div></label>`}
+function cvS3(){const c=cvData();return `
+  <div class="field"><label>Sprachen</label><p class="muted" style="margin:0">Stufen nach dem Europäischen Sprachenportfolio: A1/A2 Grundkenntnisse, B1/B2 gut, C1/C2 sehr gut bis verhandlungssicher.</p></div>
+  <div id="cv-langs" style="display:flex;flex-direction:column;gap:8px">${(c.langs||[]).map((x,i)=>`<div class="cv-lang"><input class="input" data-cv="langs.${i}.l" value="${esc(x.l)}" placeholder="Sprache">
+    <select class="input" data-cv="langs.${i}.n">${CV_LVL.map(l=>`<option ${l===x.n?'selected':''}>${l}</option>`).join('')}</select><button type="button" class="icon-btn btn-glass" data-dl="${i}" aria-label="Sprache entfernen">−</button></div>`).join('')}</div>
+  <button type="button" class="btn btn-glass" id="cv-addl" style="align-self:flex-start">+ Sprache</button>
+  <div class="field"><label>IKT-Kenntnisse</label>${cvChips('ikt',CV_IKT)}</div>
+  ${cvF('iktFrei','Weitere (mit Komma getrennt)','','z.B. Staplerleitsystem, Tablet')}`}
+function cvB3(){$$('#cv-langs [data-dl]').forEach(b=>b.onclick=()=>{cvData().langs.splice(+b.dataset.dl,1);save();cvGo(3)});
+  $('#cv-addl').onclick=()=>{cvData().langs.push({l:'',n:'B1'});save();cvGo(3)}}
+function cvS4(){return `
+  ${cvF('titel','Berufsbezeichnung unter dem Namen','','z.B. Logistiker EFZ · Staplerfahrer')}
+  ${cvF('slogan','Slogan (was Sie ausmacht)','maxlength="90"','z.B. Die richtige Ware, zur richtigen Zeit, am richtigen Ort.')}
+  ${cvT('profil','Kurzprofil (2 bis 3 kurze Sätze)','Erfahren in …, stark in …, sicher mit …',3)}
+  ${cvT('engag','Engagement, z.B. Verein (eine Zeile pro Eintrag, freiwillig)','',2)}
+  <label class="row" style="cursor:pointer;border:none"><input type="checkbox" class="check" data-cv="ref" ${cvData().ref?'checked':''}><div class="row-main"><div class="row-title">„Referenzen auf Anfrage“ anzeigen</div></div></label>`}
+function cvList(key,title,ph){const L=cvData()[key]||[];return `
+  <p class="muted">${title}. Die neueste Station kommt im PDF automatisch zuoberst.</p>
+  <div class="cv-list">${L.map((x,i)=>`<div class="cv-item">
+    <div class="grid2">${cvF(`${key}.${i}.von`,'Von','inputmode="numeric"','MM.JJJJ')}${cvF(`${key}.${i}.bis`,'Bis','','MM.JJJJ oder leer')}</div>
+    ${cvF(`${key}.${i}.f`,key==='jobs'?'Funktion':'Abschluss oder Kurs','',ph)}
+    <div class="grid2">${cvF(`${key}.${i}.firma`,key==='jobs'?'Firma':'Schule oder Anbieter')}${cvF(`${key}.${i}.ort`,'Ort')}</div>
+    ${cvT(`${key}.${i}.pts`,'Stichworte (eine Zeile pro Punkt, 2 bis 4)','',3)}
+    <button type="button" class="btn btn-ghost" data-rm="${i}" style="align-self:flex-start;color:var(--bad)">Eintrag entfernen</button></div>`).join('')}</div>
+  <button type="button" class="btn btn-glass" data-add style="align-self:flex-start">+ Eintrag</button>`}
+const cvS5=()=>cvList('jobs','Ihre Stellen, auch Temporäreinsätze und Praktika','z.B. Lagerist');
+const cvS6=()=>cvList('bildung','Lehre, Schulen, Kurse und Ausweise','z.B. Logistiker EFZ');
+function cvBList(key){const n=key==='jobs'?5:6;
+  $$('#cv-body [data-rm]').forEach(b=>b.onclick=()=>{cvData()[key].splice(+b.dataset.rm,1);save();cvGo(n)});
+  $('#cv-body [data-add]').onclick=()=>{(cvData()[key]=cvData()[key]||[]).unshift({von:'',bis:'',f:'',firma:'',ort:'',pts:''});save();cvGo(n)}}
+function cvS7(){return `<div id="cv-check"></div>
+  <label class="btn btn-glass file-btn" style="align-self:flex-start">${cvData().foto?'Foto ersetzen':'Foto hinzufügen (freiwillig)'}<input type="file" id="cv-foto" accept="image/*"></label>
+  ${cvData().foto?'<button type="button" class="btn btn-ghost" id="cv-fotodel" style="align-self:flex-start;color:var(--bad)">Foto entfernen</button>':''}
+  <div class="chips"><button type="button" class="btn btn-primary" id="cv-make">PDF erstellen und ins Dossier legen</button></div>
+  <div class="chips" id="cv-after" ${lastCv?'':'hidden'}><button type="button" class="btn btn-glass" id="cv-share">Teilen</button><button type="button" class="btn btn-glass" id="cv-save">Speichern</button></div>
+  <h3>Vorschau</h3><div class="viewer" id="cv-pages"></div>`}
+async function cvPhoto(){const f=cvData().foto;if(!f)return null;try{const i=await loadImg(f);return{src:f,w:i.naturalWidth,h:i.naturalHeight,img:i}}catch(e){return null}}
+async function cvB7(){const ex=$('#cv-ex');
+  const ph=await cvPhoto(),pages=cvLayout(ph),box=$('#cv-pages');
+  const cssW=Math.min(box.clientWidth||560,640),dpr=Math.min(3,window.devicePixelRatio||1),k=cssW/PW;
+  for(const ops of pages){const c=document.createElement('canvas');c.width=cssW*dpr;c.height=cssW*PH/PW*dpr;const x=c.getContext('2d');x.scale(k*dpr,k*dpr);
+    x.fillStyle='#fff';x.fillRect(0,0,PW,PH);
+    for(const o of ops){const css=a=>`rgb(${a.map(v=>Math.round(v*255)).join(',')})`;
+      if(o.t==='img'){x.drawImage(ph.img,o.x,o.y,o.w,o.h);continue}if(o.t==='rect'){x.fillStyle=css(o.c);x.fillRect(o.x,o.y,o.w,o.h);continue}
+      x.fillStyle=o.c?css(o.c):'#000';x.font=`${o.bold?'bold ':''}${o.size}px ${o.serif?'"Times New Roman", Times, serif':'Helvetica, Arial, "Liberation Sans", sans-serif'}`;x.fillText(decodeWin(o.s),o.x,o.y)}
+    box.appendChild(c)}
+  const c=cvData(),P=S.profil,warn=[];
+  if(!P.meName)warn.push('Ihr Name fehlt (Schritt 2).');if(!c.geb)warn.push('Das Geburtsdatum fehlt (Schritt 2).');
+  if(!(c.jobs||[]).some(j=>j.f))warn.push('Noch keine Berufserfahrung (Schritt 6).');if(!c.profil)warn.push('Das Kurzprofil fehlt (Schritt 5).');
+  if(lossy.size)warn.push('Diese Zeichen kann das PDF nicht darstellen und hat sie ersetzt: '+[...lossy].join(', '));
+  if(pages.length>1)warn.push(`Der Lebenslauf hat ${pages.length} Seiten. Kürzen Sie, wenn möglich, die Stichworte älterer Stellen.`);
+  $('#cv-check').innerHTML=warn.length?`<div class="banner warn-banner"><div class="txt"><b>Bitte prüfen</b><span>${warn.map(esc).join('<br>')}</span></div></div>`:`<div class="banner" style="background:var(--ok-soft)"><div class="txt"><b>Alles ausgefüllt</b><span>Der Lebenslauf passt auf eine Seite.</span></div></div>`;
+  $('#cv-foto').onchange=async e=>{const f=e.target.files[0];if(!f)return;const url=URL.createObjectURL(f);
+    try{const img=await loadImg(url),W=480,H=600,cv=document.createElement('canvas');cv.width=W;cv.height=H;const g=cv.getContext('2d');
+      const r=Math.max(W/img.naturalWidth,H/img.naturalHeight),w=img.naturalWidth*r,h=img.naturalHeight*r;g.fillStyle='#fff';g.fillRect(0,0,W,H);g.drawImage(img,(W-w)/2,(H-h)/2.6,w,h);
+      cvData().foto=cv.toDataURL('image/jpeg',.85);save()}catch(err){toast('Das Bild konnte nicht gelesen werden')}URL.revokeObjectURL(url);cvGo(7)};
+  $('#cv-fotodel')&&($('#cv-fotodel').onclick=()=>{cvData().foto=null;save();cvGo(7)});
+  const name=()=>['Lebenslauf',cleanName(P.meName)].filter(Boolean).join('_')+'.pdf';
+  $('#cv-make').onclick=async()=>{const blob=buildPdf(cvLayout(ph),ph,'Lebenslauf '+(P.meName||''));
+    const doc=await storePdf(blob,{name:'Lebenslauf '+(P.meName||''),kat:'cv',aktuell:true,file:name()});
+    S.docs.forEach(d=>{if(d.kat==='cv'&&!d.bereich&&d.id!==doc.id)d.aktuell=false});lastCv=blob;save();render();$('#cv-after').hidden=false;toast('Im Dossier abgelegt')};
+  const get=()=>lastCv||buildPdf(cvLayout(ph),ph,'Lebenslauf '+(P.meName||''));
+  $('#cv-share').onclick=()=>shareBlob(get(),name());$('#cv-save').onclick=()=>saveBlob(get(),name())}
+document.addEventListener('click',e=>{if(e.target.id==='cv-ex'){cvExample();cvGo(1);toast('Beispiel eingefüllt')}});
+/* Datum „MM.JJJJ“ oder „JJJJ“ in eine sortierbare Zahl */
+const cvKey=s=>{const m=String(s||'').match(/(?:(\d{1,2})\.)?(\d{4})/);return m?(+m[2])*100+(+(m[1]||12)):0};
+/* Seite füllen (Vorgabe Kursleitung): zuerst die Abschnittsabstände, erst dann die Schrift.
+   Grundschrift 10 bis 11 pt (nie kleiner), Überschriften höchstens 16 pt, Name und Foto dürfen wachsen.
+   gx = zusätzlicher Abstand zwischen Abschnitten und Einträgen, f = Wachstum der Schrift (0 bis 1). */
+const CV_GX_MAX=22;
+function cvLayout(photo){const BOT=PH-40,run=o=>cvLayoutRaw(photo,o),ok=r=>r.length===1&&r.leftY<=BOT&&r.rightY<=BOT;
+  const base=run({f:0,gL:0,gR:0});if(!ok(base))return base;                 /* zu viel Inhalt: 10 pt bleiben, zweite Seite */
+  const bs=(lo,hi,test)=>{for(let i=0;i<11;i++){const m=(lo+hi)/2;if(test(m))lo=m;else hi=m}return lo};
+  const C=CV_GX_MAX;let f=0,gL,gR;
+  if(ok(run({f:0,gL:C,gR:C})))f=bs(0,1,m=>ok(run({f:m,gL:C,gR:C})));           /* 1. Abstände bis zur Grenze, 2. dann Schrift */
+  /* 3. jede Spalte verteilt ihren restlichen Platz selbst */
+  gL=bs(0,f>=.99?90:C,m=>run({f,gL:m,gR:0}).leftY<=BOT);
+  gR=bs(0,f>=.99?130:C,m=>{const r=run({f,gL:0,gR:m});return r.length===1&&r.rightY<=BOT});
+  return run({f,gL,gR})}
+function cvLayoutRaw(photo,{f,gL,gR}){const c=cvData(),P=S.profil;lossy.clear();
+  const acc=hexRgb(cvAccent()),side=acc.map(v=>v+(1-v)*.9),ink=[.12,.11,.1],grey=[.40,.37,.34],serif=c.font==='serif',right=c.side==='right';
+  const b=10+f,H=Math.min(16,12+4*f),JT=Math.min(16,b+2),NM=26+10*f,LH=1.32;
+  /* Seitenband links oder rechts; für Times gelten die Masse von Helvetica (Times ist schmaler, also bricht nichts zu spät um) */
+  const SW=170,BW=SW+40,BX=right?PW-BW:0,SX=right?BX+12:28,BOT=PH-40;
+  let RX=right?34:BW+16,RW=right?PW-BW-34-24:PW-BW-16-34;
+  const pages=[[]];let pg=pages[0];
+  const band=()=>pg.push({t:'rect',x:BX,y:0,w:BW,h:PH,c:side},{t:'rect',x:BX,y:0,w:BW,h:5,c:acc});
+  band();
+  const T=(s,x,y,size,bold,col)=>pg.push({t:'text',s:enc(s),x,y,size,bold,c:col||ink,serif});
+  const lines=(s,w,size,bold)=>{const out=[];for(const para of String(s||'').split('\n')){let line='';for(const word of para.split(/\s+/).filter(Boolean)){const t=line?line+' '+word:word;
+    if(line&&textW(enc(t),bold,size)>w){out.push(line);line=word}else line=t}if(line)out.push(line)}return out};
+  const fit=(s,size,w,min)=>{let fs=size;while(fs>min&&textW(enc(s),true,fs)>w)fs-=.25;return fs};
+  /* ---- links: Angaben zur Person ---- */
+  let y=36;
+  if(photo){const w=Math.min(SW,110+50*f),h=w*1.245;pg.push({t:'img',x:SX+(SW-w)/2,y,w,h});y+=h+20}
+  else{const ini=(P.meName||'').split(/\s+/).filter(Boolean).map(w=>w[0]).slice(0,2).join('').toUpperCase();
+    if(ini){const fs=40+20*f,tw=textW(enc(ini),true,fs);T(ini,SX+(SW-tw)/2,y+fs*1.15,fs,true,acc.map(v=>v*.75+.2));y+=fs*2}}
+  /* gleiche Grösse für alle Überschriften einer Spalte */
+  const SHF=Math.min(...['IKT-KENNTNISSE','PERSÖNLICH','ENGAGEMENT','MOBILITÄT'].map(s=>fit(s,H*.85,SW,9))),RHF=fit('AUS- UND WEITERBILDUNG',H,RW,10);
+  const sh=t=>{y+=8+gL;const s=t.toUpperCase(),fs=SHF;T(s,SX,y,fs,true,acc);y+=5;pg.push({t:'rect',x:SX,y,w:SW,h:.7,c:acc.map(v=>v+(1-v)*.6)});y+=b*1.4};
+  const ln=(s,bold=false,col)=>{lines(s,SW,b,bold).forEach(l=>{T(l,SX,y,b,bold,col);y+=b*LH})};
+  const kv=(k,v)=>{if(!v)return;ln(k,true,grey);ln(v);y+=4};
+  const li=v=>{lines(v,SW-9,b,false).forEach((l,i)=>{if(!i)T('·',SX,y,b,true);T(l,SX+9,y,b);y+=b*LH});y+=1};
+  sh('Kontakt');[P.meStrasse,P.mePlzOrt,P.meTel,P.meMail].filter(Boolean).forEach(v=>ln(v));
+  sh('Persönlich');kv('Geburtsdatum',c.geb);kv('Nationalität',[c.nat,c.nat&&!/^schweiz/i.test(c.nat)?c.bew:''].filter(Boolean).join(', '));
+  kv('Kinder',[c.kinder,c.kinder&&c.betreuung?'Betreuung gewährleistet':''].filter(Boolean).join(', '));
+  const mob=[(c.fa||[]).length?`Führerausweis Kat. ${c.fa.join(', ')}${c.auto?', eigenes Auto':''}`:(c.auto?'Eigenes Auto':''),c.stapler?'Staplerausweis '+c.stapler:'',
+    [c.verf?'Verfügbar '+c.verf:'',c.pensum].filter(Boolean).join(', '),c.schicht?'Schichtarbeit möglich':''].filter(Boolean);
+  if(mob.length){sh('Mobilität');mob.forEach(li)}
+  /* Deutsch steht immer zuoberst (Schweiz) */
+  const L=(c.langs||[]).filter(x=>x.l).sort((a,b2)=>(/^deutsch/i.test(b2.l)?1:0)-(/^deutsch/i.test(a.l)?1:0));if(L.length){sh('Sprachen');L.forEach(x=>li(`${x.l}: ${x.n}`))}
+  const ikt=[...(c.ikt||[]),...String(c.iktFrei||'').split(',').map(s=>s.trim()).filter(Boolean)];if(ikt.length){sh('IKT-Kenntnisse');ikt.forEach(li)}
+  const eng=String(c.engag||'').split('\n').map(s=>s.trim()).filter(Boolean);if(eng.length){sh('Engagement');eng.forEach(li)}
+  /* Referenzhinweis ganz unten in der schmalen Spalte */
+  if(c.ref){y+=b*2;T('Referenzen auf Anfrage',SX,BOT,b,false,grey)}
+  const leftEnd=y;
+  /* ---- rechts: Kurzprofil, Berufserfahrung, Ausbildung (im PDF nach der linken Spalte, für ATS) ---- */
+  let ry=34+NM*.9;
+  /* Folgeseite: Kopfbalken im Farbschema mit Name, Kontakt und Slogan (empfohlen), oder wieder das Seitenband */
+  const head=()=>{const dark=.2126*acc[0]+.7152*acc[1]+.0722*acc[2]>.55,fg=dark?[.1,.1,.1]:[1,1,1],sub=dark?[.25,.25,.25]:[.93,.93,.93];
+    const kont=[P.mePlzOrt,P.meTel,P.meMail].filter(Boolean).join('  ·  '),sl=c.slogan?'«'+c.slogan.replace(/^[«"„]|[»"“]$/g,'')+'»':'';
+    const hh=sl?92:72;pg.push({t:'rect',x:0,y:0,w:PW,h:hh,c:acc});
+    T(P.meName||'',34,34,fit(P.meName||'',20,PW-68,14),true,fg);T(kont,34,52,10,false,sub);if(sl)T(sl,34,72,fit(sl,10.5,PW-68,9),true,fg);
+    RX=34;RW=PW-68;return hh+30};
+  const need=h=>{if(ry+h>BOT){pg=[];pages.push(pg);if(c.page2==='side'){band();ry=50}else ry=head()}};
+  const nm=fit(P.meName||'',NM,RW,16),i0=pg.length;T(P.meName||'',RX,ry,nm,true);ry+=nm*.55+6;
+  if(c.titel){const fs=fit(c.titel,b+2,RW,b);ry+=fs;T(c.titel,RX,ry,fs,false,grey);ry+=fs*.9+4}
+  /* ATS: Name und Berufsbezeichnung im PDF zuerst (nach dem Hintergrund), Aussehen bleibt gleich */
+  pg.splice(2,0,...pg.splice(i0,pg.length-i0));
+  if(c.slogan){const fs=Math.min(16,b+2),sl=lines('«'+c.slogan.replace(/^[«"„]|[»"“]$/g,'')+'»',RW-12,fs,true);ry+=8+gR;
+    pg.push({t:'rect',x:RX,y:ry-fs*.95,w:2.5,h:(sl.length-1)*fs*LH+fs*1.25,c:acc});sl.forEach(l=>{T(l,RX+12,ry,fs,true);ry+=fs*LH});ry+=4}
+  if(c.profil){ry+=6+gR;lines(c.profil,RW,b,false).forEach(l=>{T(l,RX,ry,b);ry+=b*LH})}
+  const rh=t=>{need(H*3);ry+=12+gR;const s=t.toUpperCase(),fs=RHF;T(s,RX,ry,fs,true,acc);ry+=6;pg.push({t:'rect',x:RX,y:ry,w:RW,h:.7,c:[.88,.86,.84]});ry+=b*1.7};
+  const entry=(x,i)=>{const pts=String(x.pts||'').split('\n').map(s=>s.trim()).filter(Boolean),firm=[x.firma,x.ort].filter(Boolean).join(', ');
+    need(JT*2+b*(2+pts.length)*LH);if(i)ry+=6+gR*.7;const when=[x.von,x.bis].filter(Boolean).join(' – ');if(when){T(when,RX,ry,b,false,grey);ry+=b*LH}
+    lines(x.f||'',RW,JT,true).forEach(l=>{T(l,RX,ry,JT,true);ry+=JT*1.25});if(firm){T(firm,RX,ry,b,false,grey);ry+=b*LH}
+    pts.forEach(p=>lines(p,RW-11,b,false).forEach((l,j)=>{need(b*LH);if(!j)T('–',RX,ry,b);T(l,RX+11,ry,b);ry+=b*LH}))};
+  const sorted=k=>[...(c[k]||[])].filter(x=>x.f).sort((a,b2)=>cvKey(b2.bis||b2.von)-cvKey(a.bis||a.von)||cvKey(b2.von)-cvKey(a.von));
+  const J=sorted('jobs');if(J.length){rh('Berufserfahrung');J.forEach(entry)}
+  const Bi=sorted('bildung');if(Bi.length){rh('Aus- und Weiterbildung');Bi.forEach(entry)}
+  pages.leftY=leftEnd;pages.rightY=pages.length>1?BOT+1:ry;
+  return pages}
 
 /* ================= Dossier-Check (beco Berner Wirtschaft) ================= */
 /* Kurzfassung der Checkliste für Bewerbungsdossiers von beco Berner Wirtschaft: was die App prüfen kann, prüft sie selbst */
@@ -4706,6 +4945,7 @@ const FR_ST=['Recherchiert','Bewerbungsreif','Kontaktiert','Gespräch','Gesendet
 const LINKS=[
   ['bew','Bewerbung erfassen','Bewerbung',()=>openBew(null)],
   ['brief','Brief schreiben','Brief',()=>openBrief(null)],
+  ['cv','Lebenslauf erstellen','Lebenslauf',()=>openCv()],
   ['doc','Dokument ablegen','Dokument',()=>openUpload({kat:'cv'})],
   ['schritt','Schritt planen','Schritt',()=>{goTo('strategie:plan');setTimeout(()=>$('#task-text').focus(),150)}],
   ['kontakt','Kontakt hinzufügen','Kontakt',()=>openKontakt(null)],
@@ -4955,6 +5195,7 @@ function renderBadges(){const t=iso(today),d=today.getDate();
 const FAB=[
   ['Bewerbung erfassen','Für den Tracker und das RAV-Formular',()=>openBew(null)],
   ['Dokument ablegen','Foto oder PDF ins Dossier',()=>openUpload({kat:'cv'})],
+  ['Lebenslauf erstellen','Zweispaltig, als PDF ins Dossier',()=>openCv()],
   ['Schritt planen','Im Aktionsplan',()=>{goTo('strategie:plan');setTimeout(()=>$('#task-text').focus(),150)}],
   ['Kontakt hinzufügen','Für Ihr Netzwerk',()=>openKontakt(null)],
   ['Firma recherchieren','Für eine Initiativbewerbung',()=>{goTo('netzwerk:firmen');setTimeout(()=>{frWiz&&frWiz.reset();const f=document.getElementById('fr-fName');f&&f.focus()},150)}],
@@ -5268,6 +5509,7 @@ const TOUR=[
     ['dossier:unterlagen','.stack-wrap','Der Dokumentstapel','Wischen Sie durch Ihre Dokumente. Ein Tipp zeigt ein Dokument gross, dort können Sie es auch senden.'],
     ['dossier:unterlagen','#btn-add-doc','Dokument hinzufügen','Fotografieren Sie ein Zeugnis oder laden Sie ein PDF hoch.'],
     ['dossier:unterlagen',tourCard('#btn-brief'),'Brief-Assistent','Bewerbungsbrief schreiben oder einfügen, unterschreiben und als PDF senden.'],
+    ['dossier:unterlagen',tourCard('#btn-cv'),'Lebenslauf-Assistent','Schritt für Schritt zum zweispaltigen Lebenslauf mit allen Angaben zur Person. Das PDF ist gut lesbar für Bewerbungssysteme.'],
     ['dossier:unterlagen','#dos-check','Dossier-Check','Die Checkliste von beco Berner Wirtschaft. Gehen Sie sie vor jedem Versand durch.'],
     ['dossier:init','#dos-init','Initiativbewerbung','Schritt für Schritt zum Initiativbrief, mit Satzrahmen, Selbstcheck und Aufträgen für eine KI.']]},
   {l:'Netzwerk',d:'Kontakte, Karte, Zielfirmen',steps:[
