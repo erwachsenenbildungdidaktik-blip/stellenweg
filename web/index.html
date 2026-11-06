@@ -249,6 +249,528 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4}
 .toast{position:fixed;z-index:60;left:50%;top:calc(14px + env(safe-area-inset-top,0px));transform:translate(-50%,-150%);transition:transform .3s;border-radius:999px;padding:10px 18px;font-weight:600;font-size:14px}
 .toast.on{transform:translate(-50%,0)}
 .empty{text-align:center;color:var(--fg3);font-size:14px;padding:18px 8px}
+#zr-root,#fr-root{--ink:var(--fg);--ink-2:var(--fg2);--ink-3:var(--fg3);--paper:var(--glass-strong);--quiet:var(--hair);--line:var(--hair);--r:14px;
+  --q1:#146B5C;--q2:#1A4E9B;--q3:#6B2CA5;--q4:#C0440E;--qbase:#fff;font-size:16px;line-height:1.5;color:var(--fg)}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) #zr-root, :root:not([data-theme="light"]) #fr-root{--q1:#5fc4a8;--q2:#8db4ea;--q3:#bd96e8;--q4:#f2906a;--qbase:#221d19} }
+:root[data-theme="dark"] #zr-root,:root[data-theme="dark"] #fr-root{--q1:#5fc4a8;--q2:#8db4ea;--q3:#bd96e8;--q4:#f2906a;--qbase:#221d19}
+#zr-root *{box-sizing:border-box;margin:0;padding:0}
+#zr-root .wrap{max-width:min(1560px,94vw);margin:0 auto;padding:clamp(24px,2.4vw,44px) 0 80px}
+#zr-root header.x-top{border-bottom:1px solid var(--line);padding-bottom:22px;margin-bottom:34px}
+#zr-root h1{font-size:clamp(30px,2.5vw,46px);font-weight:650;letter-spacing:-.015em;line-height:1.15}
+#zr-root .lede{color:var(--ink-2);max-width:60ch;margin-top:10px}
+#zr-root .cols{display:grid;grid-template-columns:minmax(0,1fr) clamp(360px,30vw,620px);gap:clamp(36px,4vw,76px);align-items:start}
+@media(max-width:1000px){#zr-root .cols{grid-template-columns:1fr;gap:36px}}
+#zr-root .step{border-top:1px solid var(--line);padding:24px 0 6px}
+#zr-root .step:first-of-type{border-top:none;padding-top:6px}
+#zr-root .step-head{display:flex;gap:14px;align-items:baseline}
+#zr-root .step-num{font-size:.92rem;font-weight:650;color:var(--accent);min-width:18px}
+#zr-root .step h3{font-size:1.14rem;font-weight:620;letter-spacing:-.005em}
+#zr-root .hints{margin:10px 0 16px 32px;color:var(--ink-2);font-size:.93rem}
+#zr-root .hints li{margin:4px 0;list-style:none;position:relative;padding-left:16px}
+#zr-root .hints li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:1px;background:var(--ink-3)}
+#zr-root .choices{display:flex;gap:10px;margin-left:32px;flex-wrap:wrap}
+#zr-root .choice{flex:1 1 130px}
+#zr-root .choice input{position:absolute;opacity:0;width:1px;height:1px;margin:0;pointer-events:none}
+#zr-root .choice span{
+  display:block;text-align:center;padding:11px 10px;border:1px solid var(--line);
+  border-radius:var(--r);cursor:pointer;font-size:.96rem;background:var(--paper);
+  transition:border-color .12s,background .12s;
+}
+#zr-root .choice span small{display:block;color:var(--ink-3);font-size:.81rem;margin-top:2px}
+#zr-root .choice input:hover+span{border-color:var(--ink-3)}
+#zr-root .choice input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+#zr-root .choice input:checked+span{border-color:var(--ink);background:var(--quiet);font-weight:600}
+#zr-root .choice input:checked+span small{color:var(--ink-2)}
+#zr-root label.x-field{display:block;font-size:1.14rem;font-weight:620;margin-bottom:8px}
+#zr-root input[type=text]{
+  width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:var(--r);
+  font:inherit;font-size:1rem;color:var(--ink);background:var(--paper);
+}
+#zr-root input[type=text]:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--ink)}
+#zr-root .field-hint{color:var(--ink-2);font-size:.93rem;margin-top:8px}
+#zr-root .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px;padding-top:24px;border-top:1px solid var(--line)}
+#zr-root button{font:inherit;cursor:pointer;border-radius:var(--r);border:1px solid transparent;padding:12px 20px;font-size:.98rem}
+#zr-root .btn-main{background:var(--ink);color:var(--bg);font-weight:600}
+#zr-root .btn-main:hover{background:#000}
+#zr-root .x-btn-ghost{background:var(--paper);border-color:var(--line);color:var(--ink)}
+#zr-root .x-btn-ghost:hover{border-color:var(--ink-3)}
+#zr-root button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#zr-root .panel{position:sticky;top:24px}
+#zr-root .panel h2{font-size:.93rem;font-weight:650;color:var(--ink-2);margin-bottom:14px}
+#zr-root .matrix-shell{display:grid;grid-template-columns:1.6rem 1fr;grid-template-rows:1fr 1.6rem;gap:8px}
+#zr-root .y-axis{grid-column:1;grid-row:1;position:relative}
+#zr-root .y-axis span{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-90deg);
+  white-space:nowrap;font-size:.84rem;color:var(--ink-2);font-weight:600
+}
+#zr-root .x-axis{grid-column:2;grid-row:2;text-align:center;font-size:.84rem;color:var(--ink-2);font-weight:600}
+#zr-root .matrix{
+  grid-column:2;grid-row:1;position:relative;aspect-ratio:1/1;width:100%;
+  border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--paper)
+}
+#zr-root .quad{position:absolute;width:50%;height:50%;padding:12px;display:flex;flex-direction:column;justify-content:flex-start}
+#zr-root .quad.bottom{justify-content:flex-end}
+#zr-root .quad b{display:block;font-size:.9rem;font-weight:650;letter-spacing:-.005em}
+#zr-root .quad em{display:block;font-style:normal;font-size:.78rem;color:var(--ink-2);margin-top:2px;line-height:1.35}
+#zr-root .q-nutzen{left:50%;top:0;background:color-mix(in srgb,var(--q1) 9%,var(--qbase))}
+#zr-root .q-nutzen b{color:var(--q1)}
+#zr-root .q-aufbauen{left:0;top:0;background:color-mix(in srgb,var(--q2) 9%,var(--qbase))}
+#zr-root .q-aufbauen b{color:var(--q2)}
+#zr-root .q-uebertragen{left:50%;top:50%;background:color-mix(in srgb,var(--q3) 9%,var(--qbase))}
+#zr-root .q-uebertragen b{color:var(--q3)}
+#zr-root .q-zurueck{left:0;top:50%;background:color-mix(in srgb,var(--q4) 9%,var(--qbase))}
+#zr-root .q-zurueck b{color:var(--q4)}
+#zr-root .cross{position:absolute;background:var(--line)}
+#zr-root .cross.h{left:0;right:0;top:50%;height:1px}
+#zr-root .cross.v{top:0;bottom:0;left:50%;width:1px}
+#zr-root .pt{position:absolute;transform:translate(-50%,-50%);z-index:5}
+#zr-root .pt .x-dot{width:1.45rem;height:1.45rem;border-radius:50%;background:var(--ink);color:var(--bg);font-size:.74rem;font-weight:650;
+  display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.25)}
+#zr-root .legend{list-style:none;margin-top:14px;font-size:.88rem}
+#zr-root .legend li{display:flex;align-items:center;gap:8px;margin:5px 0}
+#zr-root .legend .ln,
+#zr-root .x-card h3 .ln{flex:none;width:1.35rem;height:1.35rem;border-radius:50%;background:var(--ink);color:var(--bg);font-size:.72rem;font-weight:650;display:flex;align-items:center;justify-content:center}
+#zr-root .x-card h3 .ln{vertical-align:.15em;margin-right:10px;display:inline-flex}
+#zr-root .legend .lv{margin-left:auto;color:var(--bg);border-radius:999px;padding:1px 9px;font-size:.76rem;white-space:nowrap}
+#zr-root .pt.new .x-dot{animation:pop .35s ease-out}
+@keyframes pop{from{transform:scale(.4)}to{transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){#zr-root .pt.new .x-dot{animation:none}}
+#zr-root .axis-ends{display:flex;justify-content:space-between;font-size:.79rem;color:var(--ink-3);margin-top:4px}
+#zr-root .matrix-empty{color:var(--ink-3);font-size:.9rem;margin-top:14px}
+#zr-root .results{margin-top:60px;border-top:1px solid var(--line);padding-top:34px}
+#zr-root .results h2{font-size:clamp(22px,1.5vw,32px);font-weight:650;letter-spacing:-.01em;margin-bottom:6px}
+#zr-root .results .sub{color:var(--ink-2);margin-bottom:24px}
+#zr-root .x-card{border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-bottom:18px;background:var(--paper)}
+#zr-root .card-top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap}
+#zr-root .x-card h3{font-size:1.2rem;font-weight:640;letter-spacing:-.01em}
+#zr-root .verdict{display:inline-block;padding:5px 12px;border-radius:999px;font-size:.89rem;font-weight:620;color:var(--bg);white-space:nowrap}
+#zr-root .v-nutzen{background:var(--q1)}
+#zr-root .v-aufbauen{background:var(--q2)}
+#zr-root .v-uebertragen{background:var(--q3)}
+#zr-root .v-zurueck{background:var(--q4)}
+#zr-root .readout{display:flex;gap:22px;flex-wrap:wrap;margin:14px 0 4px;font-size:.89rem;color:var(--ink-2)}
+#zr-root .readout b{color:var(--ink);font-weight:620}
+#zr-root .why{margin-top:12px;color:var(--ink);max-width:70ch}
+#zr-root .close-call{margin-top:12px;background:var(--quiet);border-radius:8px;padding:12px 14px;font-size:.93rem}
+#zr-root .next{margin-top:16px}
+#zr-root .next b{display:block;font-size:.93rem;margin-bottom:6px}
+#zr-root .next li{list-style:none;position:relative;padding-left:18px;margin:5px 0;font-size:.96rem;color:var(--ink-2)}
+#zr-root .next li::before{content:"";position:absolute;left:0;top:.68em;width:8px;height:1px;background:var(--accent)}
+#zr-root .zugang{border-left:3px solid var(--accent);padding-left:14px}
+#zr-root .zugang p{font-size:.9rem;color:var(--ink-2);margin-bottom:4px;max-width:70ch}
+#zr-root .quernotes{border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:14px;padding:18px 22px;margin-bottom:22px;background:var(--quiet)}
+#zr-root .quernotes b{display:block;margin-bottom:6px}
+#zr-root .quernotes li{margin:6px 0 6px 18px;color:var(--ink-2);max-width:90ch}
+#zr-root .quernotes li b{display:inline;margin:0;color:var(--ink)}
+#zr-root .card-actions{display:flex;gap:8px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+#zr-root .card-actions button{padding:8px 14px;font-size:.89rem}
+#zr-root .x-empty{border:1px dashed var(--line);border-radius:14px;padding:34px;text-align:center;color:var(--ink-2)}
+#zr-root .bar{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px;padding-top:24px;border-top:1px solid var(--line)}
+#zr-root .jr-copy{
+  background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:7px 14px;
+  font-size:.88rem;color:var(--ink);cursor:pointer
+}
+#zr-root .jr-copy:hover{border-color:var(--ink-3)}
+#zr-root .quer{margin-top:34px;border:1px solid var(--line);border-radius:14px;padding:22px 24px;background:var(--quiet)}
+#zr-root .quer b{display:block;font-size:1.06rem;margin-bottom:8px}
+#zr-root .quer p{color:var(--ink-2);max-width:70ch;margin-bottom:14px}
+#zr-root .note{margin-top:26px;color:var(--ink-3);font-size:.89rem;max-width:78ch}
+#zr-root .jobroom{margin:0 0 14px 32px;border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:var(--quiet)}
+#zr-root .jr-links{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+#zr-root .jr-links a{
+  display:inline-block;background:var(--paper);border:1px solid var(--line);border-radius:999px;
+  padding:7px 14px;font-size:.88rem;color:var(--ink);text-decoration:none
+}
+#zr-root .jr-links a:hover{border-color:var(--ink-3)}
+#zr-root .jr-links a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#zr-root .jr-nums{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end}
+#zr-root .jr-nums>label{display:flex;flex-direction:column;gap:5px;font-size:.88rem;color:var(--ink-2);font-weight:600}
+#zr-root .jr-nums input[type=number]{
+  width:9rem;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font:inherit;
+  font-size:1rem;color:var(--ink);background:var(--paper)
+}
+#zr-root .jr-nums input[type=number]:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--ink)}
+#zr-root .jr-check{flex-direction:row!important;align-items:center;gap:8px!important;font-weight:500!important;padding-bottom:10px}
+#zr-root .jr-check input{width:18px;height:18px;accent-color:var(--ink)}
+#zr-root .jr-nums select{
+  padding:9px 12px;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:1rem;
+  color:var(--ink);background:var(--paper);min-width:13rem
+}
+#zr-root .jr-nums select:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--ink)}
+#zr-root .jr-gap{margin:0 0 14px;font-size:.92rem;color:var(--ink-2)}
+#zr-root .jr-gap b{color:var(--ink)}
+#zr-root .jr-out{margin-top:13px;font-size:.92rem;color:var(--ink-2)}
+#zr-root .jr-out b{color:var(--ink)}
+#zr-root .jr-manual{margin:0 0 8px 32px;font-size:.85rem;color:var(--ink-3)}
+#zr-root .disclaimer{margin-top:18px;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:14px 18px;background:var(--quiet);max-width:90ch;font-size:.93rem}
+#zr-root .disclaimer ul{margin:6px 0 4px 18px;color:var(--ink-2)}
+#zr-root .disclaimer li{margin:3px 0}
+#zr-root .disclaimer summary{cursor:pointer;font-weight:600;margin-top:6px}
+#zr-root .disclaimer details p{color:var(--ink-2);margin-top:6px}
+#zr-root .mot-q{margin:14px 0 8px 32px;font-weight:600;font-size:.98rem}
+#zr-root .mot-info{margin-top:14px}
+#zr-root .opt{font-size:.8rem;font-weight:500;color:var(--ink-3)}
+#zr-root .swot-in{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-left:32px}
+@media(max-width:700px){#zr-root .swot-in{grid-template-columns:1fr;margin-left:0}}
+#zr-root .swot-in label{display:flex;flex-direction:column;gap:5px;font-size:.88rem;color:var(--ink-2)}
+#zr-root .swot-in label span{font-weight:650;font-size:.82rem;text-transform:uppercase;letter-spacing:.04em}
+#zr-root .sw-s{color:var(--q1)}
+#zr-root .sw-w{color:var(--q4)}
+#zr-root .sw-o{color:var(--q2)}
+#zr-root .sw-t{color:var(--q3)}
+#zr-root .swot{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-top:16px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--line)}
+#zr-root .swot div{background:var(--paper);padding:10px 12px;font-size:.92rem}
+#zr-root .swot div span{display:block;font-weight:650;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em}
+#zr-root .fit{margin-top:12px;font-size:.93rem;border-radius:8px;padding:10px 14px}
+#zr-root .fit.aus{background:color-mix(in srgb,var(--q4) 10%,var(--qbase));color:var(--ink)}
+#zr-root .fit.warn{background:var(--quiet);color:var(--ink)}
+#zr-root .v-aus{background:var(--ink-3)}
+#zr-root .pt.aus .x-dot{background:var(--paper);color:var(--ink-3);box-shadow:0 0 0 2px var(--ink-3)}
+#zr-root .nach{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line)}
+#zr-root .nach>b{display:block;font-size:.93rem}
+#zr-root .nach>p{font-size:.88rem;color:var(--ink-2);margin:2px 0 8px}
+#zr-root .nach .jr-nums input[type=number]{width:7rem}
+#zr-root .nach-out{margin-top:8px;font-size:.92rem;color:var(--ink-2)}
+#zr-root .nach-out b{color:var(--ink)}
+#fr-root *{box-sizing:border-box;margin:0;padding:0}
+#fr-root .wrap{max-width:min(1560px,94vw);margin:0 auto;padding:clamp(24px,2.4vw,44px) 0 80px}
+#fr-root header.x-top{border-bottom:1px solid var(--line);padding-bottom:22px;margin-bottom:34px}
+#fr-root h1{font-size:clamp(30px,2.5vw,46px);font-weight:650;letter-spacing:-.015em;line-height:1.15}
+#fr-root .lede{color:var(--ink-2);max-width:60ch;margin-top:10px}
+#fr-root .cols{display:grid;grid-template-columns:minmax(0,1fr) clamp(360px,30vw,620px);gap:clamp(36px,4vw,76px);align-items:start}
+@media(max-width:1000px){#fr-root .cols{grid-template-columns:1fr;gap:36px}}
+#fr-root .step{border-top:1px solid var(--line);padding:24px 0 6px}
+#fr-root .step:first-of-type{border-top:none;padding-top:6px}
+#fr-root .step-head{display:flex;gap:14px;align-items:baseline}
+#fr-root .step-num{font-size:.92rem;font-weight:650;color:var(--accent);min-width:18px}
+#fr-root .step h3{font-size:1.14rem;font-weight:620;letter-spacing:-.005em}
+#fr-root .hints{margin:10px 0 16px 32px;color:var(--ink-2);font-size:.93rem}
+#fr-root .hints li{margin:4px 0;list-style:none;position:relative;padding-left:16px}
+#fr-root .hints li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:1px;background:var(--ink-3)}
+#fr-root .choices{display:flex;gap:10px;margin-left:32px;flex-wrap:wrap}
+#fr-root .choice{flex:1 1 130px}
+#fr-root .choice input{position:absolute;opacity:0;width:1px;height:1px;margin:0;pointer-events:none}
+#fr-root .choice span{
+  display:block;text-align:center;padding:11px 10px;border:1px solid var(--line);
+  border-radius:var(--r);cursor:pointer;font-size:.96rem;background:var(--paper);
+  transition:border-color .12s,background .12s;
+}
+#fr-root .choice span small{display:block;color:var(--ink-3);font-size:.81rem;margin-top:2px}
+#fr-root .choice input:hover+span{border-color:var(--ink-3)}
+#fr-root .choice input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+#fr-root .choice input:checked+span{border-color:var(--ink);background:var(--quiet);font-weight:600}
+#fr-root .choice input:checked+span small{color:var(--ink-2)}
+#fr-root label.x-field{display:block;font-size:1.14rem;font-weight:620;margin-bottom:8px}
+#fr-root input[type=text]{
+  width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:var(--r);
+  font:inherit;font-size:1rem;color:var(--ink);background:var(--paper);
+}
+#fr-root input[type=text]:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--ink)}
+#fr-root .field-hint{color:var(--ink-2);font-size:.93rem;margin-top:8px}
+#fr-root .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px;padding-top:24px;border-top:1px solid var(--line)}
+#fr-root button{font:inherit;cursor:pointer;border-radius:var(--r);border:1px solid transparent;padding:12px 20px;font-size:.98rem}
+#fr-root .btn-main{background:var(--ink);color:var(--bg);font-weight:600}
+#fr-root .btn-main:hover{background:#000}
+#fr-root .x-btn-ghost{background:var(--paper);border-color:var(--line);color:var(--ink)}
+#fr-root .x-btn-ghost:hover{border-color:var(--ink-3)}
+#fr-root button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#fr-root .panel{position:sticky;top:24px}
+#fr-root .panel h2{font-size:.93rem;font-weight:650;color:var(--ink-2);margin-bottom:14px}
+#fr-root .matrix-shell{display:grid;grid-template-columns:1.6rem 1fr;grid-template-rows:1fr 1.6rem;gap:8px}
+#fr-root .y-axis{grid-column:1;grid-row:1;position:relative}
+#fr-root .y-axis span{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-90deg);
+  white-space:nowrap;font-size:.84rem;color:var(--ink-2);font-weight:600
+}
+#fr-root .x-axis{grid-column:2;grid-row:2;text-align:center;font-size:.84rem;color:var(--ink-2);font-weight:600}
+#fr-root .matrix{
+  grid-column:2;grid-row:1;position:relative;aspect-ratio:1/1;width:100%;
+  border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--paper)
+}
+#fr-root .quad{position:absolute;width:50%;height:50%;padding:12px;display:flex;flex-direction:column;justify-content:flex-start}
+#fr-root .quad.bottom{justify-content:flex-end}
+#fr-root .quad b{display:block;font-size:.9rem;font-weight:650;letter-spacing:-.005em}
+#fr-root .quad em{display:block;font-style:normal;font-size:.78rem;color:var(--ink-2);margin-top:2px;line-height:1.35}
+#fr-root .q-nutzen{left:50%;top:0;background:color-mix(in srgb,var(--q1) 9%,var(--qbase))}
+#fr-root .q-nutzen b{color:var(--q1)}
+#fr-root .q-aufbauen{left:0;top:0;background:color-mix(in srgb,var(--q2) 9%,var(--qbase))}
+#fr-root .q-aufbauen b{color:var(--q2)}
+#fr-root .q-uebertragen{left:50%;top:50%;background:color-mix(in srgb,var(--q3) 9%,var(--qbase))}
+#fr-root .q-uebertragen b{color:var(--q3)}
+#fr-root .q-zurueck{left:0;top:50%;background:color-mix(in srgb,var(--q4) 9%,var(--qbase))}
+#fr-root .q-zurueck b{color:var(--q4)}
+#fr-root .cross{position:absolute;background:var(--line)}
+#fr-root .cross.h{left:0;right:0;top:50%;height:1px}
+#fr-root .cross.v{top:0;bottom:0;left:50%;width:1px}
+#fr-root .pt{position:absolute;transform:translate(-50%,-50%);z-index:5}
+#fr-root .pt .x-dot{width:1.45rem;height:1.45rem;border-radius:50%;background:var(--ink);color:var(--bg);font-size:.74rem;font-weight:650;
+  display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.25)}
+#fr-root .legend{list-style:none;margin-top:14px;font-size:.88rem}
+#fr-root .legend li{display:flex;align-items:center;gap:8px;margin:5px 0}
+#fr-root .legend .ln,
+#fr-root .x-card h3 .ln{flex:none;width:1.35rem;height:1.35rem;border-radius:50%;background:var(--ink);color:var(--bg);font-size:.72rem;font-weight:650;display:flex;align-items:center;justify-content:center}
+#fr-root .x-card h3 .ln{vertical-align:.15em;margin-right:10px;display:inline-flex}
+#fr-root .legend .lv{margin-left:auto;color:var(--bg);border-radius:999px;padding:1px 9px;font-size:.76rem;white-space:nowrap}
+#fr-root .pt.new .x-dot{animation:pop .35s ease-out}
+@keyframes pop{from{transform:scale(.4)}to{transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){#fr-root .pt.new .x-dot{animation:none}}
+#fr-root .axis-ends{display:flex;justify-content:space-between;font-size:.79rem;color:var(--ink-3);margin-top:4px}
+#fr-root .matrix-empty{color:var(--ink-3);font-size:.9rem;margin-top:14px}
+#fr-root .results{margin-top:60px;border-top:1px solid var(--line);padding-top:34px}
+#fr-root .results h2{font-size:clamp(22px,1.5vw,32px);font-weight:650;letter-spacing:-.01em;margin-bottom:6px}
+#fr-root .results .sub{color:var(--ink-2);margin-bottom:24px}
+#fr-root .x-card{border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-bottom:18px;background:var(--paper)}
+#fr-root .card-top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap}
+#fr-root .x-card h3{font-size:1.2rem;font-weight:640;letter-spacing:-.01em}
+#fr-root .verdict{display:inline-block;padding:5px 12px;border-radius:999px;font-size:.89rem;font-weight:620;color:var(--bg);white-space:nowrap}
+#fr-root .v-nutzen{background:var(--q1)}
+#fr-root .v-aufbauen{background:var(--q2)}
+#fr-root .v-uebertragen{background:var(--q3)}
+#fr-root .v-zurueck{background:var(--q4)}
+#fr-root .readout{display:flex;gap:22px;flex-wrap:wrap;margin:14px 0 4px;font-size:.89rem;color:var(--ink-2)}
+#fr-root .readout b{color:var(--ink);font-weight:620}
+#fr-root .why{margin-top:12px;color:var(--ink);max-width:70ch}
+#fr-root .close-call{margin-top:12px;background:var(--quiet);border-radius:8px;padding:12px 14px;font-size:.93rem}
+#fr-root .next{margin-top:16px}
+#fr-root .next b{display:block;font-size:.93rem;margin-bottom:6px}
+#fr-root .next li{list-style:none;position:relative;padding-left:18px;margin:5px 0;font-size:.96rem;color:var(--ink-2)}
+#fr-root .next li::before{content:"";position:absolute;left:0;top:.68em;width:8px;height:1px;background:var(--accent)}
+#fr-root .zugang{border-left:3px solid var(--accent);padding-left:14px}
+#fr-root .zugang p{font-size:.9rem;color:var(--ink-2);margin-bottom:4px;max-width:70ch}
+#fr-root .quernotes{border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:14px;padding:18px 22px;margin-bottom:22px;background:var(--quiet)}
+#fr-root .quernotes b{display:block;margin-bottom:6px}
+#fr-root .quernotes li{margin:6px 0 6px 18px;color:var(--ink-2);max-width:90ch}
+#fr-root .quernotes li b{display:inline;margin:0;color:var(--ink)}
+#fr-root .card-actions{display:flex;gap:8px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+#fr-root .card-actions button{padding:8px 14px;font-size:.89rem}
+#fr-root .x-empty{border:1px dashed var(--line);border-radius:14px;padding:34px;text-align:center;color:var(--ink-2)}
+#fr-root .bar{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px;padding-top:24px;border-top:1px solid var(--line)}
+#fr-root .jr-copy{
+  background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:7px 14px;
+  font-size:.88rem;color:var(--ink);cursor:pointer
+}
+#fr-root .jr-copy:hover{border-color:var(--ink-3)}
+#fr-root .quer{margin-top:34px;border:1px solid var(--line);border-radius:14px;padding:22px 24px;background:var(--quiet)}
+#fr-root .quer b{display:block;font-size:1.06rem;margin-bottom:8px}
+#fr-root .quer p{color:var(--ink-2);max-width:70ch;margin-bottom:14px}
+#fr-root .note{margin-top:26px;color:var(--ink-3);font-size:.89rem;max-width:78ch}
+#fr-root .top-row{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+#fr-root kbd{font:inherit;font-size:.85em;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;background:var(--quiet)}
+#fr-root .jobroom{margin:0 0 14px 32px;border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:var(--quiet)}
+#fr-root .jr-links{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+#fr-root .jr-links a{
+  display:inline-block;background:var(--paper);border:1px solid var(--line);border-radius:999px;
+  padding:7px 14px;font-size:.88rem;color:var(--ink);text-decoration:none
+}
+#fr-root .jr-links a:hover{border-color:var(--ink-3)}
+#fr-root .jr-links a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#fr-root .jr-nums{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end}
+#fr-root .jr-nums>label{display:flex;flex-direction:column;gap:5px;font-size:.88rem;color:var(--ink-2);font-weight:600}
+#fr-root .jr-nums input[type=number]{
+  width:9rem;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font:inherit;
+  font-size:1rem;color:var(--ink);background:var(--paper)
+}
+#fr-root .jr-nums input[type=number]:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--ink)}
+#fr-root .jr-check{flex-direction:row!important;align-items:center;gap:8px!important;font-weight:500!important;padding-bottom:10px}
+#fr-root .jr-check input{width:18px;height:18px;accent-color:var(--ink)}
+#fr-root .jr-nums select{
+  padding:9px 12px;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:1rem;
+  color:var(--ink);background:var(--paper);min-width:13rem
+}
+#fr-root .jr-nums select:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--ink)}
+#fr-root .jr-gap{margin:0 0 14px;font-size:.92rem;color:var(--ink-2)}
+#fr-root .jr-gap b{color:var(--ink)}
+#fr-root .jr-out{margin-top:13px;font-size:.92rem;color:var(--ink-2)}
+#fr-root .jr-out b{color:var(--ink)}
+#fr-root .jr-manual{margin:0 0 8px 32px;font-size:.85rem;color:var(--ink-3)}
+#fr-root .disclaimer{margin-top:18px;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:14px 18px;background:var(--quiet);max-width:90ch;font-size:.93rem}
+#fr-root .disclaimer ul{margin:6px 0 4px 18px;color:var(--ink-2)}
+#fr-root .disclaimer li{margin:3px 0}
+#fr-root .disclaimer summary{cursor:pointer;font-weight:600;margin-top:6px}
+#fr-root .disclaimer details p{color:var(--ink-2);margin-top:6px}
+#fr-root .opt{font-size:.8rem;font-weight:500;color:var(--ink-3)}
+#fr-root .swot-in{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-left:32px}
+@media(max-width:700px){#fr-root .swot-in{grid-template-columns:1fr;margin-left:0}}
+#fr-root .swot-in label{display:flex;flex-direction:column;gap:5px;font-size:.88rem;color:var(--ink-2)}
+#fr-root .swot-in label span{font-weight:650;font-size:.82rem;text-transform:uppercase;letter-spacing:.04em}
+#fr-root .sw-s{color:var(--q1)}
+#fr-root .sw-w{color:var(--q4)}
+#fr-root .sw-o{color:var(--q2)}
+#fr-root .sw-t{color:var(--q3)}
+#fr-root .swot{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-top:16px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--line)}
+#fr-root .swot div{background:var(--paper);padding:10px 12px;font-size:.92rem}
+#fr-root .swot div span{display:block;font-weight:650;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em}
+#fr-root .nach{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line)}
+#fr-root .nach>b{display:block;font-size:.93rem}
+#fr-root .nach>p{font-size:.88rem;color:var(--ink-2);margin:2px 0 8px}
+#fr-root .nach .jr-nums input[type=number]{width:7rem}
+#fr-root .nach-out{margin-top:8px;font-size:.92rem;color:var(--ink-2)}
+#fr-root .nach-out b{color:var(--ink)}
+#fr-root .tabs{display:flex;gap:4px;margin-top:20px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+#fr-root .x-tab{background:none;border:1px solid transparent;border-bottom:none;border-radius:10px 10px 0 0;padding:10px 16px;color:var(--ink-2);font-weight:600;margin-bottom:-1px}
+#fr-root .x-tab span{display:inline-flex;width:1.4rem;height:1.4rem;border-radius:50%;background:var(--quiet);color:var(--ink-2);font-size:.78rem;align-items:center;justify-content:center;margin-right:8px}
+#fr-root .x-tab[aria-selected="true"]{background:var(--paper);border-color:var(--line);color:var(--ink)}
+#fr-root .x-tab[aria-selected="true"] span{background:var(--accent);color:var(--bg)}
+#fr-root .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+#fr-root .toolbar button{padding:8px 14px;font-size:.88rem}
+#fr-root header.x-top{margin-bottom:22px}
+#fr-root .tabtitle{font-size:clamp(22px,1.5vw,30px);font-weight:650;letter-spacing:-.01em;margin-bottom:4px}
+#fr-root .tabpanel[hidden]{display:none}
+#fr-root .tabpanel>.lede{margin-bottom:18px}
+#fr-root .gitter{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+#fr-root .gitter3{display:grid;grid-template-columns:7rem 1fr 1fr;gap:12px}
+@media(max-width:700px){#fr-root .gitter,
+#fr-root .gitter3{grid-template-columns:1fr}}
+#fr-root .step .gitter,
+#fr-root .step .gitter3,
+#fr-root .step>.x-chips,
+#fr-root .step>textarea,
+#fr-root .step>.mini,
+#fr-root .step>.mini-h,
+#fr-root .step>.tipp,
+#fr-root .step>.ki,
+#fr-root .step>.hinweis-box{margin-left:32px}
+@media(max-width:700px){#fr-root .step .gitter,
+#fr-root .step .gitter3,
+#fr-root .step>.x-chips,
+#fr-root .step>textarea,
+#fr-root .step>.mini,
+#fr-root .step>.mini-h,
+#fr-root .step>.tipp,
+#fr-root .step>.ki,
+#fr-root .step>.hinweis-box{margin-left:0}}
+#fr-root label.mini{display:flex;flex-direction:column;gap:5px;font-size:.88rem;color:var(--ink-2);font-weight:600;margin-top:10px}
+#fr-root label.lbl-strong{font-size:1rem;color:var(--ink)}
+#fr-root .tabpanel select,
+#fr-root .tabpanel textarea,
+#fr-root .tabpanel input[type=date]{padding:9px 12px;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:.98rem;color:var(--ink);background:var(--paper);font-weight:400}
+#fr-root .tabpanel textarea{resize:vertical;width:100%;line-height:1.45}
+#fr-root .tabpanel select:focus,
+#fr-root .tabpanel textarea:focus,
+#fr-root .tabpanel input[type=date]:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--ink)}
+#fr-root .wide{width:100%}
+#fr-root .step>textarea.wide,
+#fr-root .step>label.mini{width:calc(100% - 32px)}
+@media(max-width:700px){#fr-root .step>textarea.wide,
+#fr-root .step>label.mini{width:100%}}
+#fr-root .tabpanel input[type=text]{font-weight:400}
+#fr-root #bCheck{margin-left:32px}
+@media(max-width:700px){#fr-root #bCheck{margin-left:0}}
+#fr-root .wide-sel{min-width:min(100%,28rem)}
+#fr-root .x-chips{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}
+#fr-root .x-chips button{font-size:.85rem;padding:6px 12px;border-radius:999px;background:var(--paper);border:1px solid var(--line);color:var(--ink-2)}
+#fr-root .x-chips button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+#fr-root .tipp{font-size:.86rem;color:var(--ink-3);margin-top:6px}
+#fr-root .mini-h{font-weight:600;font-size:.92rem;margin-top:16px;margin-bottom:6px}
+#fr-root .btn-sm{padding:4px 10px;font-size:.82rem;margin-left:6px}
+#fr-root .af-row{display:grid;grid-template-columns:2.2rem 1fr;gap:6px;margin:10px 0 0 32px}
+@media(max-width:700px){#fr-root .af-row{margin-left:0}}
+#fr-root .af-main b{display:block;font-size:.9rem;margin-bottom:4px}
+#fr-root .af-main textarea{width:100%}
+#fr-root .af-q{margin-top:4px;padding:6px 10px!important;font-size:.85rem!important;color:var(--ink-2)}
+#fr-root .af-star{width:2rem;height:2rem;padding:0;margin-top:1.3rem;border-radius:50%;border:1px solid var(--line);background:var(--paper);color:var(--line);font-size:1.15rem;line-height:1}
+#fr-root .af-star:hover{border-color:var(--accent);color:var(--accent)}
+#fr-root .af-star[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+#fr-root .aufh-box{margin:4px 0 8px 32px;font-size:.92rem}
+#fr-root .aufh-box .aufh-item{display:flex;gap:10px;align-items:flex-start;margin:6px 0}
+#fr-root .aufh-box .af-star{margin-top:0;flex:none;width:1.8rem;height:1.8rem;font-size:1rem}
+#fr-root .aufh-box small{color:var(--ink-3)}
+@media(max-width:700px){#fr-root .aufh-box{margin-left:0}}
+#fr-root .anleitung{border:1px solid var(--line);border-radius:12px;padding:12px 18px;margin-bottom:24px;background:var(--quiet)}
+#fr-root .anleitung summary{cursor:pointer;font-weight:600}
+#fr-root .anleitung ol{margin:10px 0 4px 20px;color:var(--ink-2)}
+#fr-root .anleitung li{margin:8px 0}
+#fr-root .anleitung .jr-links{margin:6px 0 0}
+#fr-root .anleitung p{color:var(--ink-2);margin-top:8px}
+#fr-root .ziel{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin-bottom:18px}
+#fr-root .zbox{border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+#fr-root .zbox b{display:block}
+#fr-root .zbox .dots{margin:6px 0 2px;letter-spacing:3px;color:var(--accent);font-size:1.05rem}
+#fr-root .zbox small{color:var(--ink-2)}
+#fr-root .zbox.ok{border-color:var(--q1);background:color-mix(in srgb,var(--q1) 6%,var(--qbase))}
+#fr-root .pipe-row{display:grid;grid-template-columns:10.5rem 1fr 2rem;gap:8px;align-items:center;margin:7px 0;font-size:.9rem}
+#fr-root .pipe-bar{height:10px;background:var(--quiet);border-radius:5px;overflow:hidden}
+#fr-root .pipe-bar i{display:block;height:100%;background:var(--accent)}
+#fr-root .pipe-note{font-size:.86rem;color:var(--ink-2);margin-top:14px}
+#fr-root .fgroup{margin:22px 0 8px;font-size:1.02rem}
+#fr-root .fcard .x-meta{color:var(--ink-2);font-size:.9rem}
+#fr-root .badge{display:inline-block;padding:4px 11px;border-radius:999px;font-size:.84rem;font-weight:600;white-space:nowrap}
+#fr-root .badge.reif{background:var(--q1);color:var(--bg)}
+#fr-root .badge.offen{background:var(--quiet);color:var(--ink-2);border:1px solid var(--line)}
+#fr-root .stufen{display:flex;flex-wrap:wrap;gap:4px;margin:14px 0 6px;list-style:none}
+#fr-root .stufen button{font-size:.8rem;padding:6px 10px;border-radius:8px;background:var(--paper);border:1px solid var(--line);color:var(--ink-3)}
+#fr-root .stufen button.x-done{background:color-mix(in srgb,var(--accent) 14%,var(--qbase));border-color:var(--accent);color:var(--ink)}
+#fr-root .stufen button.cur{background:var(--accent);border-color:var(--accent);color:var(--bg);font-weight:600}
+#fr-root .stufen button:disabled{cursor:default}
+#fr-root .stufen button:disabled:not(.cur):not(.x-done){opacity:.55}
+#fr-root .fdet{display:grid;grid-template-columns:1fr 1fr;gap:6px 22px;margin-top:10px;font-size:.92rem}
+@media(max-width:700px){#fr-root .fdet{grid-template-columns:1fr}}
+#fr-root .fdet b{display:block;font-size:.8rem;color:var(--ink-3);font-weight:600;text-transform:uppercase;letter-spacing:.03em}
+#fr-root .fnext{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px;font-size:.9rem}
+#fr-root .fnext input[type=text]{flex:1 1 14rem;padding:7px 10px;font-size:.92rem}
+#fr-root .fnext.overdue input{border-color:var(--q4)}
+#fr-root .fnext .late{color:var(--q4);font-weight:600}
+#fr-root .firm-link{margin-top:10px;font-size:.92rem;color:var(--ink-2)}
+#fr-root .callout{background:var(--quiet);border-left:3px solid var(--accent);padding:12px 16px;font-style:italic;margin:4px 0 22px;max-width:80ch}
+#fr-root .bsum{border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:16px 0 4px;font-size:.93rem}
+#fr-root .bsum .warn{color:var(--q4);font-weight:600;margin-top:6px}
+#fr-root .vorlage{border:1px dashed var(--line);border-radius:10px;padding:10px 14px;margin-bottom:8px;font-size:.93rem}
+#fr-root .vorlage b{display:block;font-size:.82rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.03em}
+#fr-root .vorlage p{margin:4px 0 6px}
+#fr-root .ki{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:10px 0 6px;font-size:.88rem;color:var(--ink-2)}
+#fr-root .ki span{flex:1 1 20rem}
+#fr-root .hinweis-box{background:var(--quiet);border-radius:8px;padding:10px 14px;font-size:.88rem;color:var(--ink-2);margin:8px 0 4px}
+#fr-root .check-ok{color:var(--q1);font-weight:600}
+#fr-root .x-check li{margin:6px 0 6px 18px;color:var(--ink-2)}
+#fr-root .x-check li b{color:var(--q4)}
+#fr-root .brief{background:var(--quiet);border:1px solid var(--line);border-radius:10px;padding:18px 22px;white-space:pre-wrap;line-height:1.65;max-width:80ch}
+#fr-root .brief .fehlt{color:var(--q4);font-style:italic}
+#fr-root .quelle{margin-top:20px;font-size:.8rem;color:var(--ink-3)}
+#fr-root .frage-wahl{display:flex;flex-direction:column;gap:6px;margin:4px 0 8px 32px}
+#fr-root .frage-wahl label{display:flex;gap:10px;align-items:flex-start;font-size:.95rem;cursor:pointer}
+#fr-root .frage-wahl input{margin-top:.3em;accent-color:var(--ink)}
+#fr-root .frage-wahl small{display:block;color:var(--ink-3)}
+#fr-root .step>.warnhint,
+#fr-root .step>#bKw,
+#fr-root .step>#bWir,
+#fr-root .step>#bTeilzeit,
+#fr-root .step>#bAnruf{margin-left:32px}
+@media(max-width:700px){#fr-root .step>.warnhint,
+#fr-root .step>#bKw,
+#fr-root .step>#bWir,
+#fr-root .step>#bTeilzeit,
+#fr-root .step>#bAnruf,
+#fr-root .frage-wahl{margin-left:0!important}}
+#fr-root .warnhint{color:var(--q4)}
+#fr-root .kw-row{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-top:10px}
+#fr-root .kw-row.aus{background:var(--quiet)}
+#fr-root .kw-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
+#fr-root .kw-head b{font-size:1rem}
+#fr-root .kw-head label{font-size:.85rem;color:var(--ink-2);display:flex;gap:6px;align-items:center;cursor:pointer}
+#fr-root .kw-grid{display:grid;grid-template-columns:12rem 1fr;gap:8px 12px;margin-top:8px}
+@media(max-width:700px){#fr-root .kw-grid{grid-template-columns:1fr}}
+#fr-root .kw-grid label{display:flex;flex-direction:column;gap:4px;font-size:.84rem;color:var(--ink-2);font-weight:600}
+#fr-root .kw-grid .voll{grid-column:1/-1}
+#fr-root .kw-prev{margin-top:8px;font-size:.92rem;padding:8px 10px;border-radius:8px;background:color-mix(in srgb,var(--q1) 7%,var(--qbase))}
+#fr-root .kw-prev.leer{background:var(--quiet);color:var(--ink-3)}
+#fr-root .wir-row{display:grid;grid-template-columns:minmax(14rem,auto) 1fr;gap:8px;align-items:center;margin:8px 0}
+@media(max-width:700px){#fr-root .wir-row{grid-template-columns:1fr}}
+#fr-root .manuell{background:color-mix(in srgb,var(--accent) 12%,var(--qbase));border-radius:8px;padding:10px 14px;font-size:.9rem;margin:8px 0 8px 32px}
+#fr-root .brief-edit{width:calc(100% - 32px)!important;margin-left:32px;line-height:1.65!important;font-size:1rem!important;background:var(--quiet)!important;max-width:80ch}
+@media(max-width:700px){#fr-root .brief-edit{width:100%!important;margin-left:0}
+#fr-root .manuell{margin-left:0}}
+#fr-root .x-check li.ok{color:var(--q1)}
+#fr-root .x-check li.ok b{color:var(--q1)}
+#fr-root .ki-text{flex-basis:100%;font-size:.9rem!important;line-height:1.5!important}
+#zr-root .wrap,#fr-root .wrap{max-width:none;margin:0;padding:0}
+#zr-root .cols,#fr-root .cols{grid-template-columns:minmax(0,1fr)!important;gap:28px}
+#zr-root .panel,#fr-root .panel{position:static}
+#zr-root .btn-main,#fr-root .btn-main{background:var(--accent);color:var(--accent-ink)}
+#zr-root input,#zr-root select,#zr-root textarea,#fr-root input,#fr-root select,#fr-root textarea{font-size:16px;color:var(--fg)}
+#zr-root a,#fr-root a{color:var(--accent)}
+.ext-card{padding:18px}
+#zr-root .card-actions,#fr-root .card-actions{flex-wrap:wrap}
+
 </style>
 </head>
 <body>
@@ -286,7 +808,7 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4}
       <div class="seg glass" role="tablist" aria-label="Bereich">
         <button role="tab" data-sub="tracker" aria-selected="true">Bewerbungen</button>
         <button role="tab" data-sub="plan" aria-selected="false">Aktionsplan</button>
-        <button role="tab" data-sub="strategie" aria-selected="false">Strategie</button>
+        <button role="tab" data-sub="strategie" aria-selected="false">Zielrichtungen</button>
       </div>
 
       <!-- Tracker -->
@@ -325,11 +847,254 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4}
       </div>
 
       <!-- Strategie -->
-      <div class="card glass" data-panel="strategie" hidden>
-        <div class="card-head"><h2>Zielberufe</h2></div>
-        <div class="chips" id="ziele"></div>
-        <form class="inline-add" id="ziel-form"><input class="input" id="ziel-text" placeholder="Beruf oder Funktion hinzufügen" aria-label="Zielberuf"><button class="icon-btn btn-primary" aria-label="Zielberuf hinzufügen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></form>
+<div class="card glass ext-card" data-panel="strategie" hidden><div id="zr-root">
+<div class="wrap">
+<header class="x-top">
+  <p class="lede">Sie können sich in mehrere Richtungen bewerben. Dieses Werkzeug hilft Ihnen einzuschätzen, welche sich lohnt, wo Sie zuerst etwas aufbauen müssen und welche Sie besser zurückstellen. Bewerten Sie jede Richtung einzeln und vergleichen Sie danach.</p>
+  <div class="disclaimer">
+    <b>Bitte zuerst lesen: Das Werkzeug ordnet ein, es entscheidet nicht.</b>
+    <ul>
+      <li>Die Einstufung beruht auf einfachen Punkten, 0 bis 2 je Frage. Die Grenzen haben wir festgelegt. Sie sind nicht wissenschaftlich geprüft.</li>
+      <li>Die Marktzahlen sind unvollständig. Der Job-Room zeigt nur einen Teil der Stellen und nur die beim RAV gemeldeten Personen. jobs.ch zählt nach Stichworten.</li>
+      <li>Das Ergebnis ist nur so gut wie Ihre Eingaben.</li>
+      <li>Was Ihnen wichtig ist, etwa Gesundheit, Familie oder Lohn, steckt nicht in der Punktzahl. Dafür gibt es die Fragen zur Passung, die Kurz-SWOT und das Einzelgespräch.</li>
+      <li>Ob eine Einstufung stimmt, zeigt erst die Praxis. Tragen Sie deshalb später unter «Nachfassen» ein, was Ihre Bewerbungen gebracht haben.</li>
+    </ul>
+    <details><summary>So wird gerechnet</summary>
+      <p>Hochachse: Markt plus Verankerung, je 0 bis 2 Punkte. Querachse: Können plus Aufwand, je 0 bis 2 Punkte. Pro Achse gelten 0 bis 1 Punkte als tief, 2 als Mitte, 3 bis 4 als hoch. Aus den beiden Achsen ergibt sich der Quadrant. Liegt eine Achse in der Mitte, steht «Knapper Fall».</p>
+      <p>Markt: Kandidaten geteilt durch Stellen im Job-Room. Unter 0,7 gilt als «viele Stellen», bis 2,5 als «ausgeglichen», darüber als «wenige Stellen». Unter 3 Stellen gilt der Markt als eng, ausser jobs.ch zeigt 10 oder mehr Inserate. Fehlende Nachweise (Abschluss, Ausweis, Sprache) setzen «Können» auf «wenig», egal wie viel Sie sonst belegen.</p>
+      <p>Die Fragen zur Passung zählen nicht als Punkte. Ein klares Nein bei Rahmenbedingungen oder Gesundheit stellt die Richtung aber auf «Passt nicht», unabhängig von der Matrix.</p>
+    </details>
+  </div>
+</header>
+
+<div class="cols">
+<div>
+<form id="zr-form" novalidate>
+  <div class="step">
+    <label class="x-field" for="zr-name">Welche Zielrichtung bewerten Sie?</label>
+    <input type="text" id="zr-name" placeholder="zum Beispiel Mitarbeiter/in Produktion" autocomplete="off">
+    <p class="field-hint">Schreiben Sie die Bezeichnung so, wie sie in Inseraten steht.</p>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-num">0</span><h3>Vorweg: Passt diese Richtung zu Ihnen?</h3></div>
+    <ul class="hints">
+      <li>Diese Fragen zählen nicht als Punkte. Ein klares Nein bei Rahmen oder Gesundheit schliesst die Richtung aber aus.</li>
+    </ul>
+    <p class="mot-q">Würden Sie diese Arbeit zwei Jahre lang gerne machen?</p>
+    <div class="choices" data-group="mInt"><label class="choice"><input type="radio" name="mInt" value="2"><span>Ja, gerne</span></label><label class="choice"><input type="radio" name="mInt" value="1"><span>Es geht<small>als Zwischenlösung</small></span></label><label class="choice"><input type="radio" name="mInt" value="0"><span>Eher nicht</span></label></div>
+    <p class="mot-q">Passen Arbeitszeiten, Pensum und üblicher Lohn zu Ihrer Situation?</p>
+    <div class="choices" data-group="mRahmen"><label class="choice"><input type="radio" name="mRahmen" value="2"><span>Ja</span></label><label class="choice"><input type="radio" name="mRahmen" value="1"><span>Teilweise<small>mit Abstrichen</small></span></label><label class="choice"><input type="radio" name="mRahmen" value="0"><span>Nein<small>schliesst es aus</small></span></label></div>
+    <p class="mot-q">Ist die Tätigkeit für Sie gesundheitlich machbar?</p>
+    <div class="choices" data-group="mGes"><label class="choice"><input type="radio" name="mGes" value="2"><span>Ja</span></label><label class="choice"><input type="radio" name="mGes" value="1"><span>Mit Einschränkungen</span></label><label class="choice"><input type="radio" name="mGes" value="0"><span>Nein<small>schliesst es aus</small></span></label></div>
+    <p class="mot-q">Wissen Sie, wie der Arbeitsalltag konkret aussieht?</p>
+    <div class="choices" data-group="mWissen"><label class="choice"><input type="radio" name="mWissen" value="2"><span>Ja, gut<small>erlebt oder erkundet</small></span></label><label class="choice"><input type="radio" name="mWissen" value="1"><span>Ungefähr<small>vom Hörensagen</small></span></label><label class="choice"><input type="radio" name="mWissen" value="0"><span>Kaum</span></label></div>
+    <div class="jobroom mot-info" id="zr-motInfo" hidden>
+      <p class="jr-gap" id="zr-motInfoText"></p>
+      <div class="jr-links" style="margin-bottom:0">
+        <a href="https://www.berufsberatung.ch/de/suche" target="_blank" rel="noopener" id="zr-lnkBBMot">Berufsbild auf berufsberatung.ch nachlesen</a>
       </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-num">1</span><h3>Wie sieht der Markt in dieser Richtung aus?</h3></div>
+    <ul class="hints">
+      <li>Suchen Sie im Job-Room Ihre Stellenbezeichnung an Ihrem Wohnort und notieren Sie beide Zahlen.</li>
+      <li><b>Suchradius bei beiden Suchen auf 10 km stellen.</b> Bei der Kandidatensuche steht er von sich aus auf 150 km. Dann zählen Sie die halbe Schweiz als Konkurrenz.</li>
+      <li>Die Kandidatenzahl zeigt nur die beim RAV gemeldeten Personen. Die tatsächliche Konkurrenz ist grösser.</li>
+      <li>Im Job-Room stehen nicht alle Stellen. Zählen Sie deshalb zusätzlich die Inserate auf jobs.ch in derselben Gegend.</li>
+    </ul>
+    <div class="jobroom">
+      <div class="jr-links">
+        <a href="https://www.job-room.ch/home/job-seeker" target="_blank" rel="noopener">Stellen suchen im Job-Room</a>
+        <a href="https://www.job-room.ch/home/company" target="_blank" rel="noopener">Kandidaten suchen im Job-Room</a>
+        <a href="https://www.jobs.ch/de/stellenangebote/" target="_blank" rel="noopener" id="zr-lnkJobsMarkt">Inserate auf jobs.ch zählen</a>
+      </div>
+      <div class="jr-nums">
+        <label>Suchradius in km<input type="number" id="zr-jrRadius" min="0" step="1" inputmode="numeric" value="10"></label>
+        <label>Offene Stellen (Job-Room)<input type="number" id="zr-jrStellen" min="0" step="1" inputmode="numeric" placeholder="z.B. 80"></label>
+        <label>Gemeldete Kandidaten (Job-Room)<input type="number" id="zr-jrKand" min="0" step="1" inputmode="numeric" placeholder="z.B. 300"></label>
+        <label>Inserate auf jobs.ch<input type="number" id="zr-jrJobsch" min="0" step="1" inputmode="numeric" placeholder="freiwillig"></label>
+        <label class="jr-check"><input type="checkbox" id="zr-jrMeld"> Berufsart ist meldepflichtig</label>
+      </div>
+      <p class="jr-gap" style="margin:12px 0 0">Bei jobs.ch: Überfliegen Sie die ersten 20 Treffer. Wenn viele nicht passen, schätzen Sie den passenden Anteil und tragen Sie diesen ein.</p>
+      <p class="jr-out" id="zr-jrOut">Tragen Sie beide Zahlen ein, dann wird die Lage automatisch eingestuft.</p>
+    </div>
+    <p class="jr-manual">Ergebnis, bei Bedarf korrigierbar:</p>
+    <div class="choices" data-group="markt">
+      <label class="choice"><input type="radio" name="markt" value="2"><span>Viele Stellen<small>wenig Konkurrenz</small></span></label>
+      <label class="choice"><input type="radio" name="markt" value="1"><span>Ausgeglichen<small>weder noch</small></span></label>
+      <label class="choice"><input type="radio" name="markt" value="0"><span>Wenige Stellen<small>viel Konkurrenz</small></span></label>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-num">2</span><h3>Wie gut sind Sie in diesem Bereich bereits verankert?</h3></div>
+    <ul class="hints">
+      <li>Nehmen Sie Ihre Firmenliste und Ihr Netzwerk zur Hand.</li>
+    </ul>
+    <div class="jobroom">
+      <div class="jr-nums">
+        <label>Betriebe, die ich namentlich kenne<input type="number" id="zr-evBetriebe" min="0" step="1" inputmode="numeric" placeholder="Anzahl"></label>
+        <label>Personen, die ich fragen kann<input type="number" id="zr-evKontakte" min="0" step="1" inputmode="numeric" placeholder="Anzahl"></label>
+        <label>Jahre Erfahrung in dieser Richtung<input type="number" id="zr-evJahre" min="0" step="0.5" inputmode="decimal" placeholder="Jahre"></label>
+      </div>
+      <p class="jr-gap" id="zr-evHint"></p>
+      <p class="jr-out" id="zr-evPosOut">Tragen Sie die drei Zahlen ein. Null ist eine gültige Antwort.</p>
+    </div>
+    <p class="jr-manual">Ergebnis, bei Bedarf korrigierbar:</p>
+    <div class="choices" data-group="position">
+      <label class="choice"><input type="radio" name="position" value="2"><span>Gut verankert<small>Kontakte und Erfahrung</small></span></label>
+      <label class="choice"><input type="radio" name="position" value="1"><span>Teilweise<small>einzelne Berührungspunkte</small></span></label>
+      <label class="choice"><input type="radio" name="position" value="0"><span>Noch nicht<small>neu für mich</small></span></label>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-num">3</span><h3>Was können Sie heute schon für diese Richtung?</h3></div>
+    <ul class="hints">
+      <li>Nehmen Sie ein echtes Inserat aus dieser Richtung und zählen Sie die Anforderungen.</li>
+      <li>Belegen heisst: Sie können eine Situation und ein Ergebnis dazu nennen. Nicht: Sie trauen es sich zu.</li>
+    </ul>
+    <div class="jobroom">
+      <div class="jr-links">
+        <a href="https://www.jobs.ch/de/stellenangebote/" target="_blank" rel="noopener" id="zr-lnkJobs">Auf jobs.ch suchen</a>
+        <a href="https://www.berufsberatung.ch/de/suche" target="_blank" rel="noopener" id="zr-lnkBBBeruf">Anforderungen des Berufs nachschlagen</a>
+      </div>
+      <div class="jr-nums">
+        <label>Anforderungen im Inserat<input type="number" id="zr-evAnf" min="0" step="1" inputmode="numeric" placeholder="Anzahl"></label>
+        <label>davon kann ich belegen<input type="number" id="zr-evBelegt" min="0" step="1" inputmode="numeric" placeholder="Anzahl"></label>
+        <label>Verlangte Abschlüsse, Ausweise, Sprachniveau
+          <select id="zr-evObjektiv">
+            <option value="">bitte wählen</option>
+            <option value="2">habe ich alle</option>
+            <option value="1">teilweise</option>
+            <option value="0">habe ich nicht</option>
+          </select>
+        </label>
+      </div>
+      <p class="jr-out" id="zr-evKompOut">Tragen Sie beide Zahlen ein und wählen Sie, wie es um die verlangten Nachweise steht.</p>
+    </div>
+    <p class="jr-manual">Ergebnis, bei Bedarf korrigierbar:</p>
+    <div class="choices" data-group="kompetenz">
+      <label class="choice"><input type="radio" name="kompetenz" value="2"><span>Das meiste<small>belegbar</small></span></label>
+      <label class="choice"><input type="radio" name="kompetenz" value="1"><span>Einen Teil<small>teilweise belegbar</small></span></label>
+      <label class="choice"><input type="radio" name="kompetenz" value="0"><span>Wenig<small>kaum belegbar</small></span></label>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><span class="step-num">4</span><h3>Wie gross wäre der Aufwand, die Lücke zu schliessen?</h3></div>
+    <ul class="hints">
+      <li>Mögliche Wege: individueller Kurs über das RAV, berufliche Grundbildung ab 35 Jahren, Zulassung zum Qualifikationsverfahren für Erwachsene, Anerkennung eines ausländischen Abschlusses, Einstieg über Probearbeit oder Zwischenverdienst.</li>
+    </ul>
+    <div class="jobroom">
+      <p class="jr-gap" id="zr-evGap">Ihre Lücke ergibt sich aus Frage 3.</p>
+      <div class="jr-links">
+        <a href="https://www.berufsberatung.ch/de/lehre-und-schule/bildungsschemata-nach-branchen" target="_blank" rel="noopener">Bildungsschemata nach Branchen</a>
+        <a href="https://laufbahn.berufsberatung.ch/informationsquellen/aus-weiterbildung/berufsabschluss-fuer-erwachsene" target="_blank" rel="noopener">Berufsabschluss für Erwachsene</a>
+        <a href="https://www.berufsberatung.ch/de/suche" target="_blank" rel="noopener" id="zr-lnkBBWeiter">Auf berufsberatung.ch suchen</a>
+      </div>
+      <p class="jr-gap" style="margin-top:-4px">Die Bildungsschemata zeigen, welche Wege von Ihrem heutigen Stand aus offenstehen und was die Voraussetzung dafür ist. Die Suche zeigt konkrete Angebote mit Dauer. Schätzen Sie nicht, schauen Sie nach.</p>
+      <div class="jr-nums">
+        <label>Wie lange würde es dauern
+          <select id="zr-evDauer">
+            <option value="">bitte wählen</option>
+            <option value="2">bis 3 Monate</option>
+            <option value="1">3 bis 12 Monate</option>
+            <option value="0">über ein Jahr</option>
+            <option value="-1">noch unklar</option>
+          </select>
+        </label>
+        <label>Gibt es einen Weg dorthin
+          <select id="zr-evWeg">
+            <option value="">bitte wählen</option>
+            <option value="2">ja, konkret geklärt</option>
+            <option value="1">wahrscheinlich, noch offen</option>
+            <option value="0">keiner bekannt</option>
+          </select>
+        </label>
+      </div>
+      <p class="jr-out" id="zr-evAufOut">Wählen Sie beides aus.</p>
+    </div>
+    <p class="jr-manual">Ergebnis, bei Bedarf korrigierbar:</p>
+    <div class="choices" data-group="aufwand">
+      <label class="choice"><input type="radio" name="aufwand" value="2"><span>Klein<small>Wochen bis Monate</small></span></label>
+      <label class="choice"><input type="radio" name="aufwand" value="1"><span>Mittel<small>überschaubar</small></span></label>
+      <label class="choice"><input type="radio" name="aufwand" value="0"><span>Gross<small>Jahre oder unklar</small></span></label>
+    </div>
+  </div>
+
+
+  <div class="step">
+    <div class="step-head"><span class="step-num">5</span><h3>Zum Schluss: Ihre Kurz-SWOT <small class="opt">freiwillig</small></h3></div>
+    <ul class="hints">
+      <li>Je ein Stichwort oder ein Satz genügt. Stoff liefern die Antworten oben: Können und Verankerung für Stärken und Schwächen, Markt und Aufwand für Chancen und Risiken.</li>
+      <li>Fragen Sie bei den Risiken auch: Was könnte diese Richtung in ein paar Jahren unsicher machen?</li>
+    </ul>
+    <div class="swot-in">
+      <label><span class="sw-s">Stärken</span>Was spricht bei mir dafür?<input type="text" id="zr-swS" placeholder="z.B. 4 Jahre Kundenkontakt, Kassensystem"></label>
+      <label><span class="sw-w">Schwächen</span>Was fehlt mir noch?<input type="text" id="zr-swW" placeholder="z.B. kein Französisch"></label>
+      <label><span class="sw-o">Chancen</span>Was spielt mir in die Hände?<input type="text" id="zr-swO" placeholder="z.B. Filiale in der Nähe sucht"></label>
+      <label><span class="sw-t">Risiken</span>Was könnte dagegen laufen?<input type="text" id="zr-swT" placeholder="z.B. viele Temporärstellen, Schichtarbeit"></label>
+    </div>
+  </div>
+  <div class="actions">
+    <button type="submit" class="btn-main" id="zr-submitBtn">Richtung eintragen</button>
+    <button type="button" class="x-btn-ghost" id="zr-cancelBtn" hidden>Änderung verwerfen</button>
+  </div>
+</form>
+</div>
+
+<aside class="panel">
+  <h2>Ihre Richtungen im Vergleich</h2>
+  <div class="matrix-shell">
+    <div class="y-axis"><span>Wie der Markt steht</span></div>
+    <div class="matrix" id="zr-matrix">
+      <div class="quad q-aufbauen"><b>Aufbauen</b><em>Markt gut, Ihnen fehlt noch etwas</em></div>
+      <div class="quad q-nutzen"><b>Jetzt verfolgen</b><em>Markt gut, Sie bringen es mit</em></div>
+      <div class="quad bottom q-zurueck"><b>Zurückstellen</b><em>Markt eng, Lücke gross</em></div>
+      <div class="quad bottom q-uebertragen"><b>Übertragen</b><em>Sie können viel, der Markt ist eng</em></div>
+      <div class="cross h"></div><div class="cross v"></div>
+    </div>
+    <div class="x-axis">Was Sie mitbringen</div>
+  </div>
+  <div class="axis-ends"><span>wenig</span><span>viel</span></div>
+  <p class="matrix-empty" id="zr-matrixEmpty">Noch keine Richtung eingetragen.</p>
+  <ol class="legend" id="zr-legend"></ol>
+</aside>
+</div>
+
+<section class="results">
+  <h2>Bewertete Richtungen</h2>
+  <p class="sub">Vergleichen Sie, statt sich früh festzulegen. Besprechen Sie das Ergebnis im Einzelgespräch.</p>
+  <div id="zr-list"><div class="x-empty">Tragen Sie oben Ihre erste Zielrichtung ein.</div></div>
+
+  <div class="bar">
+    
+    <button class="x-btn-ghost" id="zr-exportBtn">Sichern als Datei</button>
+    <button class="x-btn-ghost" id="zr-importBtn">Datei einlesen</button>
+    <input type="file" id="zr-importFile" accept="application/json" hidden>
+    <button class="x-btn-ghost" id="zr-clearBtn">Alles löschen</button>
+  </div>
+  <div class="quer">
+    <b>Wenn eine Richtung nicht aufgeht: Quereinstieg</b>
+    <p>Viele Betriebe schreiben Stellen aus, für die keine formale Ausbildung in diesem Beruf verlangt wird. Wer übertragbare Ressourcen mitbringt, kommt dort hinein und lernt den Rest im Betrieb. Das ist oft der schnellere Weg als eine Ausbildung nachzuholen.</p>
+    <div class="jr-links">
+      <a href="https://quereinsteiger-stellen.ch/jobs" target="_blank" rel="noopener">Quereinsteiger-Stellen in der Schweiz</a>
+      <a href="https://www.jobs.ch/de/stellenangebote/?term=quereinsteiger" target="_blank" rel="noopener">Quereinstieg auf jobs.ch</a>
+    </div>
+  </div>
+  <p class="note">Ihre Eingaben bleiben auf diesem Gerät und sind in der Sicherung der App enthalten. «Sichern als Datei» brauchen Sie nur für den Austausch mit dem Kurswerkzeug.</p>
+</section>
+</div>
+
+
+
+
+</div></div>
       <div class="card glass" data-panel="strategie" hidden>
         <div class="card-head"><h2>Rahmen</h2></div>
         <div class="grid2">
@@ -370,7 +1135,7 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4}
       <div class="banner glass">
         <div class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></div>
         <div class="txt"><b>Bewerbungsbrief erstellen</b><span>Brief schreiben oder aus ChatGPT einfügen, unterschreiben, als PDF senden. Landet automatisch im Stapel.</span></div>
-        <button class="btn btn-primary" id="btn-brief">Starten</button>
+        <div class="chips" style="flex:none"><button class="btn btn-primary" id="btn-brief">Starten</button><button class="btn btn-glass" id="btn-init">Initiativbewerbung</button></div>
       </div>
       <div class="card glass" id="dos-check"></div>
     </section>
@@ -406,11 +1171,249 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4}
         <div class="list" id="netz-aktiv"></div>
       </div>
 
-      <div class="card glass" data-np="firmen" hidden>
-        <div class="card-head"><h2>Zielfirmen</h2><button class="btn btn-primary" id="firm-add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Neu</button></div>
-        <p class="muted">Für den verdeckten Arbeitsmarkt: Wer entscheidet dort, und woran erkennen Sie, dass sich etwas bewegt?</p>
-        <div class="list" id="firm-list"></div>
+<div class="card glass ext-card" data-np="firmen" hidden><div id="fr-root">
+<div class="wrap">
+<header class="x-top">
+  
+  <nav class="tabs" role="tablist" aria-label="Bereiche">
+    <button type="button" role="tab" class="x-tab" data-tab="tab-firmen" aria-selected="true"><span>1</span>Firmen recherchieren</button>
+    <button type="button" role="tab" class="x-tab" data-tab="tab-brief" aria-selected="false"><span>2</span>Initiativbewerbung</button>
+  </nav>
+  <div class="toolbar">
+    <button class="x-btn-ghost" id="fr-exportBtn">Sichern als Datei</button>
+    <button class="x-btn-ghost" id="fr-importBtn">Datei einlesen</button>
+    <input type="file" id="fr-importFile" accept="application/json" hidden>
+    
+    <button class="x-btn-ghost" id="fr-clearBtn">Alles löschen</button>
+  </div>
+</header>
+
+<section class="tabpanel" id="fr-tab-firmen" role="tabpanel">
+  <h2 class="tabtitle">Firmen recherchieren</h2>
+  <p class="lede">Eine Initiativbewerbung wirkt, wenn sie einen Betrieb trifft, der gerade etwas braucht, und eine Person, die entscheidet. Hier sammeln Sie diese Betriebe. Ziel: mindestens 5 pro Zielrichtung, die Sie verfolgen.</p>
+  <div class="ziel" id="fr-fZiel"></div>
+  <details class="anleitung">
+    <summary>So recherchieren Sie in fünf Schritten</summary>
+    <ol>
+      <li><b>Finden:</b> Wer stellt in Ihrer Richtung im Umkreis von 10 km ein? Branche und Ort eingeben, Liste anlegen.
+        <span class="jr-links"><a href="https://search.ch/tel/" target="_blank" rel="noopener">search.ch</a><a href="https://www.local.ch" target="_blank" rel="noopener">local.ch</a><a href="https://www.google.ch/maps" target="_blank" rel="noopener">Google Maps</a><a href="https://www.zefix.ch" target="_blank" rel="noopener">Zefix (Handelsregister)</a></span></li>
+      <li><b>Signal:</b> Warum gerade jetzt dieser Betrieb? Wächst er, eröffnet er etwas, sucht er kurzfristig Leute?
+        <span class="jr-links"><a href="https://www.coople.com" target="_blank" rel="noopener">Coople: wer sucht kurzfristig</a><a href="https://www.jobs.ch/de/stellenangebote/" target="_blank" rel="noopener">jobs.ch: Inserate des Betriebs</a><a href="https://www.linkedin.com" target="_blank" rel="noopener">LinkedIn: Beiträge der Firma</a></span></li>
+      <li><b>Ansprechperson:</b> Wer entscheidet? Auf LinkedIn nach Funktion suchen (Filialleitung, Teamleitung, HR), auf der Website nachsehen oder den Empfang anrufen. Ein Name schlägt «Personalabteilung».</li>
+      <li><b>Aufhänger:</b> Was fällt Ihnen an dieser Firma auf? Slogan, Zahlen, Geschichte, Werte, Aktuelles. Jeder Mensch achtet auf anderes, genau das macht Ihre Bewerbung einzigartig. Notieren Sie die Quelle.</li>
+      <li><b>Kontakt:</b> Stehen Signal und Ansprechperson, ist der Betrieb bewerbungsreif. Dann im Reiter «Initiativbewerbung» den Brief entwerfen. Jeden Kontakt hier eintragen, er zählt als Bemühung.</li>
+    </ol>
+  </details>
+
+  <div class="cols">
+  <div>
+  <form id="fr-fForm" novalidate>
+    <div class="step">
+      <label class="x-field" for="fr-fName">Betrieb</label>
+      <div class="gitter">
+        <input type="text" id="fr-fName" placeholder="Name des Betriebs" autocomplete="off">
+        <input type="text" id="fr-fOrt" placeholder="Ort" autocomplete="off">
       </div>
+      <div class="gitter" style="margin-top:10px">
+        <label class="mini">Zu welcher Zielrichtung<input type="text" id="fr-fRichtung" list="fr-fRichtungListe" placeholder="z.B. Logistiker/in" autocomplete="off"><datalist id="fr-fRichtungListe"></datalist></label>
+        <label class="mini">Wie gefunden<select id="fr-fQuelle"><option value="">bitte wählen</option><option>search.ch / local.ch</option><option>Google Maps</option><option>Zefix (Handelsregister)</option><option>LinkedIn</option><option>Coople</option><option>jobs.ch / Job-Room</option><option>Bekannte</option><option>selbst gesehen</option><option>andere</option></select></label>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">A</span><h3>Signal: Warum gerade jetzt?</h3></div>
+      <div class="x-chips" id="fr-fSigChips"></div>
+      <textarea id="fr-fSigText" rows="2" class="wide" placeholder="Woran sehen Sie es? Zum Beispiel: «Auf Coople seit drei Wochen Einsätze im Lager ausgeschrieben»"></textarea>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">B</span><h3>Ansprechperson: Wer entscheidet?</h3></div>
+      <div class="gitter3">
+        <label class="mini">Anrede<select id="fr-fAnrede"><option value="">–</option><option>Frau</option><option>Herr</option></select></label>
+        <label class="mini">Vorname und Name<input type="text" id="fr-fPerson" autocomplete="off"></label>
+        <label class="mini">Funktion<input type="text" id="fr-fFunktion" placeholder="z.B. Filialleiterin" autocomplete="off"></label>
+      </div>
+      <div class="gitter" style="margin-top:10px">
+        <label class="mini">Gefunden über<select id="fr-fPersonQuelle"><option value="">bitte wählen</option><option>LinkedIn</option><option>Website</option><option>Empfang angerufen</option><option>Bekannte</option><option>persönlich vorbeigegangen</option><option>andere</option></select></label>
+        <label class="mini">Kontakt am besten per<select id="fr-fKanal"><option value="">bitte wählen</option><option>Telefon</option><option>E-Mail</option><option>persönlich</option><option>LinkedIn-Nachricht</option><option>Brief</option></select></label>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">C</span><h3>Aufhänger: Was fällt Ihnen an dieser Firma auf?</h3></div>
+      <ul class="hints">
+        <li>Füllen Sie aus, was Ihnen auffällt. Zwei oder drei genügen. Jeder Mensch achtet auf anderes, genau das macht Ihre Bewerbung einzigartig.</li>
+        <li>Markieren Sie mit dem Stern, was Sie angesprochen hat. Mehrere Sterne sind möglich. Darauf baut die Einleitung Ihres Briefs auf.</li>
+        <li>Zahlen und Fakten nur mit Quelle. Eine falsche Zahl im Brief schadet mehr als keine.</li>
+      </ul>
+      <div class="af-row">
+        <button type="button" class="af-star" data-star="slogan" aria-pressed="false" title="Das ist mir aufgefallen" aria-label="Als Aufhänger markieren: Slogan und Werbesprache">★</button>
+        <div class="af-main"><b>Slogan und Werbesprache</b><textarea data-af="slogan" rows="2" placeholder="wörtlich, von Website, Plakat oder Fahrzeug"></textarea>
+        <input type="text" data-afq="slogan" class="af-q" placeholder="Quelle: Website, Zeitung, LinkedIn …"></div>
+      </div>
+      <div class="af-row">
+        <button type="button" class="af-star" data-star="zahlen" aria-pressed="false" title="Das ist mir aufgefallen" aria-label="Als Aufhänger markieren: Zahlen">★</button>
+        <div class="af-main"><b>Zahlen</b><textarea data-af="zahlen" rows="2" placeholder="Gründungsjahr, Mitarbeitende, Filialen, Tagesmengen"></textarea>
+        <input type="text" data-afq="zahlen" class="af-q" placeholder="Quelle: Website, Zeitung, LinkedIn …"></div>
+      </div>
+      <div class="af-row">
+        <button type="button" class="af-star" data-star="geschichte" aria-pressed="false" title="Das ist mir aufgefallen" aria-label="Als Aufhänger markieren: Geschichte und Tradition">★</button>
+        <div class="af-main"><b>Geschichte und Tradition</b><textarea data-af="geschichte" rows="2" placeholder="Gründung, Familienbetrieb, Meilensteine"></textarea>
+        <input type="text" data-afq="geschichte" class="af-q" placeholder="Quelle: Website, Zeitung, LinkedIn …"></div>
+      </div>
+      <div class="af-row">
+        <button type="button" class="af-star" data-star="werte" aria-pressed="false" title="Das ist mir aufgefallen" aria-label="Als Aufhänger markieren: Werte und Leitbild">★</button>
+        <div class="af-main"><b>Werte und Leitbild</b><textarea data-af="werte" rows="2" placeholder="was die Firma behauptet, und woran Sie es sehen"></textarea>
+        <input type="text" data-afq="werte" class="af-q" placeholder="Quelle: Website, Zeitung, LinkedIn …"></div>
+      </div>
+      <div class="af-row">
+        <button type="button" class="af-star" data-star="produkte" aria-pressed="false" title="Das ist mir aufgefallen" aria-label="Als Aufhänger markieren: Produkte und Dienstleistungen">★</button>
+        <div class="af-main"><b>Produkte und Dienstleistungen</b><textarea data-af="produkte" rows="2" placeholder="aus Sicht der Kundschaft: was wird für sie besser?"></textarea>
+        <input type="text" data-afq="produkte" class="af-q" placeholder="Quelle: Website, Zeitung, LinkedIn …"></div>
+      </div>
+      <div class="af-row">
+        <button type="button" class="af-star" data-star="aktuell" aria-pressed="false" title="Das ist mir aufgefallen" aria-label="Als Aufhänger markieren: Aktuelles">★</button>
+        <div class="af-main"><b>Aktuelles</b><textarea data-af="aktuell" rows="2" placeholder="Neubau, neue Filiale, Auszeichnung, Medienbericht"></textarea>
+        <input type="text" data-afq="aktuell" class="af-q" placeholder="Quelle: Website, Zeitung, LinkedIn …"></div>
+      </div>
+      <div class="af-row">
+        <button type="button" class="af-star" data-star="menschen" aria-pressed="false" title="Das ist mir aufgefallen" aria-label="Als Aufhänger markieren: Menschen und Kultur">★</button>
+        <div class="af-main"><b>Menschen und Kultur</b><textarea data-af="menschen" rows="2" placeholder="Lehrlinge, Team, Auftritt in sozialen Medien"></textarea>
+        <input type="text" data-afq="menschen" class="af-q" placeholder="Quelle: Website, Zeitung, LinkedIn …"></div>
+      </div>
+      <div class="af-row">
+        <button type="button" class="af-star" data-star="eigen" aria-pressed="false" title="Das ist mir aufgefallen" aria-label="Als Aufhänger markieren: Eigener Berührungspunkt">★</button>
+        <div class="af-main"><b>Eigener Berührungspunkt</b><textarea data-af="eigen" rows="2" placeholder="selbst Kundin oder Kunde gewesen, vorbeigegangen, erlebt"></textarea>
+        <input type="text" data-afq="eigen" class="af-q" placeholder="Quelle: Website, Zeitung, LinkedIn …"></div>
+      </div>
+      <label class="mini">Ihre Beobachtung in eigenen Worten: Was hat Sie daran angesprochen?
+        <textarea id="fr-fBeob" rows="2" class="wide"></textarea></label>
+      <label class="mini">Wie tritt die Firma auf?<select id="fr-fAuftritt"><option value="">bitte wählen</option><option>sachlich</option><option>familiär</option><option>modern, verspielt</option><option>konservativ, traditionell</option><option>öffentlich-rechtlich</option></select></label>
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="btn-main" id="fr-fSubmit">Betrieb eintragen</button>
+      <button type="button" class="x-btn-ghost" id="fr-fCancel" hidden>Änderung verwerfen</button>
+    </div>
+  </form>
+  </div>
+  <aside class="panel">
+    <h2>Ihre Pipeline</h2>
+    <div id="fr-fPipe"></div>
+    <p class="pipe-note">Bewerbungsreif heisst: Signal und Ansprechperson stehen. Dann trifft Ihre Bewerbung am besten. Fehlt eines davon, ist das kein Verbot, sondern Gesprächsstoff fürs Einzelgespräch.</p>
+  </aside>
+  </div>
+
+  <section class="results">
+    <h2>Ihre Betriebe</h2>
+    <div id="fr-fList"></div>
+  </section>
+</section>
+<section class="tabpanel" id="fr-tab-brief" role="tabpanel" hidden>
+  <h2 class="tabtitle">Initiativbewerbung</h2>
+  <div class="callout">«Bei einer Initiativbewerbung gibt es keine Stelle. Es gibt nur einen Bedarf, den Sie erkennen und benennen müssen, bevor die Firma ihn selbst ausschreibt.»</div>
+  <label class="x-field" for="fr-bFirma">Für welchen Betrieb schreiben Sie?</label>
+  <select id="fr-bFirma" class="wide-sel"></select>
+  <div class="x-empty" id="fr-bEmpty" style="margin-top:14px">Erfassen Sie zuerst im Reiter «Firmen recherchieren» einen Betrieb.</div>
+  <div id="fr-bBody" hidden>
+    <div class="bsum" id="fr-bSum"></div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">Sie</span><h3>Ihre Einleitung</h3></div>
+      <ul class="hints">
+        <li>Schreiben Sie einen Satz, den Sie nur dieser Firma schreiben können.</li>
+        <li>Wählen Sie eine Frage und beantworten Sie sie in ein bis zwei ganzen Sätzen.</li>
+      </ul>
+      <div class="frage-wahl" id="fr-bSieFragen"></div>
+      <div class="aufh-box" id="fr-bAufh"></div>
+      <textarea data-b="einl" rows="3" class="wide" placeholder="Zum Beispiel: «Aus Ihrem Verteilzentrum in Biel gehen jeden Tag rund 40 000 Pakete hinaus.»"></textarea>
+      <p class="tipp warnhint" id="fr-bEinlHint"></p>
+      <div class="ki" data-kiblock="sie">
+        <button type="button" class="x-btn-ghost" data-ki="sie">KI-Auftrag für die Einleitung erstellen</button>
+        <button type="button" class="x-btn-ghost" data-kicopy="sie" hidden>Kopieren</button>
+        <span>Für eine KI Ihrer Wahl. Der Auftrag enthält Ihre Recherche und Ihre Angaben, aber keine Namen von Personen. Prüfen Sie den Vorschlag und übernehmen Sie nur, was stimmt.</span>
+        <textarea class="wide ki-text" data-kitext="sie" rows="12" readonly hidden aria-label="KI-Auftrag die Einleitung"></textarea>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">Ich</span><h3>Stellungnahme zu Aufgaben und Anforderungen</h3></div>
+      <ul class="hints">
+        <li>Woher die Schlagwörter kommen: aus dem Inserat, falls es eines gibt. Ohne Inserat aus einem aktuellen oder früheren Inserat derselben Firma für eine ähnliche Stelle, von der Karriereseite der Firma oder aus dem Inserat einer vergleichbaren Firma.</li>
+        <li>Übernehmen Sie die Schlagwörter wörtlich, so wie sie in der Quelle stehen. So erkennen Personalverantwortliche und automatische Vorselektion sie wieder.</li>
+        <li>Schreiben Sie zu jedem Schlagwort einen Beleg. Schlagwörter ohne Beleg erscheinen nicht im Brief.</li>
+      </ul>
+      <div class="gitter">
+        <label class="mini">Quelle der Schlagwörter<select data-b="kwQuelle"><option value="">bitte wählen</option><option>Inserat für diese Stelle</option><option>früheres Inserat derselben Firma</option><option>Karriereseite der Firma</option><option>Inserat einer vergleichbaren Firma</option></select></label>
+        <label class="mini">Wo genau?<input type="text" data-b="kwQuelleText" placeholder="z.B. Inserat Lagermitarbeiter, jobs.ch, März 2026"></label>
+      </div>
+      <label class="mini">Aufgaben und Anforderungen: ein Schlagwort pro Zeile<textarea data-b="kwText" rows="5" class="wide" placeholder="Kommissionieren&#10;Wareneingang&#10;Schichtarbeit&#10;Teamarbeit&#10;Staplerausweis"></textarea></label>
+      <div id="fr-bKw"></div>
+      <p class="tipp" id="fr-bSwotTipp"></p>
+      <div class="ki" data-kiblock="ich">
+        <button type="button" class="x-btn-ghost" data-ki="ich">KI-Auftrag für den Ich-Teil erstellen</button>
+        <button type="button" class="x-btn-ghost" data-kicopy="ich" hidden>Kopieren</button>
+        <span>Für eine KI Ihrer Wahl. Der Auftrag enthält Ihre Recherche und Ihre Angaben, aber keine Namen von Personen. Prüfen Sie den Vorschlag und übernehmen Sie nur, was stimmt.</span>
+        <textarea class="wide ki-text" data-kitext="ich" rows="12" readonly hidden aria-label="KI-Auftrag den Ich-Teil"></textarea>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">Wir</span><h3>Ziele, Motivation und Angebote</h3></div>
+      <p class="mini-h">Was Sie in der Zusammenarbeit suchen (ergänzen Sie, was auf Sie zutrifft)</p>
+      <div id="fr-bWir"></div>
+      <p class="mini-h">Was Sie anbieten (mehrere möglich)</p>
+      <div class="x-chips" id="fr-bAngebote"></div>
+      <div class="gitter" id="fr-bTeilzeit" hidden>
+        <label class="mini">Pensum in Prozent<input type="text" data-b="pensum" inputmode="numeric" placeholder="z.B. 80"></label>
+        <label class="mini">Verfügbar ab<input type="date" data-b="ab"></label>
+      </div>
+      <p class="hinweis-box">Zwischenverdienst und Einarbeitungszuschüsse können einen Einstieg erleichtern. Klären Sie die Bedingungen vorher mit Ihrer RAV-Personalberatung. Bieten Sie nie an, unter dem orts- und branchenüblichen Lohn zu arbeiten.</p>
+      <div class="ki" data-kiblock="wir">
+        <button type="button" class="x-btn-ghost" data-ki="wir">KI-Auftrag für den Wir-Teil erstellen</button>
+        <button type="button" class="x-btn-ghost" data-kicopy="wir" hidden>Kopieren</button>
+        <span>Für eine KI Ihrer Wahl. Der Auftrag enthält Ihre Recherche und Ihre Angaben, aber keine Namen von Personen. Prüfen Sie den Vorschlag und übernehmen Sie nur, was stimmt.</span>
+        <textarea class="wide ki-text" data-kitext="wir" rows="12" readonly hidden aria-label="KI-Auftrag den Wir-Teil"></textarea>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">+</span><h3>Zum Schluss: Gespräch und Kontakt</h3></div>
+      <div class="x-chips" id="fr-bZusatz"></div>
+      <div id="fr-bAnruf" hidden>
+        <label class="mini" style="max-width:16rem">In welcher Woche rufen Sie an?<input type="date" data-b="anrufDatum"></label>
+        <p class="tipp warnhint">Bitte wählen Sie diese Variante nur, wenn Sie wirklich anrufen.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">✓</span><h3>Selbstcheck</h3></div>
+      <div id="fr-bCheck"></div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><span class="step-num">✉</span><h3>Ihr Brief</h3></div>
+      <p class="tipp">Der Text setzt sich aus Ihren Angaben zusammen. Sie können ihn hier direkt anpassen. Lesen Sie ihn laut. Was gestelzt klingt, schreiben Sie um.
+        <button type="button" class="x-btn-ghost btn-sm" id="fr-bCopy">Text kopieren</button> <button type="button" class="btn-main btn-sm" id="fr-bPdf">Als PDF mit Briefkopf und Unterschrift</button></p>
+      <p class="manuell" id="fr-bManuell" hidden>Sie haben den Text von Hand angepasst. Änderungen in den Feldern oben erscheinen erst, wenn Sie neu zusammensetzen. <button type="button" class="x-btn-ghost btn-sm" id="fr-bNeu">Neu aus den Feldern zusammensetzen</button></p>
+      <textarea id="fr-bText" class="brief-edit" rows="18" spellcheck="true" aria-label="Ihr Brief"></textarea>
+    </div>
+
+    <details class="anleitung">
+      <summary>Zur Erinnerung: Guerilla-Bewerbung</summary>
+      <p>Wenn das Übliche nicht mehr greift: Das Format selbst kann die Arbeitsprobe sein, etwa der Lieferschein des Logistikers oder das Rezept des Kochs. Das vollständige Dossier folgt trotzdem, jede Bemühung wird dokumentiert, und bei konservativen Betrieben und öffentlichen Arbeitgebenden bleiben Sie beim klassischen Weg. Die Frage ist nie «Darf ich das?», sondern «Passt das zu dieser Firma?»</p>
+    </details>
+    <p class="quelle">CSP Biel · AMM</p>
+  </div>
+</section>
+<p class="note">Ihre Eingaben bleiben auf diesem Gerät und sind in der Sicherung der App enthalten. «Sichern als Datei» brauchen Sie nur für den Austausch mit dem Kurswerkzeug.</p>
+</div>
+
+
+
+
+
+</div></div>
     </section>
 
     <!-- ============ RAV ============ -->
@@ -532,6 +1535,8 @@ const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&g
 const fmt=d=>{if(!d)return'';const[y,m,dd]=d.slice(0,10).split('-');return `${dd}.${m}.${y}`};
 const stLabel=id=>(STATUS.find(s=>s.id===id)||{}).label||id;
 const katLabel=id=>(KAT.find(k=>k.id===id)||{}).l||id;
+let zrApi=null, frApi=null;
+const APPTOAST=m=>toast(m);
 function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('on'),2000)}
 function loadScript(src){return new Promise((res,rej)=>{if(document.querySelector(`script[src="${src}"]`))return res();const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s)})}
 
@@ -558,7 +1563,13 @@ if(!S||!S.bewerbungen){S=seed();fresh=true}
 S.docs=S.docs||[];S.meta=S.meta||{};delete S.dossier;
 if(!S.alk){S.alk=seedAlk(S.bewerbungen.some(b=>b.beispiel))}
 S.profil=S.profil||{bar:true,barColor:'#1f5f8b',barText:'#ffffff'};
-S.netz=S.netz||{contacts:[],nextId:1};S.firmen=S.firmen||seedFirmen(S.bewerbungen.some(b=>b.beispiel));S.komp=S.komp||seedKomp(S.bewerbungen.some(b=>b.beispiel));
+S.netz=S.netz||{contacts:[],nextId:1};
+if(!S.zr)S.zr=seedZr(S.bewerbungen.some(b=>b.beispiel));
+if(!S.fr){S.fr={firmen:seedFr(S.bewerbungen.some(b=>b.beispiel))};
+  (S.firmen||[]).filter(f=>!f.beispiel).forEach((f,i)=>S.fr.firmen.push({id:Date.now()+i,name:f.name,ort:f.ort||'',richtung:null,richtungText:'',quelle:'',
+    signal:{arten:[],text:f.signal||''},person:{anrede:'',name:f.ansprech||'',funktion:'',quelle:'',kanal:''},aufh:{},favs:[],fav:'',beob:f.kanal?'Erreichbar über: '+f.kanal:'',auftritt:'',
+    status:0,next:{was:'',datum:''},ergebnis:'',brief:{},bewerbungId:f.bewerbungId}))}
+delete S.firmen;S.komp=S.komp||seedKomp(S.bewerbungen.some(b=>b.beispiel));
 let saveT;
 function save(){clearTimeout(saveT);saveT=setTimeout(()=>{kvPut('state',JSON.parse(JSON.stringify(S))).catch(()=>toast('Speichern fehlgeschlagen'))},250)}
 
@@ -567,6 +1578,17 @@ function seedAlk(ex){const a={monate:{},faelle:[],kasse:'',tel:'',rahmenfrist:''
     a.monate[k]={zv:true,eingereicht:{avp:true,zv:false},beispiel:true};
     a.faelle.push({id:'f1',von:ago(20),bis:ago(15),ravGemeldet:true,gesundGemeldet:false,inAvp:false,beispiel:true})}
   return a}
+function seedZr(ex){return ex?[
+  {id:1700000000001,name:'Logistiker/in (Beispiel)',ratings:{markt:'1',position:'2',kompetenz:'2',aufwand:'2'},markt:{stellen:24,kandidaten:41,jobsch:30,radius:10,meldepflicht:false},
+   ev:{betriebe:6,kontakte:3,jahre:5,anforderungen:8,belegt:7,objektiv:2,dauer:null,weg:null},mot:{mInt:2,mRahmen:2,mGes:2,mWissen:2},
+   swot:{s:'5 Jahre Lager, Staplerausweis',w:'',o:'Neues Verteilzentrum in Aarberg',t:'viele Temporärstellen'},beispiel:true},
+  {id:1700000000002,name:'Chauffeur/in Kat. C (Beispiel)',ratings:{markt:'2',position:'0',kompetenz:'0',aufwand:'0'},markt:{stellen:30,kandidaten:15,jobsch:null,radius:10,meldepflicht:false},
+   ev:{betriebe:0,kontakte:0,jahre:0,anforderungen:6,belegt:3,objektiv:0,dauer:1,weg:1},mot:{mInt:2,mRahmen:2,mGes:2,mWissen:1},swot:{s:'',w:'kein Führerausweis C',o:'',t:''},beispiel:true}]:[]}
+function seedFr(ex){return ex?[{id:1700000000101,name:'Seeländer Getränke AG',ort:'Aarberg',richtung:1700000000001,richtungText:'Logistiker/in (Beispiel)',quelle:'search.ch / local.ch',
+  signal:{arten:['neue Filiale, Neubau'],text:'Baut ein neues Verteilzentrum, Eröffnung im Frühling'},
+  person:{anrede:'Frau',name:'Petra Beispiel',funktion:'Leiterin Logistik',quelle:'LinkedIn',kanal:'Telefon'},
+  aufh:{aktuell:{t:'Neues Verteilzentrum mit 40 Rampen',q:'Bieler Tagblatt'}},favs:['aktuell'],fav:'aktuell',beob:'Ich fahre jeden Tag an der Baustelle vorbei.',auftritt:'familiär',
+  status:0,next:{was:'Frau Beispiel anrufen',datum:ahead(3)},ergebnis:'',brief:{},beispiel:true}]:[]}
 function seedFirmen(ex){return ex?[{id:'z1',name:'Seeländer Getränke AG',ort:'Aarberg',branche:'Logistik',ansprech:'',kanal:'Empfang anrufen, nach Lagerleitung fragen',signal:'Baut ein neues Verteilzentrum',kontaktId:null,beispiel:true}]:[]}
 function seedKomp(ex){return{items:ex?[
   {id:'k1',bereich:'fach',name:'Staplerfahren (SUVA-Ausweis)',beleg:'Fünf Jahre täglich im Wareneingang, ohne Unfall.',inserat:true,star:true,beispiel:true},
@@ -585,7 +1607,7 @@ function seed(){return{
     {id:uid(),text:'Lebenslauf mit Fachkraft durchgehen',due:ahead(1),done:false,beispiel:true},
     {id:uid(),text:'5 Firmen im Seeland für Initiativbewerbungen recherchieren',due:ahead(3),done:false,beispiel:true},
     {id:uid(),text:'Arbeitszeugnisse einscannen',due:ago(1),done:true,beispiel:true}],
-  docs:[], rav:{name:'',tel:'',termin:''}, meta:{}, alk:seedAlk(true), netz:{contacts:[],nextId:1}, firmen:seedFirmen(true), komp:seedKomp(true)
+  docs:[], rav:{name:'',tel:'',termin:''}, meta:{}, alk:seedAlk(true), netz:{contacts:[],nextId:1}, zr:seedZr(true), fr:{firmen:seedFr(true)}, komp:seedKomp(true)
 }}
 
 /* ================= Beispieldokumente (nur beim ersten Start) ================= */
@@ -675,10 +1697,10 @@ function renderTracker(){
         <div class="row-meta"><span class="pill s-${b.status}">${stLabel(b.status)}</span><span class="tag">${esc(b.kanal)}</span><span class="tag">${fmt(b.datum)}</span>${nd?`<span class="tag">📎 ${nd}</span>`:''}${b.status!=='arbeit'&&!b.adresse?'<span class="tag" style="color:var(--warn)">Adresse fehlt fürs RAV</span>':''}${b.beispiel?'<span class="tag example">Beispiel</span>':''}</div>
       </div></div>`}).join(''):`<div class="empty">Noch keine Bewerbungen in dieser Ansicht.<br>Tippen Sie auf „Neu“, um die erste zu erfassen.</div>`;
   $$('#bew-list .row').forEach(r=>{r.onclick=()=>openBew(r.dataset.id);r.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openBew(r.dataset.id)}}});
-  const hasEx=S.bewerbungen.some(b=>b.beispiel)||S.aufgaben.some(a=>a.beispiel)||S.docs.some(d=>d.beispiel)||S.alk.faelle.some(f=>f.beispiel)||Object.values(S.alk.monate).some(m=>m.beispiel)||S.firmen.some(f=>f.beispiel)||S.komp.items.some(i=>i.beispiel)||S.netz.contacts.some(c=>c.beispiel);
+  const hasEx=S.bewerbungen.some(b=>b.beispiel)||S.aufgaben.some(a=>a.beispiel)||S.docs.some(d=>d.beispiel)||S.alk.faelle.some(f=>f.beispiel)||Object.values(S.alk.monate).some(m=>m.beispiel)||S.zr.some(o=>o.beispiel)||S.fr.firmen.some(f=>f.beispiel)||S.komp.items.some(i=>i.beispiel)||S.netz.contacts.some(c=>c.beispiel);
   $('#example-note').innerHTML=hasEx?`<div class="banner" style="background:var(--accent-soft)"><div class="txt"><b>Das sind Beispiele</b><span>So sieht die App gefüllt aus. Entfernt alle Beispiele in allen Tabs.</span></div><button class="btn btn-glass" id="clear-ex">Entfernen</button></div>`:'';
   if(hasEx)$('#clear-ex').onclick=async()=>{for(const d of S.docs.filter(d=>d.beispiel))await blobDel(d.id).catch(()=>{});
-    S.bewerbungen=S.bewerbungen.filter(b=>!b.beispiel);S.aufgaben=S.aufgaben.filter(a=>!a.beispiel);S.docs=S.docs.filter(d=>!d.beispiel);S.alk.faelle=S.alk.faelle.filter(f=>!f.beispiel);S.firmen=S.firmen.filter(f=>!f.beispiel);S.komp.items=S.komp.items.filter(i=>!i.beispiel);S.netz.contacts=S.netz.contacts.filter(c=>!c.beispiel);S.netz.contacts.forEach(c=>c.knows=c.knows.filter(k=>S.netz.contacts.some(o=>o.id===k)));Object.keys(S.alk.monate).forEach(k=>{if(S.alk.monate[k].beispiel)delete S.alk.monate[k]});stackIdx=0;save();render();toast('Beispiele entfernt')};
+    S.bewerbungen=S.bewerbungen.filter(b=>!b.beispiel);S.aufgaben=S.aufgaben.filter(a=>!a.beispiel);S.docs=S.docs.filter(d=>!d.beispiel);S.alk.faelle=S.alk.faelle.filter(f=>!f.beispiel);S.zr=S.zr.filter(o=>!o.beispiel);S.fr.firmen=S.fr.firmen.filter(f=>!f.beispiel);S.komp.items=S.komp.items.filter(i=>!i.beispiel);S.netz.contacts=S.netz.contacts.filter(c=>!c.beispiel);S.netz.contacts.forEach(c=>c.knows=c.knows.filter(k=>S.netz.contacts.some(o=>o.id===k)));Object.keys(S.alk.monate).forEach(k=>{if(S.alk.monate[k].beispiel)delete S.alk.monate[k]});stackIdx=0;save();render();toast('Beispiele entfernt')};
 }
 
 /* ================= Sheet ================= */
@@ -766,14 +1788,12 @@ $('#ziel-monat').oninput=e=>{S.ziele.monat=+e.target.value||0;save();renderStats
 
 /* ================= Strategie ================= */
 function renderStrategie(){
-  $('#ziele').innerHTML=S.strategie.ziele.map((z,i)=>`<span class="chip">${esc(z)}<button data-i="${i}" aria-label="${esc(z)} entfernen">×</button></span>`).join('')||'<span class="muted">Noch keine Zielberufe.</span>';
-  $$('#ziele button').forEach(b=>b.onclick=()=>{S.strategie.ziele.splice(+b.dataset.i,1);save();renderStrategie()});
   $$('[data-bind]').forEach(el=>{el.value=S.strategie[el.dataset.bind]??''});
   verteilTxt();
 }
 function verteilTxt(){const v=+S.strategie.verdeckt||0;$('#verteilung-txt').textContent=`${100-v} % offener Markt (Inserate) · ${v} % verdeckter Markt (Initiativ, Netzwerk)`}
 $$('[data-bind]').forEach(el=>el.oninput=()=>{S.strategie[el.dataset.bind]=el.type==='range'?+el.value:el.value;save();if(el.type==='range')verteilTxt()});
-$('#ziel-form').onsubmit=e=>{e.preventDefault();const t=$('#ziel-text').value.trim();if(!t)return;S.strategie.ziele.push(t);$('#ziel-text').value='';save();renderStrategie()};
+
 
 /* ================= Dossier: Stapel ================= */
 let katFilter=null, stackIdx=0;
@@ -1267,12 +2287,13 @@ const briefName=()=>['Bewerbung',cleanName(S.profil.meName),cleanName(S.brief.fi
 const BSTEPS=['Angaben','Firma','Text','Unterschrift','PDF'];let bstep=0, lastBrief=null;
 function defaultBeilagen(){const D=S.docs.filter(d=>!d.bereich);const out=[];
   if(D.some(d=>d.kat==='cv'))out.push('Lebenslauf');if(D.some(d=>d.kat==='zeugnis'))out.push('Arbeitszeugnisse');if(D.some(d=>d.kat==='diplom'))out.push('Diplome und Zertifikate');return out.join('\n')}
-function openBrief(bewId){
+function openBrief(bewId,pre){
   if(bewId){const b=S.bewerbungen.find(x=>x.id===bewId)||{};const a=parseAddress('x\n'+(b.adresse||'').replace(/\s*,\s*/g,'\n'));
     const keep=S.brief&&S.brief.bewerbungId===bewId?S.brief:{};
     S.brief={bewerbungId:bewId,fiName:b.firma||'',fiKontakt:b.kontakt||'',fiStrasse:a.fiStrasse,fiPlzOrt:a.fiPlzOrt,ort:keep.ort||'',datum:iso(today),
       betreff:keep.betreff||(b.stelle?'Bewerbung als '+b.stelle.replace(/\s*\d+\s*(–|-)?\s*\d*\s*%/,'').trim():''),text:keep.text||'',beilagen:keep.beilagen??defaultBeilagen()}}
   else if(!S.brief)S.brief={fiName:'',fiKontakt:'',fiStrasse:'',fiPlzOrt:'',ort:'',datum:iso(today),betreff:'',text:'',beilagen:defaultBeilagen()};
+  if(pre)Object.assign(S.brief,pre);
   if(!S.brief.datum||S.brief.datum<iso(today))S.brief.datum=iso(today);
   bstep=S.profil.meName?1:0;lastBrief=null;save();
   openSheet('Bewerbungsbrief',`<div class="seg glass" id="bp-steps" role="tablist">${BSTEPS.map((s,i)=>`<button role="tab" data-st="${i}">${i+1} ${s}</button>`).join('')}</div><div id="bp-body" style="display:flex;flex-direction:column;gap:14px"></div>`,null);
@@ -1441,7 +2462,6 @@ function renderNetz(){
   $('#netz-ex')&&($('#netz-ex').onclick=()=>{loadNetzExample();renderNetz()});
   if(nsub==='karte')buildMap();
   if(nsub==='aktiv')renderAktiv();
-  renderFirmen();
 }
 function loadNetzExample(){const ex=[['Schwester','fam',1,['emo','prak']],['Ex-Chefin','arb',2,['door','fach','info']],['Trainer FC','fre',3,['info','door']],['Nachbar M.','fre',3,['prak']],['Kollegin Lehre','arb',3,['fach','info']],['RAV-Beraterin','fach',2,['info','bew']],['Freundin S.','fre',1,['emo','bew']],['Onkel','fam',2,[]]];
   N().contacts=ex.map((e,i)=>({id:i+1,name:e[0]+' (Beispiel)',sec:e[1],near:e[2],sup:e[3],knows:[],step:'',act:false,beispiel:true}));N().nextId=ex.length+1;
@@ -1525,32 +2545,6 @@ function renderAktiv(){const A=N().contacts.filter(c=>c.act);
   $$('#netz-aktiv [data-plan]').forEach(b=>b.onclick=()=>{const c=cById(+b.dataset.plan);S.aufgaben.push({id:uid(),text:`${c.name}: ${c.step}`,due:ahead(3),done:false,kontaktId:c.id});save();renderAktiv();renderPlan();toast('Im Aktionsplan')});
   $$('#netz-aktiv [data-ed]').forEach(b=>b.onclick=()=>openKontakt(+b.dataset.ed))}
 
-/* Zielfirmen */
-function renderFirmen(){const F=S.firmen;
-  $('#firm-list').innerHTML=F.length?F.map(f=>{const bw=f.bewerbungId&&S.bewerbungen.find(b=>b.id===f.bewerbungId);const k=f.kontaktId&&cById(f.kontaktId);return `<div class="row row-click" data-f="${f.id}" tabindex="0" role="button"><div class="row-main">
-      <div class="row-title">${esc(f.name)}</div><div class="row-sub">${[f.ort,f.branche].filter(Boolean).map(esc).join(' · ')}</div>
-      ${f.signal?`<div class="row-sub" style="color:var(--fg)">Signal: ${esc(f.signal)}</div>`:''}
-      <div class="row-meta">${f.ansprech?`<span class="tag">${esc(f.ansprech)}</span>`:'<span class="tag" style="color:var(--warn)">Ansprechperson fehlt</span>'}${k?`<span class="tag">über ${esc(k.name)}</span>`:''}${bw?`<span class="pill s-${bw.status}">${stLabel(bw.status)}</span>`:''}${f.beispiel?'<span class="tag example">Beispiel</span>':''}</div></div></div>`}).join('')
-    :'<div class="empty">Noch keine Zielfirmen. Notieren Sie Firmen, bei denen Sie sich initiativ melden möchten.</div>';
-  $$('#firm-list [data-f]').forEach(r=>r.onclick=()=>openFirma(r.dataset.f))}
-function openFirma(id){const f=S.firmen.find(x=>x.id===id)||{name:'',ort:'',branche:'',ansprech:'',kanal:'',signal:'',kontaktId:null};
-  openSheet(id?'Zielfirma':'Zielfirma hinzufügen',`
-    <div class="field"><label for="z-nm">Firma</label><input class="input" id="z-nm" value="${esc(f.name)}" placeholder="z.B. Muster AG"></div>
-    <div class="grid2"><div class="field"><label for="z-ort">Ort</label><input class="input" id="z-ort" value="${esc(f.ort)}"></div><div class="field"><label for="z-br">Branche</label><input class="input" id="z-br" value="${esc(f.branche)}" placeholder="z.B. Logistik"></div></div>
-    <div class="field"><label for="z-an">Ansprechperson mit Funktion</label><input class="input" id="z-an" value="${esc(f.ansprech)}" placeholder="Ein Name, keine Abteilung"></div>
-    <div class="field"><label for="z-ka">Wie erreichen Sie diese Person?</label><input class="input" id="z-ka" value="${esc(f.kanal)}" placeholder="Telefon, Empfang, Messe, gemeinsame Bekannte"></div>
-    <div class="field"><label for="z-si">Ein Signal für Bewegung in der Firma</label><textarea class="input" id="z-si" placeholder="Neubau, Übernahme, neuer Standort, Grossauftrag, Medienbericht">${esc(f.signal)}</textarea></div>
-    <div class="field"><label for="z-kt">Wer aus Ihrem Netzwerk kennt jemanden dort?</label><select class="input" id="z-kt"><option value="">Niemand bekannt</option>${N().contacts.map(c=>`<option value="${c.id}" ${c.id===f.kontaktId?'selected':''}>${esc(c.name)}</option>`).join('')}</select></div>
-    ${id?`<div class="chips">${f.bewerbungId?'':'<button type="button" class="btn btn-primary" id="z-init">Initiativbewerbung starten</button>'}</div>
-      <div class="sheet-actions"><span></span><button class="btn btn-ghost" id="z-del" style="color:var(--bad)">Firma löschen</button></div>`:''}`,
-  ()=>{const name=$('#z-nm').value.trim();if(!name){toast('Bitte Firma eintragen');return}
-    const rec={...f,id:id||uid(),name,ort:$('#z-ort').value.trim(),branche:$('#z-br').value.trim(),ansprech:$('#z-an').value.trim(),kanal:$('#z-ka').value.trim(),signal:$('#z-si').value.trim(),kontaktId:+$('#z-kt').value||null};
-    delete rec.beispiel;if(id)S.firmen[S.firmen.findIndex(x=>x.id===id)]=rec;else S.firmen.push(rec);save();closeSheet();renderFirmen();toast('Gesichert')});
-  if(id){armDelete($('#z-del'),()=>{S.firmen=S.firmen.filter(x=>x.id!==id);save();closeSheet();renderFirmen()});
-    $('#z-init')&&($('#z-init').onclick=()=>{const k=f.kontaktId&&cById(f.kontaktId);const bid=uid();
-      S.bewerbungen.push({id:bid,firma:f.name,adresse:f.ort,kontakt:f.ansprech,stelle:'',datum:iso(today),kanal:k?'Netzwerk':'Initiativ',status:'arbeit',naechster:f.kanal?'Kontakt aufnehmen: '+f.kanal:'Brief schreiben'});
-      f.bewerbungId=bid;save();closeSheet();render();toast('Im Tracker erfasst');setTimeout(()=>openBew(bid),360)})}}
-$('#firm-add').onclick=()=>openFirma(null);
 $('#netz-import').onchange=e=>{const fl=e.target.files[0];if(!fl)return;const r=new FileReader();
   r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.contacts))throw 0;N().contacts=d.contacts.map(c=>({knows:[],sup:[],step:'',act:false,...c}));N().nextId=Math.max(0,...N().contacts.map(c=>c.id))+1;save();renderNetz();toast(`${N().contacts.length} Kontakte geladen`)}
     catch(err){toast('Bitte die Datei „mein-netzwerk.json“ aus dem Werkzeug „Mein Netzwerk“ wählen')}};r.readAsText(fl);e.target.value=''};
@@ -1627,7 +2621,7 @@ async function restore(file){
   else{const j=JSON.parse(await file.text());state=j.state||j}
   if(!state||!state.bewerbungen)throw new Error('ungültig');
   if(zip)for(const d of state.docs||[]){const f=zip.file('dokumente/'+d.id);if(f)await blobPut(d.id,await f.async('blob'))}
-  state.docs=state.docs||[];state.meta=state.meta||{};state.alk=state.alk||seedAlk(false);state.netz=state.netz||{contacts:[],nextId:1};state.firmen=state.firmen||[];state.komp=state.komp||{items:[],res:{}};state.profil=state.profil||{bar:true,barColor:'#1f5f8b',barText:'#ffffff'};S=state;save();
+  state.docs=state.docs||[];state.meta=state.meta||{};state.alk=state.alk||seedAlk(false);state.netz=state.netz||{contacts:[],nextId:1};state.zr=state.zr||[];state.fr=state.fr||{firmen:[]};state.komp=state.komp||{items:[],res:{}};state.profil=state.profil||{bar:true,barColor:'#1f5f8b',barText:'#ffffff'};S=state;save();
 }
 function openBackup(){
   const n=S.docs.filter(d=>d.typ!=='text').length;
@@ -1656,9 +2650,1362 @@ function openBackup(){
 }
 $('#btn-backup').onclick=openBackup;
 $('#btn-brief').onclick=()=>openBrief(null);
+$('#btn-init').onclick=()=>{location.hash='netzwerk';setTimeout(()=>{$('#netz-seg [data-n="firmen"]').click();frApi&&frApi.show('tab-brief')},60)};
 
 /* ================= Start ================= */
-function render(){renderStats();renderTracker();renderPlan();renderStrategie();renderDossier();renderRav();renderNachweis();renderAlk();renderCheck();renderNetz();renderKomp();renderBackupRemind()}
+
+/* ================= Verbindung Firmenrecherche → Tracker und Brief ================= */
+const RANK={arbeit:0,versendet:1,gespraech:2,absage:3,zusage:3};
+const artFromKanal=k=>k==='Telefon'?'telefonisch':k==='persönlich'?'persoenlich':'brieflich';
+function ensureBewForFirm(f,status,richtung,person){
+  let b=f.bewerbungId&&S.bewerbungen.find(x=>x.id===f.bewerbungId);
+  if(!b){b={id:uid(),firma:f.name,adresse:f.ort||'',kontakt:person||'',tel:'',stelle:richtung||'',datum:iso(today),kanal:'Initiativ',
+      art:artFromKanal((f.person||{}).kanal),pensum:'voll',zuweisung:false,status:status||'arbeit',absagegrund:'',naechster:(f.next||{}).was||''};
+    S.bewerbungen.push(b);f.bewerbungId=b.id;return [b,true]}
+  if(status&&RANK[status]>RANK[b.status]){b.status=status;if(status!=='arbeit'&&b.datum<iso(today)&&b.status==='versendet')b.datum=iso(today)}
+  return [b,false]}
+function swFirmStatus(f){
+  const map={2:'versendet',3:'gespraech',4:'versendet'};
+  let st=map[f.status];
+  if(f.status===5)st=f.ergebnis==='einladung'?'gespraech':f.ergebnis==='absage'?'absage':'versendet';
+  if(!st)return;
+  const p=f.person||{}, pt=[(p.anrede?p.anrede+' ':'')+(p.name||'').trim(),p.funktion].filter(Boolean).join(', ');
+  const [,neu]=ensureBewForFirm(f,st,f.richtungText||'',pt);
+  save();renderStats();renderTracker();
+  if(neu)toast('Im Bewerbungs-Tracker erfasst. Zählt für das RAV-Formular.')}
+function swInitBrief(f,text,richtung,person){
+  const p=f.person||{};
+  const [b]=ensureBewForFirm(f,'arbeit',richtung,person);save();
+  openBrief(b.id,{fiName:f.name,fiKontakt:[p.anrede,(p.name||'').trim()].filter(Boolean).join(' '),fiStrasse:'',fiPlzOrt:f.ort||'',
+    betreff:'Initiativbewerbung'+(richtung?' als '+richtung.replace(/\s*\(Beispiel\)\s*$/,''):''),text})}
+/* ================= Zielrichtungen (Werkzeug BIN 6) ================= */
+
+(function(){
+
+var KEY="bin.zielrichtungen.v1";
+var options=S.zr, editId=null;
+function Z(id){return document.getElementById("zr-"+id);}
+function armed(b,lab){ if(b.dataset.armed)return true; b.dataset.armed="1"; b.textContent="Wirklich löschen?"; setTimeout(function(){ if(b.isConnected){ delete b.dataset.armed; b.textContent=lab; } },4000); return false; }
+
+var STRAT={
+  nutzen:{label:"Jetzt verfolgen",cls:"v-nutzen",quad:"q-nutzen",
+    why:"Der Markt ist offen und Sie bringen das Nötige mit. Hier lohnt sich Ihre Zeit am meisten.",
+    next:["Dossier auf genau diese Stellenbezeichnung zuschneiden",
+          "Laufend auf ausgeschriebene Stellen bewerben"]},
+  aufbauen:{label:"Aufbauen",cls:"v-aufbauen",quad:"q-aufbauen",
+    why:"Der Markt wäre da, aber Ihnen fehlt noch etwas. Das ist eine Frage der Zeit, nicht der Eignung.",
+    next:["Genau benennen, was fehlt: Abschluss, Ausweis, Sprache oder Erfahrung",
+          "Weg wählen und im Einzelgespräch klären: individueller Kurs über das RAV, Grundbildung ab 35 Jahren, Zulassung zum Qualifikationsverfahren, Anerkennung eines ausländischen Abschlusses",
+          "Einstieg über Probearbeit oder Zwischenverdienst prüfen",
+          "Parallel weiter bewerben, nicht warten, bis alles fertig ist"]},
+  uebertragen:{label:"Übertragen",cls:"v-uebertragen",quad:"q-uebertragen",
+    why:"Sie können viel, aber in dieser Richtung wird wenig ausgeschrieben. Ihre Ressourcen sind nicht das Problem, der offene Markt ist es. Suchen Sie deshalb auch dort, wo Stellen gar nicht erst ausgeschrieben werden.",
+    next:["Aus dem Kompetenzprofil heraussuchen, was nicht an den bisherigen Beruf gebunden ist",
+          "Stellenbezeichnungen anpassen, sonst finden Sie die Inserate nicht",
+          "Dossier auf die neue Richtung umschreiben"]},
+  zurueck:{label:"Zurückstellen",cls:"v-zurueck",quad:"q-zurueck",
+    why:"In dieser Richtung wird wenig gesucht und die Lücke ist gross. Das sagt nichts über Sie aus, sondern über das Verhältnis von Aufwand und Aussicht.",
+    next:["Diese Richtung vorerst nicht weiterverfolgen und die Energie anderswo einsetzen",
+          "Im Einzelgespräch besprechen, ob es einen Umweg gibt",
+          "Später erneut prüfen, wenn sich der Markt oder Ihre Voraussetzungen ändern"]}
+};
+
+function axes(r){
+  return { y:(Number(r.markt)+Number(r.position)), x:(Number(r.kompetenz)+Number(r.aufwand)) };
+}
+function lvl(s){ return s>2?2:(s<2?0:1); }
+var QMAP={ "2,2":"nutzen","2,1":"nutzen","2,0":"aufbauen",
+           "1,2":"nutzen","1,1":"aufbauen","1,0":"aufbauen",
+           "0,2":"uebertragen","0,1":"zurueck","0,0":"zurueck" };
+// Seite des Quadranten je Strategie, damit ein Punkt nie auf der Trennlinie liegt
+var SIDE={ nutzen:{r:1,t:1}, aufbauen:{r:0,t:1}, uebertragen:{r:1,t:0}, zurueck:{r:0,t:0} };
+
+/* Zugang zum verdeckten Arbeitsmarkt: Schritte aus den eigenen Zahlen statt für alle gleich */
+function zugang(o,key){
+  if(key==="zurueck")return [];
+  var e=o.ev||{}, b=e.betriebe, k=e.kontakte, j=e.jahre, out=[];
+  if(b==null||k==null){
+    out.push("Firmenliste und Netzwerk zu dieser Richtung erfassen (Frage 2), dann werden die Schritte hier konkret");
+  } else if(b===0){
+    out.push("Zuerst 10 Betriebe in Ihrer Gegend heraussuchen, die in dieser Richtung einstellen. Ohne Namen bleibt der verdeckte Arbeitsmarkt unerreichbar");
+  } else if(k===0){
+    out.push("Sie kennen "+b+(b===1?" Betrieb":" Betriebe")+", aber niemanden darin. Pro Betrieb eine Ansprechperson finden (Website, LinkedIn, Empfang anrufen) und um ein kurzes Gespräch bitten, nicht um eine Stelle");
+  } else {
+    out.push("Ihre "+k+(k===1?" Kontaktperson":" Kontakte")+" gezielt fragen: Wer stellt ein, wann wird etwas frei, wen könnte ich noch ansprechen? Fragen Sie auch, ob man Sie empfehlen würde");
+  }
+  if(b>0) out.push("Initiativbewerbung mit konkretem Bezug an "+(b===1?"diesen Betrieb":"diese "+b+" Betriebe")+
+    (key==="nutzen"?"":", dazu einen Schnuppertag oder Probearbeit anbieten"));
+  if(key!=="nutzen"&&j===0) out.push("Ohne Erfahrung in dieser Richtung öffnet ein kurzer Einsatz die Tür: Schnuppertag, Probearbeit oder Temporäreinsatz");
+  if(key!=="nutzen") out.push("Temporärbüros für diese Branche anfragen. Ein Einsatz ist oft der schnellste Weg hinein; melden Sie ihn dem RAV als Zwischenverdienst");
+  return out;
+}
+
+/* Hinweise, die nur im Vergleich aller Richtungen sichtbar werden */
+function quer(){
+  var notes=[];
+  // gleiche Kandidatenzahl bei verschiedenen Berufen: Suche war zu breit
+  var mk=options.filter(function(o){return o.markt&&o.markt.kandidaten>=100;})
+                .sort(function(a,b){return a.markt.kandidaten-b.markt.kandidaten;});
+  var grp=[], best=[];
+  mk.forEach(function(o){
+    if(grp.length&&o.markt.kandidaten<=grp[0].markt.kandidaten*1.02)grp.push(o);
+    else{ if(grp.length>best.length)best=grp; grp=[o]; }
+  });
+  if(grp.length>best.length)best=grp;
+  var namen=best.map(function(o){return o.name.toLowerCase();}).filter(function(n,i,a){return a.indexOf(n)===i;});
+  if(best.length>=3&&namen.length>=2){
+    notes.push("Die Kandidatenzahlen von "+liste(best)+" sind fast gleich ("+best[0].markt.kandidaten+" bis "+
+      best[best.length-1].markt.kandidaten+"). Bei verschiedenen Berufen ist das kaum möglich. Wahrscheinlich war die Suche zu breit, zum Beispiel mit 150 km Radius. Prüfen Sie die Zahlen mit "+RADIUS_STD+" km.");
+  }
+  var weit=options.filter(function(o){return o.markt&&o.markt.kandidaten!=null&&(o.markt.radius==null||o.markt.radius>30);});
+  if(weit.length){
+    notes.push("Bei "+(weit.length===options.length&&weit.length>1?"allen Richtungen":liste(weit))+" ist kein Suchradius oder einer über 30 km eingetragen. Die Kandidatenzahl ist dann vermutlich zu hoch und der Markt sieht enger aus, als er ist.");
+  }
+  // Marktvergleich: Verhältnis untereinander, unabhängig von festen Schwellen
+  var vg=options.filter(function(o){return o.markt&&o.markt.stellen>=3&&o.markt.kandidaten!=null;})
+    .map(function(o){return {n:o.name,q:o.markt.kandidaten/o.markt.stellen};})
+    .sort(function(a,b){return a.q-b.q;});
+  if(vg.length>=2){
+    notes.push("Marktvergleich, Kandidaten pro Stelle (tiefer ist besser): "+vg.map(function(v){
+      return esc(v.n)+" <b>"+v.q.toFixed(1).replace(".",",")+"</b>";}).join(" · ")+".");
+  }
+  // mehrere Richtungen mit demselben Ergebnis: oft ein Berufsfeld statt getrennter Optionen
+  var byKey={};
+  options.forEach(function(o){var k=decide(o.ratings).key;(byKey[k]=byKey[k]||[]).push(o);});
+  Object.keys(byKey).forEach(function(k){
+    if(byKey[k].length>=3) notes.push(byKey[k].length+" Richtungen landen bei «"+STRAT[k].label+"»: "+liste(byKey[k])+
+      ". Gehören sie zum selben Berufsfeld, sind das keine getrennten Optionen. Dann breit im ganzen Feld bewerben und dieselben Kontakte für alle nutzen.");
+  });
+  // Praxis: Einladungen pro 10 Bewerbungen, und wo sie der Einstufung widerspricht
+  var pr=options.filter(function(o){return o.nach&&o.nach.bew>=5;});
+  if(pr.length>=2){
+    notes.push("Praxis, Einladungen pro 10 Bewerbungen (höher ist besser): "+pr.map(function(o){
+        return {n:o.name,q:(o.nach.einl||0)/o.nach.bew*10};
+      }).sort(function(a,b){return b.q-a.q;}).map(function(v){
+        return esc(v.n)+" <b>"+v.q.toFixed(1).replace(".",",")+"</b>";
+      }).join(" · ")+".");
+  }
+  pr.forEach(function(o){
+    if(fit(o).aus)return;   // ausgeschlossene Richtungen nicht gegen die Matrix ausspielen
+    var k=decide(o.ratings).key, q=(o.nach.einl||0)/o.nach.bew;
+    if(k==="nutzen"&&o.nach.bew>=10&&!o.nach.einl)
+      notes.push("«"+esc(o.name)+"» ist als «Jetzt verfolgen» eingestuft, hat aber auf "+o.nach.bew+" Bewerbungen keine Einladung gebracht. Prüfen Sie das Dossier und hinterfragen Sie die Einstufung.");
+    if((k==="uebertragen"||k==="zurueck")&&q>=0.2)
+      notes.push("«"+esc(o.name)+"» bringt mehr Einladungen, als die Einstufung «"+STRAT[k].label+"» erwarten lässt. Die Praxis hat Vorrang vor der Matrix.");
+  });
+  // doppelte Namen
+  var seen={}, dup=[];
+  options.forEach(function(o){var n=o.name.trim().toLowerCase(); if(seen[n]&&dup.indexOf(o.name)<0)dup.push(o.name); seen[n]=1;});
+  dup.forEach(function(n){
+    notes.push("«"+esc(n)+"» ist mehrfach eingetragen. Haben Sie verschiedene Regionen verglichen, benennen Sie die Einträge danach, zum Beispiel «"+esc(n)+" Bern».");
+  });
+  return notes;
+}
+function liste(arr){
+  var n=arr.map(function(o){return "«"+esc(o.name)+"»";});
+  return n.length<2?n.join(""):n.slice(0,-1).join(", ")+" und "+n[n.length-1];
+}
+function decide(r){
+  var a=axes(r), ly=lvl(a.y), lx=lvl(a.x);
+  return {key:QMAP[ly+","+lx], x:a.x, y:a.y, close:(ly===1||lx===1)};
+}
+/* Nichts im Browser speichern: auf gemeinsam genutzten Computern sähe sonst die nächste Person die Daten.
+   Gesichert wird nur über «Sichern als Datei». */
+var dirty=false;
+function changed(){ S.zr=options; save(); if(frApi)frApi.refresh(); }
+function wipeOld(){}   // Reste älterer Versionen entfernen
+
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){
+  return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function toast(m){APPTOAST(m);}
+
+function drawMatrix(newId){
+  var m=Z("matrix"), leg=Z("legend");
+  Array.prototype.slice.call(m.querySelectorAll(".pt")).forEach(function(n){n.remove();});
+  Z("matrixEmpty").style.display=options.length?"none":"block";
+  var count={}, CL=[[0,0],[7,0],[-7,0],[0,8],[0,-8],[7,8],[-7,8],[7,-8],[-7,-8]];
+  leg.innerHTML=options.map(function(o,n){
+    var d=decide(o.ratings), s=SIDE[d.key];
+    // Koordinate aus den echten Werten: 0..4 -> 17%..83% bzw. 88%..12%
+    var left=17+(d.x/4)*66, top=88-(d.y/4)*76;
+    // in den freien Teil des Quadranten der Strategie: nie auf die Trennlinie, nie über den Titel
+    var lo=s.t?24:56, hi=s.t?44:76;
+    left = s.r ? Math.min(90,Math.max(left,62)) : Math.max(10,Math.min(left,38));
+    top  = Math.min(hi,Math.max(lo,top));
+    // gleiche Koordinaten zu einem kleinen Haufen auffächern statt übereinanderzulegen
+    var pos=Math.round(left)+","+Math.round(top), i=count[pos]||0; count[pos]=i+1;
+    var off=CL[i%CL.length];
+    left+=off[0]; top+=off[1];
+    var el=document.createElement("div");
+    var aus=fit(o).aus;
+    el.className="pt"+(aus?" aus":"")+(o.id===newId?" new":"");
+    el.style.left=left+"%"; el.style.top=top+"%";
+    el.innerHTML='<div class="x-dot">'+(n+1)+'</div>';
+    el.title=o.name+" · "+(aus?"Passt nicht":STRAT[d.key].label);
+    m.appendChild(el);
+    return '<li><span class="ln">'+(n+1)+'</span>'+esc(o.name)+' <span class="lv '+(aus?"v-aus":STRAT[d.key].cls)+'">'+(aus?"Passt nicht":STRAT[d.key].label)+'</span></li>';
+  }).join("");
+}
+
+function render(newId){
+  var list=Z("list");
+  if(!options.length){
+    list.innerHTML='<div class="x-empty">Tragen Sie oben Ihre erste Zielrichtung ein.</div>';
+  } else {
+    list.innerHTML=options.map(function(o,n){
+      var d=decide(o.ratings), s=STRAT[d.key], f=fit(o);
+      return '<article class="x-card">'+
+        '<div class="card-top"><h3><span class="ln">'+(n+1)+'</span>'+esc(o.name)+'</h3>'+
+        (f.aus?'<span class="verdict v-aus" title="Matrix: '+s.label+'">Passt nicht</span>':'<span class="verdict '+s.cls+'">'+s.label+'</span>')+'</div>'+
+        '<div class="readout">'+
+          '<span>Markt <b>'+lbl("markt",o.ratings.markt)+'</b>'+marktZahl(o)+'</span>'+
+          '<span>Verankerung <b>'+lbl("position",o.ratings.position)+'</b>'+evPos(o)+'</span>'+
+          '<span>Können <b>'+lbl("kompetenz",o.ratings.kompetenz)+'</b>'+evKomp(o)+'</span>'+
+          '<span>Aufwand <b>'+lbl("aufwand",o.ratings.aufwand)+'</b></span>'+
+          '<span>Passung <b>'+fitLine(o)+'</b></span>'+
+        '</div>'+
+        (f.aus?'<p class="fit aus"><b>Passt nicht.</b> Sie haben angegeben, dass '+f.gruende.join(" und ")+
+          '. Die Matrix allein ergäbe «'+s.label+'». Verfolgen Sie diese Richtung nur, wenn sich das ändern lässt.</p>':
+          '<p class="why">'+s.why+'</p>')+
+        (f.fehlt?'<p class="fit warn">Die Fragen zur Passung sind noch nicht beantwortet. Klicken Sie auf «Bearbeiten».</p>':'')+
+        (f.warn.length?'<div class="fit warn"><ul class="hints" style="margin:0">'+f.warn.map(function(t){return "<li>"+t+"</li>";}).join("")+'</ul></div>':'')+
+        (d.close&&!f.aus?'<p class="close-call">Knapper Fall. Diese Richtung liegt nahe an der Grenze. Was müsste sich ändern, damit sie eindeutig wird? Nehmen Sie die Frage ins Einzelgespräch mit.</p>':'')+
+        (f.aus?'<div class="next"><b>Nächster Schritt</b><ul><li>Im Einzelgespräch klären, ob sich das Hindernis lösen lässt. Sonst Energie in andere Richtungen stecken.</li></ul></div>':
+          '<div class="next"><b>Nächste Schritte</b><ul>'+
+            s.next.map(function(t){return "<li>"+t+"</li>";}).join("")+
+          '</ul></div>'+
+          zugangHtml(o,d.key))+
+        swotHtml(o)+
+        nachHtml(o)+
+        '<div class="card-actions">'+
+          '<button class="x-btn-ghost" data-edit="'+o.id+'">Bearbeiten</button>'+
+          '<button class="x-btn-ghost" data-del="'+o.id+'">Löschen</button>'+
+        '</div></article>';
+    }).join("");
+    var notes=quer();
+    if(notes.length) list.innerHTML='<div class="quernotes"><b>Im Vergleich fällt auf</b><ul>'+
+      notes.map(function(t){return "<li>"+t+"</li>";}).join("")+'</ul></div>'+list.innerHTML;
+  }
+  drawMatrix(newId);
+}
+function zugangHtml(o,key){
+  var z=zugang(o,key); if(!z.length)return "";
+  return '<div class="next zugang"><b>Zugang zum verdeckten Arbeitsmarkt</b>'+
+    '<p>Viele Stellen werden besetzt, bevor sie ausgeschrieben sind. Hinein kommt, wer vorher schon Kontakt hatte.</p><ul>'+
+    z.map(function(t){return "<li>"+esc(t)+"</li>";}).join("")+'</ul></div>';
+}
+
+var LABELS={
+  markt:{2:"viele Stellen",1:"ausgeglichen",0:"wenige Stellen"},
+  position:{2:"gut",1:"teilweise",0:"noch nicht"},
+  kompetenz:{2:"das meiste",1:"ein Teil",0:"wenig"},
+  aufwand:{2:"klein",1:"mittel",0:"gross"}
+};
+function lbl(g,v){return LABELS[g][String(v)]||"";}
+
+/* ---------- Passung: zählt nicht als Punkte, kann aber ausschliessen ---------- */
+var MOTG=["mInt","mRahmen","mGes","mWissen"];
+var MOTN={mInt:"Interesse",mRahmen:"Rahmen",mGes:"Gesundheit",mWissen:"Alltag"};
+var MOTL={mInt:{2:"gerne",1:"es geht",0:"eher nicht"},
+          mRahmen:{2:"passt",1:"teilweise",0:"passt nicht"},
+          mGes:{2:"machbar",1:"mit Einschränkungen",0:"nicht machbar"},
+          mWissen:{2:"bekannt",1:"ungefähr bekannt",0:"kaum bekannt"}};
+function fit(o){
+  var m=o.mot;
+  if(!m||MOTG.some(function(g){return m[g]==null;})) return {fehlt:true,aus:false,gruende:[],warn:[]};
+  var aus=[], warn=[];
+  if(m.mRahmen===0) aus.push("Arbeitszeiten, Pensum oder Lohn nicht passen");
+  if(m.mGes===0)    aus.push("die Tätigkeit gesundheitlich nicht machbar ist");
+  if(m.mInt===0)    warn.push("Sie würden diese Arbeit eher nicht gerne machen. Prüfen Sie im Einzelgespräch, ob sie als Zwischenlösung trotzdem sinnvoll ist.");
+  if(m.mGes===1)    warn.push("Gesundheitliche Einschränkungen: Klären Sie vor der Bewerbung, welche Aufgaben gehen und welche nicht.");
+  if(m.mRahmen===1) warn.push("Die Rahmenbedingungen passen nur teilweise. Klären Sie, wo Ihre Grenze liegt: Pensum, Arbeitszeiten, Lohn.");
+  if(m.mWissen<2)   warn.push("Den Arbeitsalltag kennen Sie "+(m.mWissen===0?"kaum":"nur ungefähr")+". Lesen Sie das Berufsbild auf berufsberatung.ch und fragen Sie nach einem Schnuppertag, bevor Sie viel investieren.");
+  return {fehlt:false,aus:aus.length>0,gruende:aus,warn:warn};
+}
+function fitLine(o){
+  var m=o.mot; if(!m)return "nicht erfasst";
+  return MOTG.map(function(g){return MOTN[g]+" "+(MOTL[g][m[g]]||"–");}).join(" · ");
+}
+function swotHtml(o,print){
+  var w=o.swot; if(!w||!(w.s||w.w||w.o||w.t))return "";
+  var f=[["s","Stärken","sw-s"],["w","Schwächen","sw-w"],["o","Chancen","sw-o"],["t","Risiken","sw-t"]];
+  if(print) return '<p><strong>Kurz-SWOT</strong></p><ul>'+f.filter(function(x){return w[x[0]];})
+    .map(function(x){return '<li>'+x[1]+': '+esc(w[x[0]])+'</li>';}).join("")+'</ul>';
+  return '<div class="swot">'+f.map(function(x){
+    return '<div><span class="'+x[2]+'">'+x[1]+'</span>'+(w[x[0]]?esc(w[x[0]]):'<span style="color:var(--ink-3);font-weight:400;text-transform:none;letter-spacing:0">–</span>')+'</div>';
+  }).join("")+'</div>';
+}
+
+/* ---------- Nachfassen: was die Bewerbungen gebracht haben ---------- */
+function pct(a,b){ return Math.round(a/b*100)+" %"; }
+function fmtDate(iso){ var p=String(iso).split("-"); return p.length===3?(+p[2])+"."+(+p[1])+"."+p[0]:iso; }
+function nachText(o){
+  var n=o.nach; if(!n||!n.bew)return "Noch nichts eingetragen.";
+  var t;
+  if(n.bew<5){
+    t="Bei "+n.bew+(n.bew===1?" Bewerbung":" Bewerbungen")+" ist es zu früh für eine Aussage. Ab 5 Bewerbungen wird ausgewertet.";
+  } else {
+    var e=n.einl||0, r=Math.max(n.rueck||0,e);   // eine Einladung ist immer auch eine Rückmeldung
+    t="Rückmeldung auf <b>"+r+" von "+n.bew+"</b> ("+pct(r,n.bew)+"), Einladung zum Gespräch bei <b>"+e+"</b> ("+pct(e,n.bew)+").";
+    if(r<n.bew) t+=" "+(n.bew-r)+" Bewerbungen sind noch ohne Antwort. Fassen Sie dort telefonisch nach.";
+  }
+  if(n.stand) t+=' <span style="color:var(--ink-3)">Stand '+fmtDate(n.stand)+'</span>';
+  return t;
+}
+function nachHtml(o){
+  var n=o.nach||{};
+  function inp(k,l){ return '<label>'+l+'<input type="number" min="0" step="1" inputmode="numeric" data-nach="'+k+
+    '" data-id="'+o.id+'" value="'+(n[k]!=null?n[k]:"")+'"></label>'; }
+  return '<div class="nach"><b>Nachfassen</b><p>Tragen Sie nach einigen Wochen ein, was Ihre Bewerbungen in dieser Richtung gebracht haben. So sehen Sie, ob die Einstufung in der Praxis stimmt.</p>'+
+    '<div class="jr-nums">'+inp("bew","Bewerbungen")+inp("rueck","Rückmeldungen (Zu- und Absagen)")+inp("einl","davon Einladungen zum Gespräch")+'</div>'+
+    '<p class="nach-out">'+nachText(o)+'</p></div>';
+}
+function evPos(o){
+  var e=o.ev; if(!e||e.betriebe==null||e.kontakte==null||e.jahre==null)return "";
+  return " ("+e.betriebe+(e.betriebe===1?" Betrieb, ":" Betriebe, ")+e.kontakte+
+    (e.kontakte===1?" Kontakt, ":" Kontakte, ")+String(e.jahre).replace(".",",")+
+    (e.jahre===1?" Jahr)":" Jahre)");
+}
+function evKomp(o){
+  var e=o.ev; if(!e||e.anforderungen==null||e.belegt==null||!e.anforderungen)return "";
+  var t=" ("+e.belegt+" von "+e.anforderungen+" belegt";
+  if(e.objektiv===0)t+=", Nachweise fehlen";
+  else if(e.objektiv===1)t+=", Nachweise teilweise";
+  return t+")";
+}
+function marktZahl(o){
+  var m=o.markt; if(!m||m.stellen==null||m.kandidaten==null)return "";
+  var t=" ("+m.stellen+" Stellen, "+m.kandidaten+" Kandidaten";
+  if(m.jobsch!=null)t+=", "+m.jobsch+" auf jobs.ch";
+  if(m.radius!=null)t+=", "+m.radius+" km";
+  if(m.meldepflicht)t+=", meldepflichtig";
+  return t+")";
+}
+
+/* ---------- Job-Room: Zahlen auswerten ---------- */
+var jrStellen=Z("jrStellen");
+var jrKand=Z("jrKand");
+var jrMeld=Z("jrMeld");
+var jrOut=Z("jrOut");
+var jrRadius=Z("jrRadius");
+var jrJobsch=Z("jrJobsch");
+var RADIUS_STD=10;
+
+function marktLevel(stellen,kand,jobsch){
+  if(stellen===null||kand===null)return null;
+  if(stellen<3){                                 // im Job-Room praktisch kein Markt
+    return (jobsch!=null&&jobsch>=10)?1:0;       // ausser jobs.ch zeigt deutlich mehr
+  }
+  var q=kand/stellen;
+  var lv = q<0.7 ? 2 : (q<=2.5 ? 1 : 0);
+  if(stellen<8 && lv===2) lv=1;                  // kleine Zahlen nicht überbewerten
+  return lv;
+}
+function jrNum(el){
+  var v=el.value.trim();
+  if(v==="")return null;
+  var n=Number(v);
+  return (isFinite(n)&&n>=0)?Math.round(n):null;
+}
+function jrUpdate(){
+  var st=jrNum(jrStellen), ka=jrNum(jrKand);
+  if(st===null||ka===null){
+    jrOut.textContent="Tragen Sie beide Zahlen ein, dann wird die Lage automatisch eingestuft.";
+    return;
+  }
+  var js=jrNum(jrJobsch), rad=jrNum(jrRadius);
+  var lv=marktLevel(st,ka,js);
+  var q=st>0?(ka/st):null;
+  var txt="Auf eine Stelle kommen rechnerisch "+(q===null?"sehr viele":q.toFixed(1).replace(".",","))+
+          " gemeldete Kandidatinnen und Kandidaten. Einstufung: <b>"+lbl("markt",lv)+"</b>.";
+  if(st<3&&lv===1) txt="Im Job-Room nur "+st+" Stellen, auf jobs.ch aber "+js+
+    " Inserate. Der Markt läuft hier an der RAV-Plattform vorbei. Einstufung: <b>"+lbl("markt",1)+"</b>.";
+  else if(st<3) txt="Bei "+st+" Stellen in Ihrer Region gibt es praktisch keinen offenen Markt. Einstufung: <b>"+lbl("markt",0)+"</b>.";
+  else if(st<8) txt+=" Die Zahlen sind klein, das Verhältnis ist deshalb wenig aussagekräftig.";
+  if(st>=3&&js!=null&&js>=st*3) txt+=" Auf jobs.ch stehen deutlich mehr Inserate als im Job-Room. Der Markt ist grösser, als die RAV-Zahlen zeigen.";
+  if(rad!=null&&rad>30) txt+=" <b>Achtung:</b> Bei "+rad+" km Radius zählen Sie Kandidaten weit ausserhalb Ihrer Gegend mit. Stellen Sie beide Suchen auf "+RADIUS_STD+" km.";
+  if(jrMeld.checked) txt+=" Die Meldepflicht verschafft Ihnen einen Vorsprung von fünf Tagen.";
+  jrOut.innerHTML=txt;
+  var el=form.querySelector('input[name="markt"][value="'+lv+'"]');
+  if(el&&!el.checked)el.checked=true;
+}
+[jrStellen,jrKand,jrJobsch,jrRadius].forEach(function(el){ el.addEventListener("input",jrUpdate); });
+jrMeld.addEventListener("change",jrUpdate);
+
+function jrReset(){ jrStellen.value=""; jrKand.value=""; jrJobsch.value=""; jrRadius.value=RADIUS_STD; jrMeld.checked=false; jrUpdate(); }
+function jrFill(o){
+  var m=o.markt||{};
+  jrStellen.value=m.stellen!=null?m.stellen:"";
+  jrKand.value=m.kandidaten!=null?m.kandidaten:"";
+  jrJobsch.value=m.jobsch!=null?m.jobsch:"";
+  // ältere Dateien kennen keinen Radius: leer lassen statt 10 km vorzutäuschen
+  jrRadius.value=m.radius!=null?m.radius:"";
+  jrMeld.checked=!!m.meldepflicht;
+  jrUpdate();
+}
+function jrData(){
+  return { stellen:jrNum(jrStellen), kandidaten:jrNum(jrKand), jobsch:jrNum(jrJobsch),
+           radius:jrNum(jrRadius), meldepflicht:jrMeld.checked };
+}
+
+
+/* ---------- Belege zu Frage 2 bis 4 ---------- */
+var evBetriebe=Z("evBetriebe"), evKontakte=Z("evKontakte"),
+    evJahre=Z("evJahre"), evPosOut=Z("evPosOut"),
+    evAnf=Z("evAnf"), evBelegt=Z("evBelegt"),
+    evObjektiv=Z("evObjektiv"), evKompOut=Z("evKompOut"),
+    evGap=Z("evGap"), evDauer=Z("evDauer"),
+    evWeg=Z("evWeg"), evAufOut=Z("evAufOut");
+
+function setChoice(group,lv){
+  var el=form.querySelector('input[name="'+group+'"][value="'+lv+'"]');
+  if(el&&!el.checked)el.checked=true;
+}
+function n3(x){ return x===0?0:(x<=2?1:2); }
+
+/* Frage 2 */
+function posUpdate(){
+  var b=jrNum(evBetriebe), k=jrNum(evKontakte), j=jrNum(evJahre);
+  if(b===null||k===null||j===null){
+    evPosOut.textContent="Tragen Sie die drei Zahlen ein. Null ist eine gültige Antwort."; return null;
+  }
+  var sj = j>=2?2:(j>0?1:0);
+  var sum=n3(b)+n3(k)+sj;
+  var lv = sum>=4?2:(sum>=2?1:0);
+  evPosOut.innerHTML="Sie kennen <b>"+b+"</b> "+(b===1?"Betrieb":"Betriebe")+" und <b>"+k+"</b> "+
+    (k===1?"Person":"Personen")+" und haben <b>"+String(j).replace(".",",")+"</b> "+
+    (j===1?"Jahr":"Jahre")+" Erfahrung. Einstufung: <b>"+lbl("position",lv)+"</b>.";
+  setChoice("position",lv); return lv;
+}
+[evBetriebe,evKontakte,evJahre].forEach(function(el){el.addEventListener("input",posUpdate);});
+
+/* Frage 3 */
+function kompUpdate(){
+  var a=jrNum(evAnf), bl=jrNum(evBelegt), ob=evObjektiv.value===""?null:Number(evObjektiv.value);
+  if(a===null||bl===null||ob===null||a===0){
+    evKompOut.textContent="Tragen Sie beide Zahlen ein und wählen Sie, wie es um die verlangten Nachweise steht.";
+    gapUpdate(); return null;
+  }
+  if(bl>a){ bl=a; evBelegt.value=a; }
+  var q=bl/a, lv = q>=0.7?2:(q>=0.4?1:0);
+  var hinweis="";
+  if(ob===0){ lv=0; hinweis=" Die verlangten Nachweise fehlen. Das ist ein Ausschlusskriterium, unabhängig von der Quote."; }
+  else if(ob===1&&lv===2){ lv=1; hinweis=" Die Nachweise sind nur teilweise vorhanden, deshalb eine Stufe tiefer."; }
+  evKompOut.innerHTML="Sie belegen <b>"+bl+" von "+a+"</b> Anforderungen, das sind <b>"+
+    Math.round(q*100)+" Prozent</b>. Einstufung: <b>"+lbl("kompetenz",lv)+"</b>."+hinweis;
+  setChoice("kompetenz",lv); gapUpdate(); return lv;
+}
+[evAnf,evBelegt].forEach(function(el){el.addEventListener("input",kompUpdate);});
+evObjektiv.addEventListener("change",kompUpdate);
+
+/* Frage 4 */
+function gapUpdate(){
+  var a=jrNum(evAnf), bl=jrNum(evBelegt), ob=evObjektiv.value===""?null:Number(evObjektiv.value);
+  if(a===null||bl===null){ evGap.textContent="Ihre Lücke ergibt sich aus Frage 3."; return null; }
+  var offen=Math.max(0,a-Math.min(bl,a));
+  var t="Offen "+(offen===1?"ist":"sind")+" <b>"+offen+"</b> von "+a+" Anforderungen.";
+  if(ob===0)t+=" Dazu fehlen die verlangten Nachweise.";
+  else if(ob===1)t+=" Die verlangten Nachweise sind nur teilweise vorhanden.";
+  evGap.innerHTML=t;
+  return offen;
+}
+function aufUpdate(){
+  var d=evDauer.value===""?null:Number(evDauer.value);
+  var w=evWeg.value===""?null:Number(evWeg.value);
+  var offen=gapUpdate();
+  var ob=evObjektiv.value===""?null:Number(evObjektiv.value);
+  if(offen===0&&ob===2){
+    evAufOut.innerHTML="Es fehlt nichts. Einstufung: <b>"+lbl("aufwand",2)+"</b>.";
+    setChoice("aufwand",2); return 2;
+  }
+  if(d===null||w===null){ evAufOut.textContent="Wählen Sie beides aus."; return null; }
+  // "noch unklar" zählt neutral statt als "über ein Jahr": Nichtwissen ist eine offene Frage, kein Urteil
+  var sum=(d<0?1:d)+w, lv = sum>=3?2:(sum===2?1:0);
+  evAufOut.innerHTML="Dauer und Weg zusammen ergeben die Einstufung: <b>"+lbl("aufwand",lv)+"</b>."+
+    (d<0?" Die Dauer ist noch offen und zählt deshalb neutral. Klären Sie sie im Einzelgespräch.":"");
+  setChoice("aufwand",lv); return lv;
+}
+[evDauer,evWeg].forEach(function(el){el.addEventListener("change",aufUpdate);});
+
+function evReset(){
+  [evBetriebe,evKontakte,evJahre,evAnf,evBelegt].forEach(function(el){el.value="";});
+  evObjektiv.value=""; evDauer.value=""; evWeg.value="";
+  posUpdate(); kompUpdate(); aufUpdate();
+}
+function evFill(o){
+  var e=o.ev||{};
+  evBetriebe.value=e.betriebe!=null?e.betriebe:""; evKontakte.value=e.kontakte!=null?e.kontakte:"";
+  evJahre.value=e.jahre!=null?e.jahre:""; evAnf.value=e.anforderungen!=null?e.anforderungen:"";
+  evBelegt.value=e.belegt!=null?e.belegt:""; evObjektiv.value=e.objektiv!=null?String(e.objektiv):"";
+  evDauer.value=e.dauer!=null?String(e.dauer):""; evWeg.value=e.weg!=null?String(e.weg):"";
+  posUpdate(); kompUpdate(); aufUpdate();
+}
+function evData(){
+  return { betriebe:jrNum(evBetriebe), kontakte:jrNum(evKontakte), jahre:jrNum(evJahre),
+           anforderungen:jrNum(evAnf), belegt:jrNum(evBelegt),
+           objektiv:evObjektiv.value===""?null:Number(evObjektiv.value),
+           dauer:evDauer.value===""?null:Number(evDauer.value),
+           weg:evWeg.value===""?null:Number(evWeg.value) };
+}
+
+/* ---------- Formular ---------- */
+var form=Z("form");
+var nameIn=Z("name");
+var submitBtn=Z("submitBtn");
+var cancelBtn=Z("cancelBtn");
+
+function readForm(){
+  var r={};
+  ["markt","position","kompetenz","aufwand"].forEach(function(g){
+    var el=form.querySelector('input[name="'+g+'"]:checked');
+    r[g]=el?el.value:null;
+  });
+  return r;
+}
+function readMot(){
+  var m={};
+  MOTG.forEach(function(g){ var el=form.querySelector('input[name="'+g+'"]:checked'); m[g]=el?Number(el.value):null; });
+  return m;
+}
+function readSwot(){
+  function v(id){ return Z(id).value.trim(); }
+  return { s:v("swS"), w:v("swW"), o:v("swO"), t:v("swT") };
+}
+var motInfo=Z("motInfo"), motInfoText=Z("motInfoText");
+function motUpdate(){
+  var m=readMot(), t=[];
+  if(m.mRahmen===0||m.mGes===0) t.push("Damit passt diese Richtung nicht. Sie können sie trotzdem eintragen, um sie zu vergleichen. Sie erscheint dann als «Passt nicht».");
+  if(m.mWissen!=null&&m.mWissen<2) t.push("Lesen Sie zuerst das Berufsbild: Tätigkeiten, Arbeitszeiten, Anforderungen, Weiterbildung. Den Alltag zeigt ein Schnuppertag am besten.");
+  motInfo.hidden=!t.length; motInfoText.textContent=t.join(" ");
+}
+MOTG.forEach(function(g){
+  Array.prototype.slice.call(form.querySelectorAll('input[name="'+g+'"]')).forEach(function(el){ el.addEventListener("change",motUpdate); });
+});
+function resetForm(){
+  form.reset(); jrReset(); evReset(); termUpdate(); motUpdate(); editId=null;
+  submitBtn.textContent="Richtung eintragen";
+  cancelBtn.hidden=true;
+}
+function fillForm(o){
+  nameIn.value=o.name;
+  ["markt","position","kompetenz","aufwand"].forEach(function(g){
+    var el=form.querySelector('input[name="'+g+'"][value="'+o.ratings[g]+'"]');
+    if(el)el.checked=true;
+  });
+  MOTG.forEach(function(g){
+    var el=o.mot&&o.mot[g]!=null?form.querySelector('input[name="'+g+'"][value="'+o.mot[g]+'"]'):null;
+    Array.prototype.slice.call(form.querySelectorAll('input[name="'+g+'"]')).forEach(function(x){x.checked=false;});
+    if(el)el.checked=true;
+  });
+  var w=o.swot||{};
+  Z("swS").value=w.s||""; Z("swW").value=w.w||"";
+  Z("swO").value=w.o||""; Z("swT").value=w.t||"";
+  jrFill(o); evFill(o); termUpdate(); motUpdate();
+  editId=o.id;
+  submitBtn.textContent="Änderung speichern";
+  cancelBtn.hidden=false;
+  form.scrollIntoView({behavior:"smooth",block:"start"});
+  nameIn.focus({preventScroll:true});
+}
+
+
+/* ---------- Suchlinks aus der Zielrichtung ---------- */
+var lnkJobs=Z("lnkJobs");
+var lnkJobsMarkt=Z("lnkJobsMarkt");
+var lnkBBBeruf=Z("lnkBBBeruf");
+var lnkBBWeiter=Z("lnkBBWeiter");
+var lnkBBMot=Z("lnkBBMot");
+var BB="https://www.berufsberatung.ch/de/suche";
+
+function termUpdate(){
+  var t=nameIn.value.trim(), q=encodeURIComponent(t);
+  lnkJobs.href = t ? "https://www.jobs.ch/de/stellenangebote/?term="+q
+                   : "https://www.jobs.ch/de/stellenangebote/";
+  lnkJobs.textContent = t ? "Inserat zu \u00bb"+t+"\u00ab auf jobs.ch suchen" : "Inserat auf jobs.ch suchen";
+  lnkJobsMarkt.href = lnkJobs.href;
+  lnkJobsMarkt.textContent = t ? "\u00bb"+t+"\u00ab auf jobs.ch z\u00e4hlen" : "Inserate auf jobs.ch z\u00e4hlen";
+  lnkBBBeruf.href = t ? BB+"?q="+q : BB;
+  lnkBBBeruf.textContent = t ? "\u00bb"+t+"\u00ab auf berufsberatung.ch nachschlagen"
+                             : "Anforderungen des Berufs nachschlagen";
+  lnkBBWeiter.href = t ? BB+"?q="+q : BB;
+  lnkBBMot.href = t ? BB+"?q="+q : BB;
+  lnkBBMot.textContent = t ? "Berufsbild \u00bb"+t+"\u00ab auf berufsberatung.ch nachlesen" : "Berufsbild auf berufsberatung.ch nachlesen";
+  lnkBBWeiter.textContent = t ? "Weiterbildungen zu \u00bb"+t+"\u00ab suchen"
+                              : "Auf berufsberatung.ch suchen";
+}
+nameIn.addEventListener("input",termUpdate);
+function hintUpdate(){ var h=Z("evHint"); if(!h)return; var t=nameIn.value.trim();
+  if(!t){ h.textContent=""; return; }
+  var n=frApi?frApi.count(t):0, k=((S.netz||{}).contacts||[]).length;
+  h.textContent="Zum Nachschauen: In Ihrer Firmenliste stehen "+n+(n===1?" Betrieb":" Betriebe")+" zu «"+t+"». Im Netzwerk haben Sie "+k+(k===1?" Kontakt":" Kontakte")+" erfasst."; }
+nameIn.addEventListener("input",hintUpdate);
+
+termUpdate();
+
+form.addEventListener("submit",function(e){
+  e.preventDefault();
+  var name=nameIn.value.trim(), r=readForm();
+  if(!name){ toast("Bitte tragen Sie zuerst die Zielrichtung ein."); nameIn.focus(); return; }
+  var mot=readMot();
+  var missing=MOTG.filter(function(g){return mot[g]===null;})
+    .concat(["markt","position","kompetenz","aufwand"].filter(function(g){return r[g]===null;}));
+  if(missing.length){
+    toast(MOTG.indexOf(missing[0])>=0?"Bitte beantworten Sie auch die Fragen zur Passung.":"Bitte beantworten Sie alle vier Fragen.");
+    var g=form.querySelector('[data-group="'+missing[0]+'"]');
+    if(g)g.scrollIntoView({block:"center",behavior:"smooth"});
+    return;
+  }
+  var gleich=options.some(function(o){return o.id!==editId&&o.name.trim().toLowerCase()===name.toLowerCase();});
+  if(gleich){ toast('«'+name+'» gibt es schon. Tipp: Region oder Variante in den Namen schreiben, zum Beispiel «'+name+' Bern».'); }
+  if(editId){
+    // Nachfassen-Zahlen werden auf der Karte gepflegt und bleiben beim Bearbeiten erhalten
+    options=options.map(function(o){return o.id===editId?{id:o.id,name:name,ratings:r,markt:jrData(),ev:evData(),
+      mot:mot,swot:readSwot(),nach:o.nach}:o;});
+    var id=editId; resetForm(); changed(); render(id); toast("Änderung gespeichert.");
+  } else {
+    var nid=Date.now();
+    options.push({id:nid,name:name,ratings:r,markt:jrData(),ev:evData(),mot:mot,swot:readSwot()});
+    resetForm(); changed(); render(nid); toast("Richtung eingetragen.");
+  }
+});
+cancelBtn.addEventListener("click",resetForm);
+
+Z("list").addEventListener("click",function(e){
+  var b=e.target.closest("button"); if(!b)return;
+  if(b.dataset.edit){
+    var o=options.filter(function(x){return String(x.id)===b.dataset.edit;})[0];
+    if(o)fillForm(o);
+  }
+  if(b.dataset.del){
+    var o2=options.filter(function(x){return String(x.id)===b.dataset.del;})[0];
+    if(o2&&armed(b,"Löschen")){
+      options=options.filter(function(x){return String(x.id)!==b.dataset.del;});
+      if(editId&&String(editId)===b.dataset.del)resetForm();
+      changed(); render(); toast("Gelöscht.");
+    }
+  }
+});
+
+Z("list").addEventListener("change",function(e){
+  var t=e.target; if(!t.dataset||!t.dataset.nach)return;
+  var o=options.filter(function(x){return String(x.id)===t.dataset.id;})[0]; if(!o)return;
+  var n=o.nach||{bew:null,rueck:null,einl:null};
+  var v=t.value.trim()===""?null:Math.round(Number(t.value));
+  n[t.dataset.nach]=(v===null||!isFinite(v)||v<0)?null:v;
+  // Einladungen sind auch Rückmeldungen, Rückmeldungen setzen eine Bewerbung voraus
+  var fix=false;
+  if(n.einl!=null&&(n.rueck==null||n.einl>n.rueck)){ if(n.rueck!=null)fix=true; n.rueck=n.einl; }
+  if(n.rueck!=null&&n.bew!=null&&n.rueck>n.bew){n.bew=n.rueck;fix=true;}
+  if(n.einl!=null&&n.bew!=null&&n.einl>n.bew){n.bew=n.einl;fix=true;}
+  n.stand=new Date().toISOString().slice(0,10);
+  o.nach=n; changed(); render();
+  toast(fix?"Angepasst: Einladungen zählen auch als Rückmeldung, Rückmeldungen setzen eine Bewerbung voraus.":"Eingetragen. Am Schluss die Datei sichern.");
+});
+
+/* ---------- Sichern, Einlesen, Löschen ---------- */
+Z("exportBtn").addEventListener("click",function(){
+  if(!options.length){toast("Es gibt noch nichts zu sichern.");return;}
+  var blob=new Blob([JSON.stringify({version:1,gespeichert:new Date().toISOString(),optionen:options},null,2)],
+    {type:"application/json"});
+  var a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="Meine_Zielrichtungen.json";
+  a.click(); URL.revokeObjectURL(a.href);
+  dirty=false; toast("Datei gesichert.");
+});
+Z("importBtn").addEventListener("click",function(){
+  Z("importFile").click();
+});
+Z("importFile").addEventListener("change",function(e){
+  var f=e.target.files[0]; if(!f)return;
+  var rd=new FileReader();
+  rd.onload=function(){
+    try{
+      var d=JSON.parse(rd.result);
+      var arr=d&&d.optionen?d.optionen:(Array.isArray(d)?d:null);
+      if(!arr)throw new Error("Format");
+      options=arr; changed(); resetForm(); render(); toast("Datei eingelesen.");
+    }catch(err){ toast("Diese Datei lässt sich nicht lesen."); }
+  };
+  rd.readAsText(f); e.target.value="";
+});
+Z("clearBtn").addEventListener("click",function(){
+  if(!options.length){toast("Es ist nichts gespeichert.");return;}
+  if(armed(this,"Alles löschen")){
+    options=[]; changed(); resetForm();
+    render(); toast("Alles gelöscht.");
+  }
+});
+
+zrApi={
+  verfolgt:function(){ return options.filter(function(o){ return !fit(o).aus&&decide(o.ratings).key!=="zurueck"; }).map(function(o){return o.name;}); },
+  sync:function(){ if(options!==S.zr){ options=S.zr; resetForm(); render(); } },
+  rerender:function(){ render(); hintUpdate(); }
+};
+render();
+})();
+
+/* ================= Firmenrecherche und Initiativbewerbung (Werkzeug BIN 1) ================= */
+
+(function(){
+
+var KEY="bin.firmenrecherche.v1";
+// Richtungen aus dem Gesamtwerkzeug werden nur durchgereicht, damit beim Sichern nichts verloren geht
+var options=S.zr;
+var ROOT=document.getElementById("fr-root");
+function armed(b,lab){ if(b.dataset.armed)return true; b.dataset.armed="1"; b.textContent="Wirklich löschen?"; setTimeout(function(){ if(b.isConnected){ delete b.dataset.armed; b.textContent=lab; } },4000); return false; }
+function optById(id){ return options.filter(function(o){return o.id===id;})[0]||null; }
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){
+  return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function toast(m){APPTOAST(m);}
+
+function fmtDate(iso){ var p=String(iso).split("-"); return p.length===3?(+p[2])+"."+(+p[1])+"."+p[0]:iso; }
+/* Nichts im Browser speichern: auf gemeinsam genutzten Computern sähe sonst die nächste Person die Daten. */
+var dirty=false;
+function changed(){ S.fr.firmen=firmen; save(); if(zrApi)zrApi.rerender(); }
+function wipeOld(){}
+
+
+/* =====================================================================
+   Firmen recherchieren und Initiativbewerbung (Einzelwerkzeug, gebaut aus dem Gesamtwerkzeug)
+   ===================================================================== */
+var firmen=S.fr.firmen, fEditId=null, bFirmaId=null, aktivTab="tab-firmen";
+var MIN_FIRMEN=5;
+var AUFH=[["slogan","Slogan und Werbesprache"],["zahlen","Zahlen"],["geschichte","Geschichte und Tradition"],
+          ["werte","Werte und Leitbild"],["produkte","Produkte und Dienstleistungen"],["aktuell","Aktuelles"],
+          ["menschen","Menschen und Kultur"],["eigen","Eigener Berührungspunkt"]];
+var AUFHN={}; AUFH.forEach(function(a){AUFHN[a[0]]=a[1];});
+var SIGNALE=["stellt ein, wächst","neue Filiale, Neubau","sucht kurzfristig (Coople, Temporär)","Inserate in Nachbarberuf",
+             "Saison, Spitzenzeit","Pensionierung, Personalwechsel","Medienbericht"];
+var STUFEN=["Recherchiert","Bewerbungsreif","Kontaktiert","Gespräch, Schnuppern","Bewerbung gesendet","Antwort"];
+var FORMEN=["Probeeinsatz von einigen Tagen","befristeter Einsatz","Stundenlohn","Saison oder Spitzenzeit",
+            "Ferien- oder Krankheitsablösung","Springerdienst auf Abruf","Teilzeit mit Ausbaumöglichkeit",
+            "Festanstellung mit längerer Einarbeitung"];
+var ERGEBNIS={einladung:"Einladung oder Einsatz",absage:"Absage",spaeter:"später wieder melden"};
+
+function $(id){ return document.getElementById("fr-"+id); }
+function heute(){ return new Date().toISOString().slice(0,10); }
+function reif(f){
+  var sig=!!(f.signal&&((f.signal.arten||[]).length||(f.signal.text||"").trim()));
+  var per=!!(f.person&&(f.person.name||"").trim());
+  return {ok:sig&&per, fehlt:[sig?null:"Signal",per?null:"Ansprechperson"].filter(Boolean)};
+}
+// markierte Aufhänger (mehrere möglich); ältere Dateien kennen nur einen («fav»)
+function favs(f){ var a=f.aufh||{}, k=Array.isArray(f.favs)?f.favs:(f.fav?[f.fav]:[]);
+  return k.filter(function(x){return a[x]&&(a[x].t||"").trim();}); }
+function aufhGefuellt(f){ var a=f.aufh||{}; return AUFH.map(function(x){return x[0];}).filter(function(k){return a[k]&&(a[k].t||"").trim();}); }
+function favText(f,k){ var a=f.aufh[k]; return '«'+esc(a.t)+'» <span class="tipp">('+AUFHN[k]+(a.q?', Quelle: '+esc(a.q):', Quelle fehlt')+')</span>'; }
+function stufe(f){ return f.status>=2?f.status:(reif(f).ok?1:0); }
+function optById(id){ return options.filter(function(o){return o.id===id;})[0]||null; }
+function idByName(n){ var o=options.filter(function(x){return n&&x.name.toLowerCase()===n.toLowerCase();})[0]; return o?o.id:null; }
+// Zielrichtungen, wie sie in diesem Werkzeug vorkommen: die Namen bei den Betrieben
+function richtungen(){ var m={}, out=[];
+  (zrApi?zrApi.verfolgt():[]).concat(firmen.map(richtungName)).forEach(function(n){ if(n&&!m[n.toLowerCase()]){ m[n.toLowerCase()]=1; out.push(n); } });
+  return out; }
+function firmenMitName(n){ return firmen.filter(function(f){ return richtungName(f).toLowerCase()===n.toLowerCase(); }); }
+// Zielrichtung eines Betriebs: Kennnummer aus Reiter 1 und/oder Name (Einzelwerkzeug kennt nur den Namen)
+function richtungName(f){ var o=f.richtung!=null?optById(f.richtung):null; return o?o.name:(f.richtungText||""); }
+function firmenZu(id){ var o=optById(id);
+  return firmen.filter(function(f){ return f.richtung===id||(o&&!optById(f.richtung)&&f.richtungText&&f.richtungText.toLowerCase()===o.name.toLowerCase()); }); }
+function personText(f){
+  var p=f.person||{}; if(!(p.name||"").trim())return "";
+  return [(p.anrede?p.anrede+" ":"")+p.name.trim(), p.funktion].filter(Boolean).join(", ");
+}
+
+/* ---------- Reiter ---------- */
+function showTab(id){
+  aktivTab=id;
+  Array.prototype.slice.call(ROOT.querySelectorAll(".tabpanel")).forEach(function(p){p.hidden=(p.id!=="fr-"+id);});
+  Array.prototype.slice.call(ROOT.querySelectorAll(".x-tab")).forEach(function(t){t.setAttribute("aria-selected",String(t.dataset.tab===id));});
+  if(id==="tab-firmen")renderFirmen();
+  if(id==="tab-brief")renderBrief();
+}
+Array.prototype.slice.call(ROOT.querySelectorAll(".x-tab")).forEach(function(t){
+  t.addEventListener("click",function(){showTab(t.dataset.tab);});
+});
+
+/* ---------- Reiter 2: Formular ---------- */
+var fSig=[];
+function sigChips(){
+  var g=$("fSigChips"); g.innerHTML="";
+  SIGNALE.forEach(function(x){
+    var b=document.createElement("button"); b.type="button"; b.textContent=x;
+    b.setAttribute("aria-pressed",String(fSig.indexOf(x)>=0));
+    b.onclick=function(){ fSig=fSig.indexOf(x)>=0?fSig.filter(function(y){return y!==x;}):fSig.concat(x); sigChips(); };
+    g.appendChild(b);
+  });
+}
+function richtungOptionen(){
+  $("fRichtungListe").innerHTML=richtungen().map(function(n){return '<option value="'+esc(n)+'">';}).join("");
+}
+function fRead(){
+  var aufh={};
+  AUFH.forEach(function(a){
+    var t=ROOT.querySelector('[data-af="'+a[0]+'"]').value.trim(), q=ROOT.querySelector('[data-afq="'+a[0]+'"]').value.trim();
+    if(t||q)aufh[a[0]]={t:t,q:q};
+  });
+  var sterne=Array.prototype.slice.call(ROOT.querySelectorAll('#fForm .af-star[aria-pressed="true"]')).map(function(b){return b.dataset.star;});
+  return { name:$("fName").value.trim(), ort:$("fOrt").value.trim(),
+    richtung:idByName($("fRichtung").value.trim()), richtungText:$("fRichtung").value.trim(),
+    quelle:$("fQuelle").value,
+    signal:{arten:fSig.slice(), text:$("fSigText").value.trim()},
+    person:{anrede:$("fAnrede").value, name:$("fPerson").value.trim(), funktion:$("fFunktion").value.trim(),
+            quelle:$("fPersonQuelle").value, kanal:$("fKanal").value},
+    aufh:aufh, favs:sterne, fav:sterne[0]||"", beob:$("fBeob").value.trim(), auftritt:$("fAuftritt").value };
+}
+function fReset(){
+  $("fForm").reset(); fSig=[]; sigChips(); fEditId=null;
+  Array.prototype.slice.call(ROOT.querySelectorAll('#fForm .af-star')).forEach(function(b){ b.setAttribute("aria-pressed","false"); });
+  $("fSubmit").textContent="Betrieb eintragen"; $("fCancel").hidden=true;
+}
+function fFill(f){
+  fReset();
+  $("fName").value=f.name||""; $("fOrt").value=f.ort||""; richtungOptionen();
+  $("fRichtung").value=richtungName(f); $("fQuelle").value=f.quelle||"";
+  fSig=((f.signal||{}).arten||[]).slice(); sigChips(); $("fSigText").value=(f.signal||{}).text||"";
+  var p=f.person||{};
+  $("fAnrede").value=p.anrede||""; $("fPerson").value=p.name||""; $("fFunktion").value=p.funktion||"";
+  $("fPersonQuelle").value=p.quelle||""; $("fKanal").value=p.kanal||"";
+  AUFH.forEach(function(a){
+    var x=(f.aufh||{})[a[0]]||{};
+    ROOT.querySelector('[data-af="'+a[0]+'"]').value=x.t||"";
+    ROOT.querySelector('[data-afq="'+a[0]+'"]').value=x.q||"";
+  });
+  var fs=favs(f); Array.prototype.slice.call(ROOT.querySelectorAll('#fForm .af-star')).forEach(function(b){ b.setAttribute("aria-pressed",String(fs.indexOf(b.dataset.star)>=0)); });
+  $("fBeob").value=f.beob||""; $("fAuftritt").value=f.auftritt||"";
+  fEditId=f.id; $("fSubmit").textContent="Änderung speichern"; $("fCancel").hidden=false;
+  $("fForm").scrollIntoView({behavior:"smooth",block:"start"});
+  $("fName").focus({preventScroll:true});
+}
+$("fForm").addEventListener("submit",function(e){
+  e.preventDefault();
+  var d=fRead();
+  if(!d.name){ toast("Bitte tragen Sie den Namen des Betriebs ein."); $("fName").focus(); return; }
+  var leer=d.favs.filter(function(k){return !(d.aufh[k]&&d.aufh[k].t);});
+  if(leer.length){ toast("Mit Stern markiert, aber leer: "+leer.map(function(k){return AUFHN[k];}).join(", ")+". Füllen Sie das Feld aus oder entfernen Sie den Stern."); return; }
+  var dup=firmen.some(function(f){return f.id!==fEditId&&f.name.toLowerCase()===d.name.toLowerCase()&&(f.ort||"").toLowerCase()===d.ort.toLowerCase();});
+  if(dup)toast("«"+d.name+"» steht schon in Ihrer Liste.");
+  if(fEditId){
+    firmen=firmen.map(function(f){ if(f.id!==fEditId)return f;
+      var n=d; n.id=f.id; n.status=f.status;
+      n.next=f.next; n.ergebnis=f.ergebnis; n.brief=f.brief; if(f.bewerbungId)n.bewerbungId=f.bewerbungId; return n; });
+    toast("Änderung gespeichert.");
+  } else {
+    d.id=Date.now(); d.status=0; d.next={was:"",datum:""}; d.ergebnis=""; d.brief={};
+    firmen.push(d); toast(reif(d).ok?"Betrieb eingetragen. Er ist bewerbungsreif.":"Betrieb eingetragen. Für eine Bewerbung fehlt noch: "+reif(d).fehlt.join(" und ")+".");
+  }
+  var keepR=$("fRichtung").value;
+  fReset(); $("fRichtung").value=keepR;   // nächste Firma meist in derselben Richtung
+  changed(); renderFirmen();
+});
+$("fCancel").addEventListener("click",fReset);
+$("fForm").addEventListener("click",function(e){
+  var b=e.target.closest(".af-star"); if(!b)return;
+  b.setAttribute("aria-pressed",String(b.getAttribute("aria-pressed")!=="true"));
+});
+
+/* ---------- Reiter 2: Anzeige ---------- */
+function renderFirmen(){
+  richtungOptionen();
+  // Ziel pro verfolgte Richtung
+  var v=richtungen(), z=$("fZiel");
+  if(!v.length){
+    z.innerHTML='<div class="zbox"><b>Ziel: '+MIN_FIRMEN+' Betriebe pro Zielrichtung</b><small>Tragen Sie bei jedem Betrieb ein, zu welcher Zielrichtung er gehört. Dann sehen Sie hier Ihren Stand.</small></div>';
+  } else {
+    z.innerHTML=v.map(function(n0){
+      var fs=firmenMitName(n0), n=fs.length, r=fs.filter(function(f){return reif(f).ok;}).length;
+      var dots=""; for(var i=0;i<Math.max(MIN_FIRMEN,n);i++)dots+=i<n?"●":"○";
+      return '<div class="zbox'+(n>=MIN_FIRMEN?' ok':'')+'"><b>'+esc(n0)+'</b><div class="dots" aria-hidden="true">'+dots+'</div>'+
+        '<small>'+n+' von '+MIN_FIRMEN+' Betrieben, davon '+r+' bewerbungsreif'+(n>=MIN_FIRMEN?'. Ziel erreicht.':'')+'</small></div>';
+    }).join("");
+  }
+  // Pipeline
+  var cnt=STUFEN.map(function(){return 0;});
+  firmen.forEach(function(f){ cnt[stufe(f)]++; });
+  var max=Math.max(1,firmen.length);
+  $("fPipe").innerHTML=firmen.length?STUFEN.map(function(l,i){
+    return '<div class="pipe-row"><span>'+l+'</span><span class="pipe-bar"><i style="width:'+(cnt[i]/max*100)+'%"></i></span><b>'+cnt[i]+'</b></div>';
+  }).join(""):'<p class="tipp">Noch keine Betriebe erfasst.</p>';
+  // Liste, gruppiert nach Richtung
+  var L=$("fList");
+  if(!firmen.length){ L.innerHTML='<div class="x-empty">Tragen Sie oben Ihren ersten Betrieb ein.</div>'; return; }
+  var gruppen=richtungen().map(function(n){return {t:n,fs:firmenMitName(n)};})
+    .concat([{t:"Ohne Zuordnung",fs:firmen.filter(function(f){return !richtungName(f);})}])
+    .filter(function(g){return g.fs.length;});
+  L.innerHTML=gruppen.map(function(g){
+    return '<h3 class="fgroup">'+esc(g.t)+' <small style="color:var(--ink-3);font-weight:500">('+g.fs.length+')</small></h3>'+g.fs.map(fCard).join("");
+  }).join("");
+}
+function fCard(f){
+  var r=reif(f), st=stufe(f), p=f.person||{}, sig=f.signal||{};
+  // Bewerbungsreif ist ein Qualitätsmerkmal, keine Sperre: jede tatsächliche Bemühung muss eintragbar sein
+  var stufenHtml=STUFEN.map(function(l,i){
+    var cls=i<st?"x-done":(i===st?"cur":"");
+    if(i===1&&!r.ok&&f.status>=2)cls="";
+    return '<button type="button" class="'+cls+'" data-fstat="'+i+'" data-id="'+f.id+'"'+(i===1?' disabled title="Ergibt sich automatisch aus Signal und Ansprechperson"':'')+'>'+l+'</button>';
+  }).join("");
+  var fv=favs(f);
+  var next=f.next||{}, late=next.datum&&next.datum<heute()&&st<5;
+  return '<article class="x-card fcard">'+
+    '<div class="card-top"><div><h3>'+esc(f.name)+'</h3><div class="x-meta">'+esc([f.ort,richtungName(f)?"Richtung: "+richtungName(f):"",f.quelle?"gefunden über "+f.quelle:""].filter(Boolean).join(" · "))+'</div></div>'+
+    (r.ok?'<span class="badge reif">bewerbungsreif</span>':'<span class="badge offen">es fehlt: '+r.fehlt.join(", ")+'</span>')+'</div>'+
+    '<div class="stufen" role="group" aria-label="Stand">'+stufenHtml+'</div>'+
+    (f.status>=2&&!r.ok?'<p class="tipp" style="color:var(--q4)">Kontaktiert ohne '+r.fehlt.join(" und ")+'. Das zählt als Bemühung. Ergänzen Sie, was Sie dabei erfahren haben, und besprechen Sie es im Einzelgespräch.</p>':'')+
+    (f.status===5?'<label class="mini" style="max-width:20rem">Ergebnis<select data-ferg="'+f.id+'"><option value="">bitte wählen</option>'+
+      Object.keys(ERGEBNIS).map(function(k){return '<option value="'+k+'"'+(f.ergebnis===k?' selected':'')+'>'+ERGEBNIS[k]+'</option>';}).join("")+'</select></label>':'')+
+    '<div class="fdet">'+
+      '<div><b>Signal</b>'+(((sig.arten||[]).length||sig.text)?esc((sig.arten||[]).concat(sig.text?[sig.text]:[]).join(" · ")):'<span class="tipp">noch offen</span>')+'</div>'+
+      '<div><b>Ansprechperson</b>'+(personText(f)?esc(personText(f))+(p.kanal?' · per '+esc(p.kanal):'')+(p.quelle?' · über '+esc(p.quelle):''):'<span class="tipp">noch offen</span>')+'</div>'+
+      '<div style="grid-column:1/-1"><b>'+(fv.length>1?'Ihre Aufhänger':'Ihr Aufhänger')+'</b>'+(fv.length?fv.map(function(k){return favText(f,k);}).join('<br>')+(f.beob?'<br>'+esc(f.beob):''):'<span class="tipp">noch keiner markiert</span>')+'</div>'+
+    '</div>'+
+    '<div class="fnext'+(late?' overdue':'')+'"><b>Nächster Schritt</b>'+
+      '<input type="text" data-fnext="was" data-id="'+f.id+'" value="'+esc(next.was||"")+'" placeholder="z.B. Filialleiterin anrufen">'+
+      '<input type="date" data-fnext="datum" data-id="'+f.id+'" value="'+esc(next.datum||"")+'">'+(late?'<span class="late">überfällig</span>':'')+'</div>'+
+    '<div class="card-actions">'+
+      '<button class="x-btn-ghost" data-fedit="'+f.id+'">Bearbeiten</button>'+
+      '<button class="x-btn-ghost" data-fbrief="'+f.id+'">Brief entwerfen</button>'+
+      '<button class="x-btn-ghost" data-fdel="'+f.id+'">Löschen</button>'+
+    '</div></article>';
+}
+function firmaById(id){ return firmen.filter(function(f){return String(f.id)===String(id);})[0]; }
+$("fList").addEventListener("click",function(e){
+  var b=e.target.closest("button"); if(!b)return;
+  if(b.dataset.fstat!=null){
+    var f=firmaById(b.dataset.id), i=Number(b.dataset.fstat);
+    f.status=(i===0||f.status===i)?0:i;   // aktuelle Stufe nochmals klicken = zurück auf «Recherchiert»
+    swFirmStatus(f); changed(); renderFirmen();
+  }
+  if(b.dataset.fedit){ fFill(firmaById(b.dataset.fedit)); }
+  if(b.dataset.fbrief){ bFirmaId=Number(b.dataset.fbrief); showTab("tab-brief"); }
+  if(b.dataset.fdel){
+    var f2=firmaById(b.dataset.fdel);
+    if(f2&&armed(b,"Löschen")){
+      firmen=firmen.filter(function(x){return x!==f2;}); if(fEditId===f2.id)fReset(); if(bFirmaId===f2.id)bFirmaId=null;
+      changed(); renderFirmen(); toast("Gelöscht.");
+    }
+  }
+});
+$("fList").addEventListener("change",function(e){
+  var t=e.target, f;
+  if(t.dataset.fnext){ f=firmaById(t.dataset.id); f.next=f.next||{}; f.next[t.dataset.fnext]=t.value.trim(); changed(); renderFirmen(); }
+  if(t.dataset.ferg){ f=firmaById(t.dataset.ferg); f.ergebnis=t.value; swFirmStatus(f); changed(); }
+});
+
+/* ---------- Reiter 3: Initiativbewerbung ---------- */
+/* Der Brief entsteht aus Satzrahmen (Leitfaden Initiativbewerbung). Regeln: nie roher Feldinhalt als
+   Satz, leere Felder lassen den ganzen Satz weg, keine Wertungssätze, kein Doppelpunkt und kein
+   Gedankenstrich im Fliesstext, Anrede ohne Komma, Datum ausgeschrieben, Tausender mit Leerzeichen. */
+var bFelder=Array.prototype.slice.call(ROOT.querySelectorAll("[data-b]"));
+function bFirma(){ return firmaById(bFirmaId); }
+
+var MONATE=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+function datumLang(iso){ var p=String(iso||"").split("-"); return p.length===3&&+p[1]>=1?(+p[2])+". "+MONATE[+p[1]-1]+" "+p[0]:""; }
+function tausender(t){
+  return t.replace(/(\d{1,3})['’](\d{3})(?!\d)/g,"$1 $2")
+          .replace(/(^|[^\d,.])([1-9]\d{4,})(?![\d,.])/g,function(m,v,n){ return v+n.replace(/\B(?=(\d{3})+(?!\d))/g," "); });
+}
+function bereinigen(t){ return tausender(String(t||"").replace(/\s+/g," ").trim()); }
+function ohneSchluss(t){ return bereinigen(t).replace(/[\s.,;:!?]+$/,""); }
+function grossAnfang(t){ return t?t.charAt(0).toUpperCase()+t.slice(1):t; }
+// freier Text als ganzer Satz: genau ein Schlusszeichen, grosser Anfang
+function satz(t){ t=bereinigen(t).replace(/[\s,;:]+$/,"").replace(/\.{2,}$/,"."); if(!t)return ""; if(!/[.!?]$/.test(t))t+="."; return grossAnfang(t); }
+function oder(a){ return a.length<2?a.join(""):a.slice(0,-1).join(", ")+" oder "+a[a.length-1]; }
+
+var SIEFRAGEN=["Was ist Ihnen an dieser Firma aufgefallen? (Zahl, Produkt, Neuigkeit, Standort)",
+  "Wo sind Sie der Firma begegnet? (als Kundin oder Kunde, im Vorbeifahren, über Bekannte, in der Zeitung)",
+  "Was macht diese Firma anders als andere in der Branche?"];
+var RAHMEN=[
+  {id:"kennen1",t:"{S} kenne ich aus {E}.",ph:"meiner letzten Stelle als Lagermitarbeiter"},
+  {id:"kennen2",t:"{S} kenne ich von {E}.",ph:"meiner Arbeit bei der Firma …"},
+  {id:"taeglich1",t:"{S} gehört seit {E} zu meinen täglichen Aufgaben.",ph:"fünf Jahren"},
+  {id:"taeglich2",t:"{S} gehörte während {E} zu meinen täglichen Aufgaben.",ph:"drei Jahren bei …"},
+  {id:"gelernt",t:"{S} habe ich {E} gelernt.",ph:"in meiner Ausbildung als …"},
+  {id:"angewendet",t:"{S} habe ich {E} angewendet.",ph:"täglich bei …"},
+  {id:"gemacht",t:"{S} habe ich {E} gemacht.",ph:"2022"},
+  {id:"gewohnt",t:"{S} bin ich aus {E} gewohnt.",ph:"drei Jahren im Schichtbetrieb bei …"},
+  {id:"neu1",t:"{S} ist für mich neu. Ich bringe dafür {E} mit.",ph:"Erfahrung mit …"},
+  {id:"neu2",t:"{S} wäre für mich neu. Dafür bringe ich {E} mit.",ph:"Erfahrung mit …"}];
+var WIR=[{k:"wirA",v:["In Ihrem Betrieb möchte ich {E}.","Bei Ihnen möchte ich {E}."],ph:"langfristig mitarbeiten und mich im Lager weiterentwickeln"},
+  {k:"wirB",v:["An der Zusammenarbeit mit Ihnen reizt mich {E}.","An einer Mitarbeit in Ihrem Betrieb reizt mich {E}."],ph:"die Arbeit in einem grossen Team"},
+  {k:"wirC",v:["Mein Ziel ist {E}.","Mein Ziel ist es, {E}."],ph:"eine feste Stelle in der Logistik"}];
+var ANGEBOTE=[["probe","Probearbeit"],["zv","Zwischenverdienst"],["abruf","Auf Abruf"],["praktikum","Praktikum"],["befristet","Befristet oder temporär"],["anstellung","Teilzeit oder Festanstellung"]];
+var ZUSATZ=[["gespraech","Einladung zum Vorstellungsgespräch"],["anruf","Ich rufe an"],["rueck","Rückmeldung abwarten"]];
+var VERBOT=[
+  [/(^|[^a-zäöü])(perfekt|ideal|optimal|hundertprozentig|zweifellos)|bestens geeignet|überzeugt|(^|[^a-zäöü])(der|die) richtige([^a-zäöü]|$)/i,"Urteil über sich selbst",
+   "Tipp: In der Schweiz wirken Belege stärker als Urteile über sich selbst. Was haben Sie konkret gemacht oder erreicht?"],
+  [/(^|[^a-zäöü])ich (melde mich|erwarte|will)([^a-zäöü]|$)/i,"Forderung",
+   "Tipp: Ein Anliegen wirkt höflicher im Konjunktiv, zum Beispiel «Gerne würde ich …»."],
+  [/hiermit bewerbe ich mich|mit gro(ss|ß)em interesse|neuen? herausforderung|auf der suche nach|ihre firma ist bekannt für|als ich ihre (website|webseite|homepage) besuchte/i,"Floskel",
+   "Tipp: Solche Sätze stehen in vielen Bewerbungen. Beginnen Sie mit etwas, das Sie nur dieser Firma schreiben können."],
+  [/ß/,"«ß»","In der Schweiz schreibt man «ss»."]];
+
+/* ---------- Bausteine ---------- */
+function kwListe(b){ var seen={};
+  return String(b.kwText||"").split(/\n/).map(function(x){return x.trim();})
+    .filter(function(x){ var k=x.toLowerCase(); if(!x||seen[k])return false; seen[k]=1; return true; }); }
+function kwDaten(b,kw){ b.ich=b.ich||{}; var k=kw.toLowerCase();
+  if(!b.ich[k])b.ich[k]={als:"",r:"kennen1",e:"",z:"",mit:false}; return b.ich[k]; }
+// Zwei Verhältniswörter hintereinander («kenne ich aus in meiner Lehre») verraten eine falsch gefüllte Lücke
+var PRAEP="aus|von|vom|seit|während|in|im|bei|beim|als|an|am|auf|mit|nach|für|zu|zur|zum";
+var DOPPEL=new RegExp("(^|\\s)("+PRAEP+")\\s+("+PRAEP+")\\s","i");
+function schief(satz0){ var m=DOPPEL.exec(satz0||""); return m?m[2]+" "+m[3]:""; }
+function rahmen(id){ return RAHMEN.filter(function(r){return r.id===id;})[0]||RAHMEN[0]; }
+function kwSatz(kw,d){
+  if(d.mit)return "";
+  var S=ohneSchluss(d.als||kw), E=ohneSchluss(d.e);
+  if(!S||!E)return "";          // ohne Beleg kein Satz
+  return [grossAnfang(rahmen(d.r).t.replace("{S}",S).replace("{E}",E)), d.z?satz(d.z):""].filter(Boolean).join(" ");
+}
+function wirSaetze(b){
+  return WIR.map(function(w){ var e=ohneSchluss(b[w.k]); if(!e)return "";
+    return grossAnfang(w.v[((b.wirV||{})[w.k])||0].replace("{E}",e)); }).filter(Boolean);
+}
+function angebotSaetze(b){
+  var a=b.angebote||[], s=[], has=function(k){return a.indexOf(k)>=0;};
+  if(has("probe")) s.push("Gerne würde ich Ihnen bei einigen Tagen Probearbeit zeigen, wie ich arbeite.");
+  var eins=["zv","abruf","befristet"].filter(has), auch=s.length>0;
+  if(eins.length===1){
+    if(eins[0]==="zv") s.push((auch?"Auch ein":"Ein")+" Einsatz im Zwischenverdienst ist für mich möglich.");
+    if(eins[0]==="abruf") s.push("Für Einsätze auf Abruf bin ich kurzfristig verfügbar.");
+    if(eins[0]==="befristet") s.push("Ich bin "+(auch?"auch ":"")+"für einen befristeten Einsatz offen.");
+  } else if(eins.length>1){
+    var ph={zv:"im Zwischenverdienst",abruf:"auf Abruf",befristet:"befristet"};
+    s.push((auch?"Auch ein":"Ein")+" Einsatz "+oder(eins.map(function(k){return ph[k];}))+" ist für mich möglich.");
+  }
+  if(has("praktikum")) s.push("Ein Praktikum wäre für mich ein guter Weg, Ihren Betrieb kennenzulernen.");
+  if(has("anstellung")){
+    var p=ohneSchluss(b.pensum).replace(/\s*(%|prozent)$/i,""), d=datumLang(b.ab);
+    if(p&&d) s.push("Ich suche eine Anstellung von "+p+" Prozent und bin ab "+d+" verfügbar.");
+    else if(p) s.push("Ich suche eine Anstellung von "+p+" Prozent.");
+    else if(d) s.push("Ab "+d+" bin ich verfügbar.");
+  }
+  return s;
+}
+function zusatzSaetze(b){
+  var z=b.zusatz||[], s=[], d=datumLang(b.anrufDatum);
+  var g=z.indexOf("gespraech")>=0, a=z.indexOf("anruf")>=0&&d, r=z.indexOf("rueck")>=0;
+  if(g) s.push("Gerne stelle ich mich Ihnen in einem persönlichen Gespräch vor.");
+  if(a) s.push(g?"Ich rufe Sie dazu gerne in der Woche vom "+d+" an.":"Gerne rufe ich Sie in der Woche vom "+d+" an, um zu hören, ob ein Gespräch für Sie in Frage kommt.");
+  if(r) s.push("Über eine Rückmeldung von Ihnen freue ich mich.");
+  return s;
+}
+function anrede(f){
+  var p=f.person||{}, n=(p.name||"").trim().split(/\s+/).pop();
+  return p.anrede==="Frau"&&n?"Sehr geehrte Frau "+n:(p.anrede==="Herr"&&n?"Sehr geehrter Herr "+n:"Sehr geehrte Damen und Herren");
+}
+function briefTeile(f){
+  var b=f.brief||{};
+  return { sie:satz(b.einl),
+    ich:kwListe(b).map(function(kw){return kwSatz(kw,kwDaten(b,kw));}).filter(Boolean).join(" "),
+    wir:wirSaetze(b).concat(angebotSaetze(b)).join(" "),
+    zusatz:zusatzSaetze(b).join(" ") };
+}
+function briefGenerieren(f){
+  var t=briefTeile(f);
+  return [anrede(f)].concat([t.sie,t.ich,t.wir,t.zusatz].filter(Boolean)).concat(["Freundliche Grüsse"]).join("\n\n");
+}
+function briefText(f){ var b=f.brief||{}; return b.manuell&&b.text?b.text:briefGenerieren(f); }
+
+// Selbstprüfung der festen Bausteine: darf nie anschlagen
+(function(){
+  var fest=RAHMEN.map(function(r){return r.t;}).concat([].concat.apply([],WIR.map(function(w){return w.v;})))
+    .concat(angebotSaetze({angebote:ANGEBOTE.map(function(a){return a[0];}),pensum:"80",ab:"2026-11-01"}))
+    .concat(zusatzSaetze({zusatz:["gespraech","anruf","rueck"],anrufDatum:"2026-10-19"}))
+    .concat(zusatzSaetze({zusatz:["anruf"],anrufDatum:"2026-10-19"}));
+  fest.forEach(function(t){
+    if(VERBOT.some(function(v){return v[0].test(t);})||/[:–—]/.test(t)) console.error("Baustein verletzt den Leitfaden: "+t);
+  });
+})();
+
+/* ---------- Anzeige ---------- */
+function renderBrief(){
+  var sel=$("bFirma");
+  if(!firmen.length){ $("bEmpty").hidden=false; $("bBody").hidden=true; sel.hidden=true; return; }
+  sel.hidden=false; $("bEmpty").hidden=true; $("bBody").hidden=false;
+  if(!bFirma()) bFirmaId=(firmen.filter(function(f){return reif(f).ok;})[0]||firmen[0]).id;
+  sel.innerHTML=firmen.map(function(f){
+    return '<option value="'+f.id+'">'+esc(f.name)+(f.ort?', '+esc(f.ort):'')+' ('+STUFEN[stufe(f)]+')</option>';
+  }).join("");
+  sel.value=String(bFirmaId);
+  if(kiFirmaId!==bFirmaId){ kiZurueck(); kiFirmaId=bFirmaId; }   // nie den Auftrag eines anderen Betriebs stehen lassen
+  var f=bFirma(); f.brief=f.brief||{}; var b=f.brief;
+  bFelder.forEach(function(el){ el.value=b[el.dataset.b]||""; });
+  var r=reif(f), o=optById(f.richtung);
+  $("bSum").innerHTML='<b>'+esc(f.name)+'</b>'+(f.ort?' · '+esc(f.ort):'')+(richtungName(f)?' · Richtung «'+esc(richtungName(f))+'»':'')+(f.auftritt?' · Auftritt: '+esc(f.auftritt):'')+
+    '<br>Signal: '+(((f.signal||{}).arten||[]).length||(f.signal||{}).text?esc(((f.signal.arten||[]).concat(f.signal.text?[f.signal.text]:[])).join(" · ")):'–')+
+    '<br>Ansprechperson: '+(personText(f)?esc(personText(f)):'–')+
+    (r.ok?'':'<p class="warn">Noch nicht bewerbungsreif: Es fehlt '+r.fehlt.join(" und ")+'. Mit beidem trifft der Brief besser. Versuchen Sie es zu ergänzen, bevor Sie ihn senden.</p>');
+  $("bSieFragen").innerHTML=SIEFRAGEN.map(function(q,i){
+    return '<label><input type="radio" name="bSieFrage" value="'+i+'"'+(b.sieFrage===i?' checked':'')+'><span>'+esc(q)+'</span></label>';
+  }).join("");
+  aufhListe(f);
+  var sw=o&&o.swot&&o.swot.s;
+  $("bSwotTipp").textContent=sw?"Aus Ihrer Kurz-SWOT zu dieser Richtung, Stärken: «"+sw+"»":"";
+  renderKw(f); renderWir(f); chips(f,"bAngebote",ANGEBOTE,"angebote"); chips(f,"bZusatz",ZUSATZ,"zusatz");
+  bUpdate();
+}
+$("bFirma").addEventListener("change",function(){ bFirmaId=Number(this.value); kiZurueck(); renderBrief(); });
+$("bSieFragen").addEventListener("change",function(e){ var f=bFirma(); if(!f)return; f.brief.sieFrage=Number(e.target.value); changed(); });
+
+function aufhListe(f){
+  var g=aufhGefuellt(f), fv=favs(f);
+  $("bAufh").innerHTML=g.length?'<p class="tipp" style="margin:0 0 4px">Aus Ihrer Recherche. Markieren Sie mit dem Stern, was Ihnen aufgefallen ist. Mehrere Sterne sind möglich.</p>'+
+    g.map(function(k){ return '<div class="aufh-item"><button type="button" class="af-star" data-bstar="'+k+'" aria-pressed="'+(fv.indexOf(k)>=0)+'" aria-label="Als Aufhänger markieren: '+AUFHN[k]+'">★</button><span>'+favText(f,k)+'</span></div>'; }).join("")+
+    (f.beob?'<p class="tipp">Ihre Beobachtung: '+esc(f.beob)+'</p>':''):
+    '<p class="tipp warnhint">Zu diesem Betrieb ist noch kein Aufhänger erfasst. Tragen Sie im Reiter «Firmen recherchieren» unter «C Aufhänger» ein, was Ihnen aufgefallen ist (Bearbeiten).</p>';
+}
+$("bAufh").addEventListener("click",function(e){
+  var b=e.target.closest("[data-bstar]"), f=bFirma(); if(!b||!f)return;
+  var fv=favs(f), k=b.dataset.bstar;
+  f.favs=fv.indexOf(k)>=0?fv.filter(function(x){return x!==k;}):fv.concat(k); f.fav=f.favs[0]||"";
+  changed(); aufhListe(f);
+});
+function renderKw(f){
+  var b=f.brief, L=kwListe(b);
+  $("bKw").innerHTML=L.length?L.map(function(kw,i){
+    var d=kwDaten(b,kw), s=kwSatz(kw,d), R=rahmen(d.r);
+    return '<div class="kw-row'+(d.mit?' aus':'')+'" data-kw="'+esc(kw)+'">'+
+      '<div class="kw-head"><b>'+esc(kw)+'</b>'+(i>0?'<label><input type="checkbox" data-kwf="mit"'+(d.mit?' checked':'')+'> steht im Satz darüber</label>':'')+'</div>'+
+      (d.mit?'<p class="tipp">Dieses Schlagwort ergänzen Sie im Satz darüber, zum Beispiel unter «Im Satz als»: «Schichtarbeit und Teamarbeit».</p>':
+      '<div class="kw-grid">'+
+        '<label>Im Satz als<input type="text" data-kwf="als" value="'+esc(d.als)+'" placeholder="'+esc(kw)+'"></label>'+
+        '<label>Satzrahmen<select data-kwf="r">'+RAHMEN.map(function(x){return '<option value="'+x.id+'"'+(x.id===R.id?' selected':'')+'>'+esc(x.t.replace("{S}",kw).replace(/\{E\}\.?/,"…"))+'</option>';}).join("")+'</select></label>'+
+        '<label class="voll">Ihr Beleg: ergänzen Sie die drei Punkte<input type="text" data-kwf="e" value="'+esc(d.e)+'" placeholder="'+esc(R.ph)+'"></label>'+
+        '<label class="voll">Ein Beispiel oder Ergebnis, als ganzer Satz (freiwillig)<input type="text" data-kwf="z" value="'+esc(d.z)+'" placeholder="z.B. Meine Fehlerquote lag in dieser Zeit unter 0,5 Prozent."></label>'+
+      '</div>'+
+      '<p class="kw-prev'+(s?'':' leer')+'">'+(s?esc(s):'Erscheint nicht im Brief, solange der Beleg fehlt.')+'</p>'+
+      '<p class="tipp warnhint kw-warn"'+(schief(s)?'':' hidden')+'>'+(schief(s)?'Klingt der Satz richtig? «'+esc(schief(s))+'» steht doppelt. Wählen Sie einen anderen Satzrahmen oder lassen Sie das erste Wort in Ihrem Beleg weg.':'')+'</p>')+
+    '</div>';
+  }).join(""):'<p class="tipp">Sobald Sie oben Schlagwörter eintragen, erscheint hier zu jedem ein Satzrahmen.</p>';
+}
+function kwEvent(e){
+  var row=e.target.closest(".kw-row"), k=e.target.dataset.kwf, f=bFirma(); if(!row||!k||!f)return;
+  var kw=row.dataset.kw, d=kwDaten(f.brief,kw);
+  d[k]=k==="mit"?e.target.checked:e.target.value; changed();
+  if(k==="mit"||k==="r"){ renderKw(f); }
+  else { var s=kwSatz(kw,d), pv=row.querySelector(".kw-prev"); pv.className="kw-prev"+(s?"":" leer"); pv.textContent=s||"Erscheint nicht im Brief, solange der Beleg fehlt.";
+    var w=row.querySelector(".kw-warn"), sc=schief(s); w.hidden=!sc; w.textContent=sc?"Klingt der Satz richtig? «"+sc+"» steht doppelt. Wählen Sie einen anderen Satzrahmen oder lassen Sie das erste Wort in Ihrem Beleg weg.":""; }
+  bUpdate();
+}
+$("bKw").addEventListener("input",kwEvent); $("bKw").addEventListener("change",function(e){ if(e.target.dataset.kwf==="mit"||e.target.dataset.kwf==="r")kwEvent(e); });
+
+function renderWir(f){
+  var b=f.brief; b.wirV=b.wirV||{};
+  $("bWir").innerHTML=WIR.map(function(w){
+    var vi=b.wirV[w.k]||0;
+    return '<div class="wir-row"><select data-wv="'+w.k+'" aria-label="Satzanfang">'+w.v.map(function(v,i){return '<option value="'+i+'"'+(i===vi?' selected':'')+'>'+esc(v.replace(" {E}."," …").replace(" {E}"," …"))+'</option>';}).join("")+'</select>'+
+      '<input type="text" data-wk="'+w.k+'" value="'+esc(b[w.k]||"")+'" placeholder="'+esc(w.ph)+'"></div>';
+  }).join("");
+}
+$("bWir").addEventListener("input",function(e){ var f=bFirma(); if(!f)return;
+  if(e.target.dataset.wk){ f.brief[e.target.dataset.wk]=e.target.value; changed(); bUpdate(); } });
+$("bWir").addEventListener("change",function(e){ var f=bFirma(); if(!f)return;
+  if(e.target.dataset.wv){ f.brief.wirV[e.target.dataset.wv]=Number(e.target.value); changed(); bUpdate(); } });
+
+function chips(f,id,liste,feld){
+  var g=$(id); g.innerHTML=""; f.brief[feld]=f.brief[feld]||[];
+  liste.forEach(function(x){
+    var b=document.createElement("button"); b.type="button"; b.textContent=x[1];
+    b.setAttribute("aria-pressed",String(f.brief[feld].indexOf(x[0])>=0));
+    b.onclick=function(){
+      var a=f.brief[feld], an=a.indexOf(x[0])<0;
+      a=an?a.concat(x[0]):a.filter(function(y){return y!==x[0];});
+      // Anruf und «Rückmeldung abwarten» schliessen sich aus
+      if(an&&x[0]==="anruf")a=a.filter(function(y){return y!=="rueck";});
+      if(an&&x[0]==="rueck")a=a.filter(function(y){return y!=="anruf";});
+      f.brief[feld]=a; changed(); chips(f,id,liste,feld); bUpdate();
+    };
+    g.appendChild(b);
+  });
+}
+bFelder.forEach(function(el){
+  el.addEventListener("input",function(){
+    var f=bFirma(); if(!f)return;
+    f.brief[el.dataset.b]=el.value; changed();
+    if(el.dataset.b==="kwText")renderKw(f);
+    bUpdate();
+  });
+});
+$("bText").addEventListener("input",function(){
+  var f=bFirma(); if(!f)return;
+  f.brief.text=this.value; f.brief.manuell=true; changed();
+  $("bManuell").hidden=false; selbstcheck(f);
+});
+$("bNeu").addEventListener("click",function(){
+  var f=bFirma(); if(!f)return; f.brief.manuell=false; f.brief.text=""; changed(); bUpdate();
+});
+
+function bUpdate(){
+  var f=bFirma(); if(!f)return; var b=f.brief;
+  var an=(b.angebote||[]); $("bTeilzeit").hidden=an.indexOf("anstellung")<0;
+  $("bAnruf").hidden=(b.zusatz||[]).indexOf("anruf")<0;
+  // Hinweise direkt beim Eingeben der Einleitung
+  var e=b.einl||"", h=VERBOT.filter(function(v){return v[0].test(e);}).map(function(v){return v[2];});
+  if(/[:–—]| - /.test(e)) h.push("Tipp: Doppelpunkte und Gedankenstriche wirken im Brief steif. Schreiben Sie lieber zwei kurze Sätze.");
+  $("bEinlHint").textContent=h.join(" ");
+  if(!b.manuell) $("bText").value=briefGenerieren(f);
+  else if($("bText").value!==b.text) $("bText").value=b.text;
+  $("bManuell").hidden=!b.manuell;
+  selbstcheck(f);
+}
+
+/* ---------- Selbstcheck ---------- */
+function selbstcheck(f){
+  var b=f.brief, t=briefTeile(f), text=briefText(f), L=[], ok=[];
+  // 1 vier Absätze
+  var fehl=[];
+  if(!t.sie)fehl.push("Sie-Teil: Ihre Einleitung");
+  if(!t.ich)fehl.push("Ich-Teil: mindestens ein Schlagwort mit Beleg");
+  if(!t.wir)fehl.push("Wir-Teil: ein Ziel oder ein Angebot");
+  if(!t.zusatz)fehl.push((b.zusatz||[]).indexOf("anruf")>=0&&!b.anrufDatum?"Schluss: das Datum für Ihren Anruf":"Schluss: eine Option für Gespräch oder Kontakt");
+  if(fehl.length)L.push(["Es fehlt noch",fehl.join(", ")+"."]); else ok.push("Alle vier Absätze sind vorhanden.");
+  // 2 Schlagwörter
+  var kws=kwListe(b), ohne=kws.filter(function(kw){var d=kwDaten(b,kw); return !d.mit&&!kwSatz(kw,d);});
+  var ichText=t.ich.toLowerCase();
+  var verloren=kws.filter(function(kw){var d=kwDaten(b,kw); return d.mit&&ichText.indexOf(kw.toLowerCase())<0;});
+  if(ohne.length)L.push(["Ohne Beleg weggelassen",ohne.map(function(x){return "«"+x+"»";}).join(", ")+". Ergänzen Sie den Beleg, wenn das Schlagwort in den Brief soll."]);
+  if(verloren.length)L.push(["Schlagwort fehlt im Satz",verloren.map(function(x){return "«"+x+"»";}).join(", ")+" ist als «steht im Satz darüber» markiert, kommt dort aber nicht vor."]);
+  var schiefe=kws.map(function(kw){return kwSatz(kw,kwDaten(b,kw));}).filter(function(x){return schief(x);});
+  if(schiefe.length)L.push(["Klingt der Satz richtig?",schiefe.map(function(x){return "«"+x+"»";}).join(" ")+" Hier stehen zwei Verhältniswörter hintereinander."]);
+  if(kws.length&&!ohne.length&&!verloren.length&&!schiefe.length)ok.push("Jedes Schlagwort steht in einem ganzen Satz mit Beleg.");
+  // 3 Sätze: ganze Sätze, genau ein Schlusspunkt (Verb-Prüfung nur ungefähr)
+  var zeilen=text.split(/\n+/).filter(function(z){return z.trim();});
+  var koerper=zeilen.slice(1).filter(function(z){return z.trim()!=="Freundliche Grüsse";}).join(" ");
+  var saetze=koerper.match(/[^.!?]+[.!?]+/g)||[];
+  var kurz=saetze.filter(function(s0){return s0.trim().split(/\s+/).length<3;});
+  if(kurz.length)L.push(["Wirkt wie ein Stichwort",kurz.map(function(x){return "«"+x.trim()+"»";}).join(", ")+". Schreiben Sie einen ganzen Satz mit Verb."]);
+  if(/\.\.|[!?]\.|\.[!?]/.test(koerper))L.push(["Satzzeichen","Am Satzende steht mehr als ein Zeichen."]);
+  var rest=koerper.replace(/[^.!?]+[.!?]+/g,"").trim();
+  if(rest)L.push(["Satzende fehlt","«"+rest+"» endet ohne Punkt."]);
+  // 4/5 Verbotsliste, Doppelpunkt, Gedankenstrich
+  VERBOT.forEach(function(v){ if(v[0].test(koerper))L.push([v[1],v[2]]); });
+  if(/:/.test(koerper))L.push(["Doppelpunkt","Im Fliesstext wirkt ein Doppelpunkt wie aus einem Formular. Schreiben Sie zwei Sätze."]);
+  if(/[–—]| - /.test(koerper))L.push(["Gedankenstrich","Gedankenstriche gelten als typisches KI-Merkmal. Schreiben Sie lieber zwei kurze Sätze."]);
+  // 6 Anrede ohne Komma, erster Satz gross
+  if(/,\s*$/.test(zeilen[0]||""))L.push(["Anrede","Nach der Anrede steht in der Schweiz kein Komma."]);
+  if(zeilen[1]&&/^[a-zäöü]/.test(zeilen[1]))L.push(["Anfang","Der erste Satz nach der Anrede beginnt mit einem Grossbuchstaben."]);
+  if(!L.length)ok.push("Keine Floskeln, keine Doppelpunkte oder Gedankenstriche, Satzzeichen in Ordnung.");
+  $("bCheck").innerHTML='<ul class="x-check">'+L.map(function(x){return '<li><b>'+esc(x[0])+':</b> '+esc(x[1])+'</li>';}).join("")+
+    ok.map(function(x){return '<li class="ok"><b>✓</b> '+esc(x)+'</li>';}).join("")+'</ul>'+
+    (b.manuell?'<p class="tipp">Geprüft wird Ihr von Hand angepasster Text.</p>':'');
+}
+
+function kopieren(text,ok){
+  function alt(){
+    var t=document.createElement("textarea"); t.value=text; t.style.position="fixed"; t.style.opacity="0";
+    document.body.appendChild(t); t.select(); var r=false; try{r=document.execCommand("copy");}catch(e){} t.remove();
+    toast(r?ok:"Kopieren nicht möglich. Markieren Sie den Text von Hand.");
+  }
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function(){toast(ok);},alt); else alt();
+}
+$("bCopy").addEventListener("click",function(){ var f=bFirma(); if(f)kopieren(briefText(f),"Brieftext kopiert."); });
+$("bPdf").addEventListener("click",function(){ var f=bFirma(); if(!f)return; swInitBrief(f,briefText(f),richtungName(f),personText(f)); });
+/* ---------- KI-Aufträge für Sie, Ich und Wir ---------- */
+var KI_KOPF="Du hilfst mir bei einer Initiativbewerbung in der Deutschschweiz. Berücksichtige alle dir bekannten beruflichen Informationen über mich. Wenn dir für einen Satz eine Angabe fehlt, frag nach, statt etwas zu erfinden.\n\n";
+var KI_REGELN="Regeln: Schweizer Hochdeutsch mit «ss». Kurze, ganze Sätze in Alltagssprache. Keine Gedankenstriche und keine Doppelpunkte im Text. Keine Urteile über mich selbst wie perfekt, ideal, optimal, überzeugt, bestens geeignet, hundertprozentig oder zweifellos. Keine Forderungen wie «Ich melde mich», «Ich erwarte» oder «Ich will», sondern höflicher Konjunktiv wie «Gerne würde ich …». Keine Floskeln wie «Hiermit bewerbe ich mich», «mit grossem Interesse», «neue Herausforderung» oder «Ihre Firma ist bekannt für». Tatsachen statt Wertungen. Erfinde keine Fakten über die Firma. Tausender mit Leerzeichen (40 000), Datum ausgeschrieben (19. Oktober 2026).";
+function kiFirma(f){
+  var sig=f.signal||{}, fv=favs(f), keys=fv.length?fv:aufhGefuellt(f);
+  return "Firma: "+f.name+(f.ort?", "+f.ort:"")+"\n"+
+    (richtungName(f)?"Stelle oder Richtung: "+richtungName(f)+"\n":"")+
+    (((sig.arten||[]).length||sig.text)?"Was die Firma gerade bewegt: "+(sig.arten||[]).concat(sig.text?[sig.text]:[]).join("; ")+"\n":"")+
+    (f.auftritt?"Auftritt der Firma: "+f.auftritt+"\n":"")+
+    keys.map(function(k){ var a=f.aufh[k]; return (fv.length?"Was mir aufgefallen ist":"Aus meiner Recherche")+" ("+AUFHN[k]+"): "+a.t+(a.q?" (Quelle: "+a.q+")":"")+"\n"; }).join("")+
+    (f.beob?"Was mich daran angesprochen hat: "+f.beob+"\n":"");
+}
+function kiAuftrag(f,teil){
+  var b=f.brief||{};
+  if(teil==="sie"){
+    if(!aufhGefuellt(f).length&&!f.beob&&!(b.einl||"").trim()) return {fehlt:"Zu diesem Betrieb ist noch nichts recherchiert. Tragen Sie unter «Firmen recherchieren», Punkt C, mindestens einen Aufhänger ein."};
+    return {t:KI_KOPF+kiFirma(f)+
+      (b.sieFrage!=null?"Meine Leitfrage: "+SIEFRAGEN[b.sieFrage]+"\n":"")+
+      ((b.einl||"").trim()?"Mein eigener Entwurf: "+satz(b.einl)+"\n":"")+
+      "\nAuftrag: Schreibe drei Varianten für die Einleitung, je ein bis zwei ganze Sätze. Die Einleitung soll so sein, dass sie nur an diese Firma gehen kann. Verwebe das, was mir aufgefallen ist, in den Satz, statt es zu zitieren oder zu loben.\n\n"+KI_REGELN};
+  }
+  if(teil==="ich"){
+    var L=kwListe(b);
+    if(!L.length) return {fehlt:"Tragen Sie zuerst die Aufgaben und Anforderungen als Schlagwörter ein."};
+    var mit=[], ohne=[];
+    L.forEach(function(kw){ var d=kwDaten(b,kw); if(d.mit)return; var sz=kwSatz(kw,d);
+      if(sz)mit.push("- "+kw+": "+sz); else ohne.push("- "+kw+((d.e||d.z)?" (meine Notiz: "+[d.e,d.z].filter(Boolean).join(", ")+")":"")); });
+    return {t:KI_KOPF+kiFirma(f)+
+      (b.kwQuelle?"Quelle der Schlagwörter: "+b.kwQuelle+(b.kwQuelleText?", "+b.kwQuelleText:"")+"\n":"")+
+      "\nAufgaben und Anforderungen, wörtlich aus der Quelle:\n"+L.map(function(x){return "- "+x;}).join("\n")+"\n"+
+      (mit.length?"\nMein Entwurf mit Beleg:\n"+mit.join("\n")+"\n":"")+
+      (ohne.length?"\nNoch ohne Beleg:\n"+ohne.join("\n")+"\n":"")+
+      "\nAuftrag: Schreibe den Ich-Absatz. Nimm Punkt für Punkt Stellung zu diesen Aufgaben und Anforderungen und verwende die Schlagwörter wörtlich. Jedes Schlagwort steht in einem ganzen Satz mit einem Beleg, zum Beispiel Dauer, Ort, Tätigkeit, Beispiel oder Ergebnis. Verwandte Schlagwörter darfst du in einem Satz verbinden, wenn ein gemeinsamer Beleg sie trägt. Ist ein Schlagwort für mich neu, schreibe ehrlich, dass es neu ist, und was ich dafür mitbringe. Findest du für ein Schlagwort keinen Beleg, lass es weg und frag mich am Schluss danach. Hänge nie eine Liste von Schlagwörtern an. Gib zwei Varianten.\n\n"+KI_REGELN};
+  }
+  var ziele=wirSaetze(b), ang=angebotSaetze(b), z=zusatzSaetze(b);
+  if(!ziele.length&&!ang.length) return {fehlt:"Ergänzen Sie zuerst ein Ziel oder wählen Sie ein Angebot."};
+  return {t:KI_KOPF+kiFirma(f)+
+    (ziele.length?"\nMeine Ziele und meine Motivation:\n"+ziele.map(function(x){return "- "+x;}).join("\n")+"\n":"")+
+    (ang.length?"\nWas ich anbiete:\n"+ang.map(function(x){return "- "+x;}).join("\n")+"\n":"")+
+    (z.length?"\nZum Schluss des Briefs steht bereits:\n"+z.map(function(x){return "- "+x;}).join("\n")+"\n":"")+
+    "\nAuftrag: Schreibe den Wir-Absatz. Er zeigt, was ich in der Zusammenarbeit suche und was ich der Firma konkret anbiete. Angebot statt Anspruch, die Firma entscheidet. Weiterentwicklung nur mit Bezug zu den Aufgaben im Betrieb, nicht als eigene Agenda. Verbinde mehrere Angebote zu flüssigen Sätzen, statt sie zu stapeln. Biete nie an, unter dem orts- und branchenüblichen Lohn zu arbeiten. Wiederhole den Schluss nicht. Gib zwei Varianten.\n\n"+KI_REGELN};
+}
+var kiFirmaId=null;
+function kiZurueck(){
+  Array.prototype.slice.call(ROOT.querySelectorAll("[data-kitext]")).forEach(function(t){ t.value=""; t.hidden=true; });
+  Array.prototype.slice.call(ROOT.querySelectorAll("[data-kicopy]")).forEach(function(b){ b.hidden=true; });
+}
+$("bBody").addEventListener("click",function(e){
+  var b=e.target.closest("[data-ki],[data-kicopy]"), f=bFirma(); if(!b||!f)return;
+  var teil=b.dataset.ki||b.dataset.kicopy, ta=ROOT.querySelector('[data-kitext="'+teil+'"]');
+  if(b.dataset.kicopy){ kopieren(ta.value,"KI-Auftrag kopiert. Fügen Sie ihn in die KI Ihrer Wahl ein."); return; }
+  var r=kiAuftrag(f,teil);
+  if(r.fehlt){ toast(r.fehlt); return; }
+  ta.value=r.t; ta.hidden=false; ROOT.querySelector('[data-kicopy="'+teil+'"]').hidden=false;
+  ta.focus(); ta.select();
+});
+
+
+/* ---------- Sichern, Einlesen, Löschen ---------- */
+var gesichert=false;
+function exportFile(){
+  if(!firmen.length){toast("Es gibt noch nichts zu sichern.");return false;}
+  var blob=new Blob([JSON.stringify({version:2,gespeichert:new Date().toISOString(),optionen:options,firmen:firmen},null,2)],{type:"application/json"});
+  var a=document.createElement("a"), href=URL.createObjectURL(blob);
+  a.href=href; a.download="Meine_Firmenrecherche.json";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function(){URL.revokeObjectURL(href);},1500);
+  dirty=false; gesichert=true; toast("Datei gesichert."); return true;
+}
+$("exportBtn").addEventListener("click",exportFile);
+$("importBtn").addEventListener("click",function(){ $("importFile").click(); });
+$("importFile").addEventListener("change",function(e){
+  var f=e.target.files[0]; if(!f)return;
+  var rd=new FileReader();
+  rd.onload=function(){
+    try{
+      var d=JSON.parse(rd.result);
+      if(!d||(!Array.isArray(d.firmen)&&!Array.isArray(d.optionen)))throw new Error("Format");
+      var neu=Array.isArray(d.optionen)?d.optionen:[];
+      neu.forEach(function(o){ if(o&&!S.zr.some(function(x){return x.id===o.id||x.name.toLowerCase()===String(o.name||"").toLowerCase();}))S.zr.push(o); });
+      options=S.zr;
+      firmen=Array.isArray(d.firmen)?d.firmen:[];
+      // Namen der Zielrichtung festhalten, damit sie auch ohne Reiter «Zielrichtungen» sichtbar ist
+      firmen.forEach(function(x){ if(!x.richtungText){ var o=optById(x.richtung); if(o)x.richtungText=o.name; } });
+      bFirmaId=null; changed(); fReset(); showTab(aktivTab); if(zrApi){zrApi.sync();zrApi.rerender();}
+      toast("Datei eingelesen: "+firmen.length+(firmen.length===1?" Betrieb.":" Betriebe."));
+    }catch(err){ toast("Diese Datei lässt sich nicht lesen."); }
+  };
+  rd.readAsText(f); e.target.value="";
+});
+$("clearBtn").addEventListener("click",function(){
+  if(!firmen.length){toast("Es ist nichts erfasst.");return;}
+  if(armed(this,"Alles löschen")){
+    firmen=[]; bFirmaId=null; changed(); fReset(); showTab(aktivTab); toast("Alles gelöscht.");
+  }
+});
+frApi={
+  refresh:function(){ options=S.zr; if(aktivTab==="tab-firmen")renderFirmen(); else renderBrief(); },
+  sync:function(){ if(firmen!==S.fr.firmen||options!==S.zr){ firmen=S.fr.firmen; options=S.zr; bFirmaId=null; fReset(); showTab(aktivTab); } },
+  count:function(n){ return firmenMitName(n).length; },
+  show:function(tab){ showTab(tab); }
+};
+sigChips(); showTab("tab-firmen");
+})();
+
+function render(){zrApi&&zrApi.sync();frApi&&frApi.sync();renderStats();renderTracker();renderPlan();renderStrategie();renderDossier();renderRav();renderNachweis();renderAlk();renderCheck();renderNetz();renderKomp();renderBackupRemind()}
 route();
 if(fresh){await seedDocs();render()}
 else if(!S.docs.length&&!S.meta.docsSeeded&&S.bewerbungen.some(b=>b.beispiel)){await seedDocs();render()}

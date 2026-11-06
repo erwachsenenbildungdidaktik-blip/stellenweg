@@ -25,9 +25,9 @@ Tabs (Reihenfolge der Kursmodule):
 | Tab | Kursmodul | Stand |
 |---|---|---|
 | Kompetenzen & Ressourcen | A1.II, A1.III | fertig: vier Bereiche mit Beleg pro Kompetenz, Top 3 mit Stern, Marktbezug, Ressourcen-Koffer mit Ampel |
-| Strategie & Aktionsplan | A1.IV, A1.V | fertig: Bewerbungs-Tracker, Aktionsplan, Strategie |
+| Strategie & Aktionsplan | A1.IV, A1.V | fertig: Bewerbungs-Tracker, Aktionsplan, **Zielrichtungen** (Hugos Werkzeug BIN 6: Passung, Markt mit Job-Room-Zahlen, Verankerung, Können, Aufwand, Matrix, Kurz-SWOT, Nachfassen), Rahmen |
 | Dossier & Portfolio | A2 | fertig: Dokumentstapel, Upload, Brief-Assistent, beco-Check |
-| Netzwerk | A3–A5 | fertig: aus Hugos A5-Tool portiert (Kontakte, Karte nach Nähe oder Unterstützung, Aktivieren), Import `mein-netzwerk.json`, Zielfirmen mit „Initiativbewerbung starten“ |
+| Netzwerk | A3–A5 | fertig: aus Hugos A5-Tool portiert (Kontakte, Karte nach Nähe oder Unterstützung, Aktivieren), Import `mein-netzwerk.json`, **Zielfirmen = Hugos Werkzeug BIN 1** (Firmenrecherche mit Signal, Ansprechperson, Aufhänger, Pipeline; Initiativbewerbung mit Satzrahmen, Selbstcheck, KI-Aufträgen) |
 | RAV & ALK | – | fertig: Arbeitsbemühungen, Formular 716.007 mit Unterschrift, ALK-Monatsordner, Zwischenverdienst-Stunden, Krankheit |
 
 ## Architektur
@@ -46,9 +46,20 @@ Tabs (Reihenfolge der Kursmodule):
 - `alk{monate{YYYY-MM:{zv, eingereicht{avp,zv,nachweis}}}, faelle[], kasse, tel, rahmenfrist}`
 - `profil{meName, meStrasse, mePlzOrt, meTel, meMail, bar, barColor, barText, sigRaw, sig, sigClean, sigRot}`
 - `netz{contacts[{id,name,sec,near,sup[],knows[],step,act}],nextId}` (gleiches Format wie `mein-netzwerk.json` des A5-Tools), `firmen[]`
+- `zr[]`: Zielrichtungen im Format `optionen` aus `Meine_Zielrichtungen.json` (BIN 6), `fr{firmen[]}`: Betriebe im Format `firmen` aus `Meine_Firmenrecherche.json` (BIN 1). Beide Dateien lassen sich im jeweiligen Werkzeug einlesen und wieder sichern.
 - `komp{items[{id,bereich,name,beleg,inserat,star}],res{}}`
 - `check{}` (beco-Checkliste), `meta{lastBackup, docsSeeded}`
 - Beispieldaten tragen `beispiel:true` und lassen sich im Tracker mit einem Knopf entfernen.
+
+## Eingebaute Kurswerkzeuge (BIN 1 und BIN 6)
+
+Hugos Werkzeuge „Firmenrecherche und Initiativbewerbung“ (BIN 1) und „Meine Zielrichtungen vergleichen“ (BIN 6) sind praktisch unverändert übernommen: Logik, Texte, Einstufungsregeln, Satzrahmen, Selbstcheck und KI-Aufträge stammen 1:1 aus den Originalen. Angepasst wurde nur:
+
+- IDs mit Präfix `zr-` bzw. `fr-`, CSS unter `#zr-root` / `#fr-root` eingegrenzt, kollidierende Klassen umbenannt (`x-card`, `x-btn-ghost`, `x-tab` …), Farben auf die App-Tokens gelegt (helles und dunkles Theme).
+- Speichern in `S.zr` / `S.fr` statt nur als Datei; „Drucken“ und „Sitzung beenden“ entfernt; `confirm()` ersetzt (zweimal tippen zum Löschen).
+- Verbindungen: Firmen sehen die verfolgten Zielrichtungen (nicht „Zurückstellen“, nicht „Passt nicht“); Stufe „Kontaktiert“ oder weiter legt einen Eintrag im Bewerbungs-Tracker an und zählt damit fürs RAV-Formular; „Als PDF mit Briefkopf und Unterschrift“ übergibt den Initiativbrief an den Brief-Assistenten; Frage 2 der Zielrichtungen zeigt die Anzahl Betriebe aus der Firmenliste.
+
+Wenn Hugo die Originalwerkzeuge weiterentwickelt, müssen die Änderungen hier nachgezogen werden. Die Funktionen liegen in `index.html` zwischen den Kommentaren „Zielrichtungen (Werkzeug BIN 6)“ und „Firmenrecherche und Initiativbewerbung (Werkzeug BIN 1)“.
 
 ## Fachliche Regeln (mit Quelle)
 
@@ -80,4 +91,4 @@ Erledigt in dieser Runde: Unterschrift auf dem RAV-Formular, Import der Angaben 
 python3 -m http.server 8000   # dann http://localhost:8000
 ```
 
-Getestet im Chat (Chrome, lokal und offline): Tracker, Brief-Assistent mit Unterschrift bis PDF, RAV-Formular mit 16 Einträgen (4 Seiten) und Unterschrift, ALK, Zwischenverdienst, Krankheit, Dossier-Stapel, Netzwerk mit Karte und Zielfirmen, Kompetenzen. Nicht getestet: echtes iPhone und Android-Gerät, Teilen-Dialog, Service Worker auf GitHub Pages.
+Getestet im Chat (Chrome, lokal und offline, hell und dunkel): Zielrichtungen mit Matrix, Firmenrecherche mit Übergabe an Tracker und Brief-Assistent, Tracker, Brief-Assistent mit Unterschrift bis PDF, RAV-Formular mit 16 Einträgen (4 Seiten) und Unterschrift, ALK, Zwischenverdienst, Krankheit, Dossier-Stapel, Netzwerk mit Karte und Zielfirmen, Kompetenzen. Nicht getestet: echtes iPhone und Android-Gerät, Teilen-Dialog, Service Worker auf GitHub Pages.
