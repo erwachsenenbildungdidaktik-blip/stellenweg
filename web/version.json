@@ -1,6 +1,6 @@
 {
-    "versionCode": 2,
-    "versionName": "1.1",
+    "versionCode": 3,
+    "versionName": "1.2",
     "apk": "download/Stellenweg.apk",
-    "notes": "Kurs oder selbst\u00e4ndig w\u00e4hlbar, klarere Auswertungen, Wochenziel aus der RAV-Vorgabe, App weitergeben per QR-Code, Updates direkt in der App."
+    "notes": "Lebenslauf: Portr\u00e4t mit der Kamera aufnehmen, Hintergrund entfernen und in der Farbe des Balkens, Weiss oder Hellgrau hinterlegen."
 }

@@ -93,7 +93,14 @@ public class MainActivity extends Activity {
         web.setWebViewClient(new WebViewClient() {
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView v, WebResourceRequest r) {
-                return loader.shouldInterceptRequest(r.getUrl());
+                WebResourceResponse res = loader.shouldInterceptRequest(r.getUrl());
+                // Module (.mjs) und WebAssembly (.wasm) für das Porträt brauchen den richtigen Typ, sonst lädt die WebView sie nicht
+                String p = r.getUrl().getPath();
+                if (res != null && p != null) {
+                    if (p.endsWith(".mjs")) res.setMimeType("text/javascript");
+                    else if (p.endsWith(".wasm")) res.setMimeType("application/wasm");
+                }
+                return res;
             }
 
             @Override

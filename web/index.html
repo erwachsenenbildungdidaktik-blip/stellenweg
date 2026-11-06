@@ -978,6 +978,9 @@ html.selbst .eyebrow.kurs{display:none}
 .upd-ic{width:56px;height:56px;border-radius:18px;display:grid;place-items:center;background:var(--accent);color:var(--accent-ink);box-shadow:0 12px 26px -10px var(--accent)}
 .upd-ic svg{width:28px;height:28px}
 /* Lebenslauf-Assistent */
+.cv-photo{display:flex;gap:14px;align-items:flex-start}
+.cv-thumb{width:84px;height:105px;border-radius:12px;object-fit:cover;flex:none;box-shadow:0 6px 16px -8px rgba(0,0,0,.4);background:var(--hair)}
+.cv-thumb.empty{display:grid;place-items:center;color:var(--fg3);font-size:13px;border:2px dashed var(--hair);box-shadow:none;background:transparent}
 .cvmini{display:flex;gap:4px;width:100%;height:58px;border-radius:8px;background:#fff;padding:6px;margin-bottom:4px;box-shadow:0 2px 8px -4px rgba(0,0,0,.3)}
 .cvmini.r{flex-direction:row-reverse}
 .cvmini.top{flex-direction:column}
@@ -3098,13 +3101,40 @@ function cvBList(key){const n=key==='jobs'?5:6;
   $$('#cv-body [data-rm]').forEach(b=>b.onclick=()=>{cvData()[key].splice(+b.dataset.rm,1);save();cvGo(n)});
   $('#cv-body [data-add]').onclick=()=>{(cvData()[key]=cvData()[key]||[]).unshift({von:'',bis:'',f:'',firma:'',ort:'',pts:''});save();cvGo(n)}}
 function cvS7(){return `<div id="cv-check"></div>
-  <label class="btn btn-glass file-btn" style="align-self:flex-start">${cvData().foto?'Foto ersetzen':'Foto hinzufügen (freiwillig)'}<input type="file" id="cv-foto" accept="image/*"></label>
-  ${cvData().foto?'<button type="button" class="btn btn-ghost" id="cv-fotodel" style="align-self:flex-start;color:var(--bad)">Foto entfernen</button>':''}
+  <div class="cv-photo">
+    ${cvData().foto?`<img src="${cvData().foto}" alt="Ihr Porträt" class="cv-thumb">`:'<div class="cv-thumb empty" aria-hidden="true">Foto</div>'}
+    <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+      <b>Porträt (freiwillig)</b>
+      <div class="chips"><label class="btn btn-glass file-btn">Porträt aufnehmen<input type="file" id="cv-cam" accept="image/*" capture="user"></label><label class="btn btn-glass file-btn">Bild wählen<input type="file" id="cv-foto" accept="image/*"></label></div>
+      <span class="muted">Tipp: gutes Licht von vorne, Kopf und Schultern im Bild, freundlicher Blick in die Kamera.</span>
+    </div></div>
+  ${cvData().fotoRaw?`<div class="field"><label>Hintergrund</label><div class="chips" id="cv-bg">${[['orig','Original'],['bar','Balkenfarbe'],['white','Weiss'],['grey','Hellgrau']].map(([v,l])=>`<button type="button" class="kat" data-bg="${v}" aria-pressed="${(cvData().fotoBg||'orig')===v}">${l}</button>`).join('')}</div>
+    <span class="muted" id="cv-bgnote">Der Hintergrund wird auf dem Gerät entfernt, das Foto verlässt es nicht.</span></div>
+    <button type="button" class="btn btn-ghost" id="cv-fotodel" style="align-self:flex-start;color:var(--bad)">Foto entfernen</button>`:''}
   <div class="chips"><button type="button" class="btn btn-primary" id="cv-make">PDF erstellen und ins Dossier legen</button></div>
   <div class="chips" id="cv-after" ${lastCv?'':'hidden'}><button type="button" class="btn btn-glass" id="cv-share">Teilen</button><button type="button" class="btn btn-glass" id="cv-save">Speichern</button></div>
   <h3>Vorschau</h3><div class="viewer" id="cv-pages"></div>`}
+/* Porträt: Person mit MediaPipe (selfie_segmenter, lokal in vendor/mediapipe) vom Hintergrund trennen und neu hinterlegen */
+let cvSegP=null;
+function cvSegmenter(){if(cvSegP)return cvSegP;const u=x=>new URL(x,location.href).href;
+  cvSegP=(async()=>{const m=await import(u('vendor/mediapipe/vision_bundle.mjs'));const fs=await m.FilesetResolver.forVisionTasks(u('vendor/mediapipe/wasm'));
+    return m.ImageSegmenter.createFromOptions(fs,{baseOptions:{modelAssetPath:u('vendor/mediapipe/selfie_segmenter.tflite'),delegate:'CPU'},runningMode:'IMAGE',outputCategoryMask:false,outputConfidenceMasks:true})})();
+  cvSegP.catch(()=>{cvSegP=null});return cvSegP}
+const cvBgColor=v=>v==='white'?[255,255,255]:v==='grey'?[234,234,232]:hexRgb(cvAccent()).map(x=>Math.round((x+(1-x)*.72)*255));
+async function cvApplyBg(bg){const c=cvData();c.fotoBg=bg;
+  if(bg==='orig'||!c.fotoRaw){c.foto=c.fotoRaw||null;save();return}
+  try{const img=await loadImg(c.fotoRaw),W=img.naturalWidth,H=img.naturalHeight,cv=document.createElement('canvas');cv.width=W;cv.height=H;const g=cv.getContext('2d');g.drawImage(img,0,0);
+    const seg=await cvSegmenter(),res=seg.segment(cv),mk=res.confidenceMasks[0],mw=mk.width,mh=mk.height,m=mk.getAsFloat32Array();
+    const d=g.getImageData(0,0,W,H),px=d.data,[br,bgc,bb]=cvBgColor(bg);
+    for(let y=0,i=0;y<H;y++)for(let x=0;x<W;x++,i+=4){const mi=Math.min(mh-1,(y*mh/H)|0)*mw+Math.min(mw-1,(x*mw/W)|0);
+      /* weiche Kante: Wahrscheinlichkeit 0,3 bis 0,7 wird zu Deckkraft 0 bis 1 */
+      const a=Math.min(1,Math.max(0,(m[mi]-.3)/.4));px[i]=px[i]*a+br*(1-a);px[i+1]=px[i+1]*a+bgc*(1-a);px[i+2]=px[i+2]*a+bb*(1-a)}
+    if(res.close)res.close();g.putImageData(d,0,0);c.foto=cv.toDataURL('image/jpeg',.9);c.fotoAcc=cvAccent()}
+  catch(err){console.warn('Porträt',err);c.fotoBg='orig';c.foto=c.fotoRaw;toast('Den Hintergrund kann dieses Gerät nicht entfernen. Das Original bleibt.')}
+  save()}
 async function cvPhoto(){const f=cvData().foto;if(!f)return null;try{const i=await loadImg(f);return{src:f,w:i.naturalWidth,h:i.naturalHeight,img:i}}catch(e){return null}}
 async function cvB7(){const ex=$('#cv-ex');
+  if(cvData().fotoRaw&&cvData().fotoBg==='bar'&&cvData().fotoAcc!==cvAccent())await cvApplyBg('bar');
   const ph=await cvPhoto(),pages=cvLayout(ph),box=$('#cv-pages');
   const cssW=Math.min(box.clientWidth||560,640),dpr=Math.min(3,window.devicePixelRatio||1),k=cssW/PW;
   for(const ops of pages){const c=document.createElement('canvas');c.width=cssW*dpr;c.height=cssW*PH/PW*dpr;const x=c.getContext('2d');x.scale(k*dpr,k*dpr);
@@ -3119,11 +3149,13 @@ async function cvB7(){const ex=$('#cv-ex');
   if(lossy.size)warn.push('Diese Zeichen kann das PDF nicht darstellen und hat sie ersetzt: '+[...lossy].join(', '));
   if(pages.length>1)warn.push(`Der Lebenslauf hat ${pages.length} Seiten. Kürzen Sie, wenn möglich, die Stichworte älterer Stellen.`);
   $('#cv-check').innerHTML=warn.length?`<div class="banner warn-banner"><div class="txt"><b>Bitte prüfen</b><span>${warn.map(esc).join('<br>')}</span></div></div>`:`<div class="banner" style="background:var(--ok-soft)"><div class="txt"><b>Alles ausgefüllt</b><span>Der Lebenslauf passt auf eine Seite.</span></div></div>`;
-  $('#cv-foto').onchange=async e=>{const f=e.target.files[0];if(!f)return;const url=URL.createObjectURL(f);
+  const pick=async e=>{const f=e.target.files[0];if(!f)return;const url=URL.createObjectURL(f);
     try{const img=await loadImg(url),W=480,H=600,cv=document.createElement('canvas');cv.width=W;cv.height=H;const g=cv.getContext('2d');
       const r=Math.max(W/img.naturalWidth,H/img.naturalHeight),w=img.naturalWidth*r,h=img.naturalHeight*r;g.fillStyle='#fff';g.fillRect(0,0,W,H);g.drawImage(img,(W-w)/2,(H-h)/2.6,w,h);
-      cvData().foto=cv.toDataURL('image/jpeg',.85);save()}catch(err){toast('Das Bild konnte nicht gelesen werden')}URL.revokeObjectURL(url);cvGo(7)};
-  $('#cv-fotodel')&&($('#cv-fotodel').onclick=()=>{cvData().foto=null;save();cvGo(7)});
+      cvData().fotoRaw=cv.toDataURL('image/jpeg',.9);await cvApplyBg(cvData().fotoBg||'bar')}catch(err){toast('Das Bild konnte nicht gelesen werden')}URL.revokeObjectURL(url);cvGo(7)};
+  $('#cv-foto').onchange=pick;$('#cv-cam').onchange=pick;
+  $$('#cv-bg [data-bg]').forEach(b=>b.onclick=async()=>{$('#cv-bgnote').textContent='Einen Moment, der Hintergrund wird bearbeitet …';await cvApplyBg(b.dataset.bg);cvGo(7)});
+  $('#cv-fotodel')&&($('#cv-fotodel').onclick=()=>{Object.assign(cvData(),{foto:null,fotoRaw:null});save();cvGo(7)});
   const name=()=>['Lebenslauf',cleanName(P.meName)].filter(Boolean).join('_')+'.pdf';
   $('#cv-make').onclick=async()=>{const blob=buildPdf(cvLayout(ph),ph,'Lebenslauf '+(P.meName||''));
     const doc=await storePdf(blob,{name:'Lebenslauf '+(P.meName||''),kat:'cv',aktuell:true,file:name()});

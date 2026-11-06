@@ -42,3 +42,7 @@ Updates lassen sich nur über die alte Version installieren, wenn die APK mit **
 
 - Web-App: `python -m http.server 8000` im Ordner `web`, dann http://localhost:8000
 - APK auf dem Handy: Datei aufs Handy kopieren und öffnen (Installation aus unbekannten Quellen erlauben) oder mit USB-Debugging: `tools\android-sdk\platform-tools\adb install -r web\download\Stellenweg.apk`
+
+## Fremdkomponenten
+
+- MediaPipe Tasks Vision 0.10.14 und Modell selfie_segmenter (Google, Apache License 2.0), in `web/vendor/mediapipe`, für das Freistellen des Porträts im Lebenslauf-Assistenten. Details in `web/vendor/mediapipe/NOTICE.txt`.
