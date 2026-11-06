@@ -12,7 +12,8 @@ Wichtig: Auf dem iPhone die App unbedingt auf den Home-Bildschirm legen und mind
 
 ## Android
 
-APK folgt. Bis dahin funktioniert die Web-App auch in Chrome: Menü → **Zum Startbildschirm hinzufügen**.
+APK herunterladen und installieren: [download/Stellenweg.apk](https://erwachsenenbildungdidaktik-blip.github.io/stellenweg/download/Stellenweg.apk)
+(Installation aus unbekannten Quellen erlauben.) Die Android-App kann zusätzlich Apps vom Handy als schwebendes Fenster öffnen, pünktlich erinnern und geteilten Text ins Notizfenster übernehmen.
 
 ## Moodle
 

@@ -1,5 +1,8 @@
 # Stellenweg – Projekt
 
+- **iPhone / Browser:** https://erwachsenenbildungdidaktik-blip.github.io/stellenweg/ (in Safari öffnen, Teilen → Zum Home-Bildschirm)
+- **Android:** [Stellenweg.apk herunterladen](https://erwachsenenbildungdidaktik-blip.github.io/stellenweg/download/Stellenweg.apk) (Installation aus unbekannten Quellen erlauben)
+
 Eine App, zwei Varianten aus derselben Web-App:
 
 | Variante | Ordner | Für |
