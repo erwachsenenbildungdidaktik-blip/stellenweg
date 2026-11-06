@@ -2045,34 +2045,49 @@ function a4Doc(draw){return new Promise(res=>{
       g.fillText(line,x,y);y+=lh}return y},
     rule(y,col='#e6e1da',x1=120,x2=W-120,h=2){g.fillStyle=col;g.fillRect(x1,y,x2-x1,h)}};
   draw(D);
-  D.font(20,400,'#b5aea6',true);D.t('Beispiel · erfundene Person · Stellenweg',D.L,H-70);
+  D.font(20,400,'#b5aea6',true);D.t('Beispiel · erfundene Person · Stellenweg',D.footX||D.L,H-70);
   c.toBlob(b=>res(b),'image/png')})}
 const EXP={name:'Marco Beispiel',str:'Bahnhofstrasse 12',ort:'2502 Biel/Bienne',tel:'079 123 45 67',mail:'marco.beispiel@example.ch'};
-function exLebenslauf(){return a4Doc(D=>{const{g,L,R}=D,acc='#e0821a';
-  g.fillStyle=acc;g.fillRect(0,0,D.W,16);
-  D.font(64,700);D.t(EXP.name,L,170);
-  D.font(28,400,'#5d5650');D.t('Logistiker EFZ · Staplerfahrer',L,218);
-  D.font(22,400,'#5d5650');D.t(`${EXP.str}, ${EXP.ort}  ·  ${EXP.tel}  ·  ${EXP.mail}`,L,262);
-  D.rule(300);
-  let y=360;const C2=L+250,MW=R-C2;
-  const head=t=>{D.font(22,700,acc);D.t(t.toUpperCase(),L,y);y+=46};
-  const item=(when,title,firm,pts)=>{D.font(23,400,'#5d5650');D.t(when,L,y);D.font(25,700);D.t(title,C2,y);y+=34;
-    if(firm){D.font(23,400,'#5d5650');D.t(firm,C2,y);y+=34}
-    D.font(23,400,'#2a2622');(pts||[]).forEach(p=>{D.t('–',C2,y);y=D.wrap(p,C2+26,y,MW-26,32)});y+=18};
-  head('Berufserfahrung');
-  item('04.2019 – 08.2025','Lagerist','Seeland Distribution AG, Lyss',['Kommissionieren mit Handscanner, rund 180 Positionen pro Schicht','Warenein- und -ausgang, Kontrolle der Lieferpapiere','Inventur und Lagerbewirtschaftung in SAP','Einarbeitung neuer Mitarbeitender']);
-  item('03.2012 – 03.2019','Mitarbeiter Logistik','Bauhandel Muster AG, Biel',['Staplerfahren im Aussen- und Hochregallager','Tourenvorbereitung für die Baustellenlieferungen']);
-  item('08.2001 – 02.2012','Lagermitarbeiter','Grossverteiler Seeland, Nidau',['Filialbelieferung, Verpacken und Etikettieren']);
-  head('Aus- und Weiterbildung');
-  item('2023','Weiterbildung Lagerbewirtschaftung mit SAP','Logistikschule Bern');
-  item('2015','Staplerausweis SUVA, Kategorie R1','');
-  item('1996 – 1999','Lehre als Lagerist (heute Logistiker EFZ)','Berufsfachschule Biel');
-  head('Sprachen');
-  D.font(23,400,'#2a2622');D.t('Deutsch: Muttersprache   ·   Französisch: gut (B1)   ·   Italienisch: Grundkenntnisse',L,y);y+=56;
-  head('Stärken');
-  D.font(23,400,'#2a2622');y=D.wrap('Zuverlässig und genau, auch unter Zeitdruck. Erfahrung mit Scanner und SAP. Arbeitet gern im Team und gibt Wissen weiter, zum Beispiel als Juniorentrainer beim FC Aurore.',L,y,R-L,32);y+=24;
-  head('Persönliches');
-  D.font(23,400,'#2a2622');D.t('Jahrgang 1980 · Führerausweis Kategorie B · Referenzen auf Anfrage',L,y)})}
+function exLebenslauf(){return a4Doc(D=>{const{g,W,H}=D,acc='#e0821a',side='#f5efe7',SX=70,SW=380,RX=SX+SW+60,RW=W-RX-80;
+  /* Linke Spalte: Angaben zur Person (gemäss Checkliste fürs Bewerbungsdossier) */
+  g.fillStyle=side;g.fillRect(0,0,SX+SW+20,H);g.fillStyle=acc;g.fillRect(0,0,SX+SW+20,14);
+  const cx=SX+SW/2;g.fillStyle='#e8ddd0';g.beginPath();g.arc(cx,210,105,0,Math.PI*2);g.fill();
+  D.font(64,700,'#b9a58f');const ini='MB';D.t(ini,cx-g.measureText(ini).width/2,233);
+  let y=380;
+  const sh=t=>{D.font(20,700,acc);D.t(t.toUpperCase(),SX,y);y+=10;D.rule(y,'#e2d6c8',SX,SX+SW,2);y+=34};
+  const kv=(k,v)=>{D.font(18,700,'#7a6f64');D.t(k,SX,y);y+=27;D.font(21,400,'#2a2622');y=D.wrap(v,SX,y,SW,28);y+=10};
+  const li=v=>{D.font(21,400,'#2a2622');D.t('·',SX,y);y=D.wrap(v,SX+18,y,SW-18,28);y+=2};
+  sh('Kontakt');D.font(21,400,'#2a2622');[EXP.str,EXP.ort,EXP.tel,EXP.mail].forEach(l=>{D.t(l,SX,y);y+=30});y+=18;
+  sh('Persönlich');
+  kv('Geburtsdatum','14. März 1980');kv('Nationalität','Italien, Niederlassungsbewilligung C');
+  kv('Kinder','Jahrgang 2014 und 2017, Betreuung gewährleistet');y+=6;
+  sh('Mobilität und Verfügbarkeit');
+  li('Führerausweis Kat. B, eigenes Auto');li('Staplerausweis SUVA R1');li('Verfügbar per sofort, 80–100 %');li('Schichtarbeit möglich');y+=14;
+  sh('Sprachen');
+  const lang=(l,lvl,n)=>{D.font(21,400,'#2a2622');D.t(l,SX,y);D.font(19,700,acc);D.tr(lvl,SX+SW,y);y+=14;
+    for(let i=0;i<6;i++){g.fillStyle=i<n?acc:'#e2d6c8';g.fillRect(SX+i*(SW/6),y,SW/6-6,7)}y+=34};
+  lang('Italienisch','Muttersprache',6);lang('Deutsch','C1',5);lang('Französisch','B1',3);lang('Englisch','A2',2);
+  D.font(16,400,'#8a7f74',true);D.t('Stufen nach dem Europäischen Sprachenportfolio',SX,y);y+=36;
+  sh('IKT-Kenntnisse');
+  li('SAP (Lagerverwaltung, Wareneingang)');li('Handscanner, Lagerleitsystem');li('MS Office: Word, Excel (gut)');li('E-Mail, Job-Room, Online-Formulare');y+=14;
+  sh('Engagement');li('Juniorentrainer FC Aurore, Biel');li('Begleitet Lernende im Betrieb');
+  D.footX=RX;
+  /* Rechte Spalte: Kurzprofil mit Slogan, Berufserfahrung, Aus- und Weiterbildung */
+  y=150;D.font(62,700);D.t(EXP.name,RX,y);y+=48;D.font(28,400,'#5d5650');D.t('Logistiker EFZ · Staplerfahrer',RX,y);y+=56;
+  g.fillStyle=acc;g.fillRect(RX,y-30,6,92);D.font(30,700,'#2a2622',true);y=D.wrap('«Die richtige Ware, zur richtigen Zeit, am richtigen Ort.»',RX+26,y,RW-26,40);y+=26;
+  D.font(22,400,'#2a2622');y=D.wrap('Erfahrener Logistiker mit über 20 Jahren Praxis in Lager und Verteilung. Arbeite genau und auch in Spitzenzeiten ruhig, kenne SAP und Handscanner aus dem Alltag und arbeite neue Kolleginnen und Kollegen gerne ein.',RX,y,RW,32);y+=34;
+  const rh=t=>{D.font(22,700,acc);D.t(t.toUpperCase(),RX,y);y+=12;D.rule(y,'#e6e1da',RX,RX+RW,2);y+=40};
+  const job=(when,title,firm,pts)=>{D.font(20,400,'#7a6f64');D.t(when,RX,y);y+=30;D.font(25,700);D.t(title,RX,y);y+=31;if(firm){D.font(21,400,'#5d5650');D.t(firm,RX,y);y+=31}y+=4;
+    D.font(21,400,'#2a2622');(pts||[]).forEach(p=>{D.t('–',RX,y);y=D.wrap(p,RX+24,y,RW-24,29)});y+=20};
+  rh('Berufserfahrung');
+  job('04.2019 – 08.2025','Lagerist','Seeland Distribution AG, Lyss',['Kommissionieren mit Handscanner, rund 180 Positionen pro Schicht','Wareneingang und Bestandesführung in SAP','Einarbeitung neuer Mitarbeitender']);
+  job('03.2012 – 03.2019','Mitarbeiter Logistik','Bauhandel Muster AG, Biel',['Staplerfahren im Hochregallager','Tourenvorbereitung für Baustellenlieferungen']);
+  job('08.2001 – 02.2012','Lagermitarbeiter','Grossverteiler Seeland, Nidau',['Filialbelieferung, Verpacken und Etikettieren']);
+  rh('Aus- und Weiterbildung');
+  job('2023','Lagerbewirtschaftung mit SAP','Logistikschule Bern');
+  job('2015','Staplerausweis SUVA, Kategorie R1','SUVA');
+  job('1996 – 1999','Lehre als Lagerist (heute Logistiker EFZ)','Berufsfachschule Biel');
+  D.font(19,400,'#7a6f64',true);D.t('Referenzen auf Anfrage',RX,Math.min(y+10,H-110))})}
 function exBrief(){return a4Doc(D=>{const{g,L,R}=D,acc='#e0821a',MW=R-L;
   /* Absatz mit fetter Bezeichnung vorne, danach Fliesstext auf derselben Zeile */
   const para=(label,txt,y)=>{D.font(24,700,acc);D.t(label,L,y);let x=L+g.measureText(label+'  ').width,line='';D.font(24,400,'#2a2622');
@@ -2108,7 +2123,7 @@ function exZeugnis(){return a4Doc(D=>{const{g,L,R}=D,acc='#2f8f5b';
   g.font='italic 40px "Segoe Script","Brush Script MT","Snell Roundhand",cursive';g.fillStyle='#0f1a3a';D.t('A. Muster',L,y+64);
   D.font(22,400,'#5d5650');D.t('Anna Muster, Leiterin Personal',L,y+108)})}
 /* Version der Beispieldokumente; erhöhen, wenn sich ihr Inhalt ändert */
-const EXV=4;
+const EXV=6;
 const EX_DOCS=[
   {kat:'cv',name:'Lebenslauf Marco Beispiel',fn:exLebenslauf,aktuell:true},
   {kat:'brief',name:'Bewerbungsschreiben Muster Logistik',fn:exBrief,aktuell:true,bewerbungId:'b2'},
