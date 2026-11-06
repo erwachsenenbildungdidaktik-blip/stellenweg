@@ -4844,9 +4844,9 @@ const APP_THEMES=[
   {id:'see',l:'Seeblau',d:'Ruhig wie der Bielersee',
    light:{accent:'#1f6fb2',bg:'#eaf0f5',blobs:['#4da3e8','#b9d8f2','#9fd6cf','#8fb3e0']},
    dark:{accent:'#5aaeef',bg:'#0f1419',blobs:['#164a7a','#1d3a55','#1f4d49','#2a3f6b']}},
-  {id:'beere',l:'Beere',d:'Tiefrot wie ein Pinot Noir vom Bielersee',
-   light:{accent:'#b8336f',bg:'#f5ecef',blobs:['#e76aa2','#f4c1d6','#c9b6ea','#f0a58f']},
-   dark:{accent:'#ef6fa6',bg:'#171013',blobs:['#7a1f4a','#4a2340','#3a2d63','#6b2e33']}}];
+  {id:'joran',l:'Joran',d:'Frisch und kräftig wie der Joran',
+   light:{accent:'#0f7f7a',bg:'#e9f1f0',blobs:['#4fc9bd','#c4ece6','#a9bfd9','#8fb3ad']},
+   dark:{accent:'#45cfc2',bg:'#0e1515',blobs:['#0f5a55','#1b3b3e','#2b3d57','#24474a']}}];
 const hexRgb3=h=>{const n=parseInt((h||'#000000').slice(1),16);return[n>>16,(n>>8)&255,n&255]};
 const rgbHex=a=>'#'+a.map(v=>Math.round(Math.max(0,Math.min(255,v))).toString(16).padStart(2,'0')).join('');
 const mixHex=(a,b,t)=>{const x=hexRgb3(a),y=hexRgb3(b);return rgbHex(x.map((v,i)=>v+(y[i]-v)*t))};
@@ -4857,7 +4857,7 @@ function customTheme(hex){let L=hex,D=hex;
   while(lum(D)<.28)D=mixHex(D,'#ffffff',.08);
   return{id:'custom',light:{accent:L,bg:mixHex('#f3ede6',hex,.06),blobs:[hex,mixHex(hex,'#ffffff',.6),'#9fc9c4',mixHex(hex,'#e8a07a',.5)]},
     dark:{accent:D,bg:mixHex('#15120f',hex,.06),blobs:[mixHex(hex,'#000000',.45),mixHex(hex,'#000000',.7),'#1f4d49',mixHex(hex,'#000000',.6)]}}}
-function currentTheme(){const c=S.meta.color;if(c&&c.id==='custom'&&/^#[0-9a-f]{6}$/i.test(c.hex||''))return customTheme(c.hex);
+function currentTheme(){const c=S.meta.color;if(c&&c.id==='beere')c.id='joran';if(c&&c.id==='custom'&&/^#[0-9a-f]{6}$/i.test(c.hex||''))return customTheme(c.hex);
   return APP_THEMES.find(t=>t.id===(c&&c.id))||APP_THEMES[0]}
 function themeVars(m,dark){const[r,g,b]=hexRgb3(m.accent);
   return `--accent:${m.accent};--accent-ink:${lum(m.accent)>.45?'#1a1209':'#ffffff'};--accent-soft:rgba(${r},${g},${b},${dark?.22:.16});--bg:${m.bg};--blob1:${m.blobs[0]};--blob2:${m.blobs[1]};--blob3:${m.blobs[2]};--blob4:${m.blobs[3]};`}
