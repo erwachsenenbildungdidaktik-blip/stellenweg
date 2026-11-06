@@ -24,11 +24,11 @@ Tabs (Reihenfolge der Kursmodule):
 
 | Tab | Kursmodul | Stand |
 |---|---|---|
-| Kompetenzen & Ressourcen | A1.II, A1.III | Gerüst, Import aus „Kompetenz-Spiegel“ (JSON) geplant |
+| Kompetenzen & Ressourcen | A1.II, A1.III | fertig: vier Bereiche mit Beleg pro Kompetenz, Top 3 mit Stern, Marktbezug, Ressourcen-Koffer mit Ampel |
 | Strategie & Aktionsplan | A1.IV, A1.V | fertig: Bewerbungs-Tracker, Aktionsplan, Strategie |
 | Dossier & Portfolio | A2 | fertig: Dokumentstapel, Upload, Brief-Assistent, beco-Check |
-| Netzwerk | A3–A5 | Gerüst, soll Hugos A5-Tool „Mein Netzwerk“ übernehmen |
-| RAV & ALK | – | fertig: Arbeitsbemühungen, Formular 716.007, ALK-Monatsordner, Krankheit |
+| Netzwerk | A3–A5 | fertig: aus Hugos A5-Tool portiert (Kontakte, Karte nach Nähe oder Unterstützung, Aktivieren), Import `mein-netzwerk.json`, Zielfirmen mit „Initiativbewerbung starten“ |
+| RAV & ALK | – | fertig: Arbeitsbemühungen, Formular 716.007 mit Unterschrift, ALK-Monatsordner, Zwischenverdienst-Stunden, Krankheit |
 
 ## Architektur
 
@@ -45,6 +45,8 @@ Tabs (Reihenfolge der Kursmodule):
 - `docs[]`: Metadaten, Blob in IndexedDB. Dossier-Dokumente haben `kat`, ALK/RAV-Dokumente zusätzlich `bereich:'alk'` und `slot (avp|zv|arzt|dauer|nachweis)`, `monat`, `fallId`.
 - `alk{monate{YYYY-MM:{zv, eingereicht{avp,zv,nachweis}}}, faelle[], kasse, tel, rahmenfrist}`
 - `profil{meName, meStrasse, mePlzOrt, meTel, meMail, bar, barColor, barText, sigRaw, sig, sigClean, sigRot}`
+- `netz{contacts[{id,name,sec,near,sup[],knows[],step,act}],nextId}` (gleiches Format wie `mein-netzwerk.json` des A5-Tools), `firmen[]`
+- `komp{items[{id,bereich,name,beleg,inserat,star}],res{}}`
 - `check{}` (beco-Checkliste), `meta{lastBackup, docsSeeded}`
 - Beispieldaten tragen `beispiel:true` und lassen sich im Tracker mit einem Knopf entfernen.
 
@@ -63,15 +65,14 @@ Tabs (Reihenfolge der Kursmodule):
 - Beispielbranchen: Logistik, Detailhandel, Bau, Industrie (Seeland).
 - Alle Farben als CSS-Tokens, helles und dunkles Theme.
 
-## Offene Punkte (mit Hugo klären)
+## Offene Punkte
 
-1. **Netzwerk-Tab:** Hugos A5-Tool „Mein Netzwerk“ (separate HTML-Datei, liegt bei Hugo) übernehmen, inklusive JSON-Import. Aus einer Zielfirma soll per Tipp eine Initiativbewerbung im Tracker entstehen.
-2. **Kompetenzen-Tab:** Import aus dem Kompetenz-Spiegel (JSON), Belege pro Kompetenz, Top 3.
-3. **Unterschrift aufs RAV-Formular** setzen (Feldposition im PDF bestimmen).
-4. **Import aus „Bewerbung PDF“**: Angaben und Unterschrift aus `localStorage['bewerbung-pdf.v1']` übernehmen, wenn beide Apps auf derselben Domain laufen.
-5. **Inserat-Parser:** aus eingefügtem oder gescanntem Inseratstext Firma, Stelle, Ort und Pensum vorschlagen.
-6. **Android-APK** wie bei `bewerbung-pdf` (WebView mit `window.AndroidApp`-Brücke für Teilen und Speichern).
-7. **Zwischenverdienst-Stunden** pro Tag erfassen, zum Abgleich mit der Bescheinigung 716.105.
+1. **Android-APK** wie bei `bewerbung-pdf` bauen (WebView). Die App nutzt für Senden `navigator.share` mit Fallback auf Download; in der WebView braucht es dafür die gleiche `window.AndroidApp`-Brücke wie in `bewerbung-pdf` (`sharePdf`, `savePdf`), oder einen DownloadListener.
+2. **Auf echten Geräten testen:** iPhone (Home-Bildschirm, Teilen, Kamera im Dateiwähler), Android, Moodle.
+3. **Import aus dem Kompetenz-Spiegel** (JSON), sobald Hugo die Datei liefert. Der Tab läuft auch ohne.
+4. Die 3D-Ansicht des A5-Tools wurde bewusst weggelassen (Bibliothek 1.2 MB). Die 2D-Karte zeigt dieselben Verbindungen.
+
+Erledigt in dieser Runde: Unterschrift auf dem RAV-Formular, Import der Angaben aus „Bewerbung PDF“ (gleiche Domain, `localStorage['bewerbung-pdf.v1']`), Inserat-Parser (Text-Inserat im Dossier → „Bewerbung daraus erfassen“), Zwischenverdienst-Stunden im ALK-Monat.
 
 ## Testen
 
@@ -79,4 +80,4 @@ Tabs (Reihenfolge der Kursmodule):
 python3 -m http.server 8000   # dann http://localhost:8000
 ```
 
-Getestet im Chat: Tracker, Brief-Assistent bis PDF, RAV-Formular mit 16 Einträgen (4 Seiten), ALK und Krankheit, Dossier-Stapel. Nicht getestet: echtes iPhone und Android-Gerät, Teilen-Dialog, Service Worker auf GitHub Pages.
+Getestet im Chat (Chrome, lokal und offline): Tracker, Brief-Assistent mit Unterschrift bis PDF, RAV-Formular mit 16 Einträgen (4 Seiten) und Unterschrift, ALK, Zwischenverdienst, Krankheit, Dossier-Stapel, Netzwerk mit Karte und Zielfirmen, Kompetenzen. Nicht getestet: echtes iPhone und Android-Gerät, Teilen-Dialog, Service Worker auf GitHub Pages.

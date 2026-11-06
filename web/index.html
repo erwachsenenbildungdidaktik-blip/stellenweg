@@ -28,6 +28,7 @@
   --warn:#b7791f; --warn-soft:rgba(214,158,46,.18);
   --bad:#c0463a; --bad-soft:rgba(192,70,58,.13);
   --info:#3b6fb0; --info-soft:rgba(59,111,176,.14);
+  --s-emo:#E07A1F; --s-info:#2B7BB9; --s-door:#7A4BB0; --s-fach:#1E8C7E; --s-bew:#4E9A2F; --s-prak:#B8902A;
   --f-ui: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI Variable", "Segoe UI", Roboto, system-ui, sans-serif;
   --f-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI Variable Display", "Segoe UI", Roboto, system-ui, sans-serif;
   --r-xl:28px; --r-lg:20px; --r-md:14px;
@@ -200,6 +201,23 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4}
 .warn-banner{background:var(--warn-soft)}
 .warn-banner .dot{background:var(--warn-soft);color:var(--warn)}
 
+/* Netzwerkkarte */
+#netz-map .ring{fill:none;stroke:var(--hair);stroke-width:1.5}
+#netz-map .sector{stroke:var(--hair);stroke-width:1.5;stroke-dasharray:4 6}
+#netz-map .ringlbl{font:600 16px var(--f-ui);fill:var(--fg3)}
+#netz-map .sectorlbl{font:700 17px var(--f-ui);fill:var(--fg3);text-transform:uppercase;letter-spacing:.06em}
+#netz-map .clusterlbl{font:700 19px var(--f-ui)}
+#netz-map .edge{stroke:var(--hair);stroke-width:1.2}
+#netz-map .kennt{stroke:var(--fg3);stroke-width:1.6;stroke-dasharray:5 4;opacity:.7}
+#netz-map .me circle{fill:var(--fg)}
+#netz-map .me text{fill:var(--bg);font:700 15px var(--f-ui)}
+#netz-map .node{cursor:pointer}
+#netz-map .node .core{fill:var(--glass-strong);stroke:var(--hair)}
+#netz-map .node text{font:600 19px var(--f-ui);fill:var(--fg)}
+#netz-map .node.sel .core{stroke:var(--accent);stroke-width:3}
+#netz-map .node:focus-visible{outline:none}
+#netz-map .node:focus-visible .core{stroke:var(--accent);stroke-width:3}
+
 /* Banner */
 .banner{border-radius:var(--r-lg);padding:14px 16px;display:flex;gap:12px;align-items:center}
 .banner .dot{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;flex:none;background:var(--accent-soft);color:var(--accent)}
@@ -242,29 +260,16 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4}
     <!-- ============ KOMPETENZEN ============ -->
     <section class="view" id="v-kompetenzen" hidden>
       <div class="top"><div><div class="eyebrow">A1.II · A1.III</div><h1>Kompetenzen &amp; Ressourcen</h1></div></div>
-      <p class="lead">Was Sie können, was Sie mitbringen und was Sie im Vorstellungsgespräch fachlich begründen können.</p>
-
+      <p class="lead">Was Sie können und wie Sie es im Vorstellungsgespräch belegen. Zu jeder Kompetenz gehört ein Beispiel aus Ihrem Berufsalltag.</p>
       <div class="card glass">
-        <div class="card-head"><h2>Vier Kompetenzbereiche</h2></div>
-        <div class="tiles">
-          <div class="tile glass"><div class="k">Fachkompetenz</div><p>Berufliches Wissen und Können, Ausbildungen, Zertifikate</p></div>
-          <div class="tile glass"><div class="k">Methodenkompetenz</div><p>Wie Sie arbeiten: planen, organisieren, Probleme lösen</p></div>
-          <div class="tile glass"><div class="k">Selbstkompetenz</div><p>Wie Sie mit sich umgehen: Belastbarkeit, Zuverlässigkeit</p></div>
-          <div class="tile glass"><div class="k">Sozialkompetenz</div><p>Wie Sie mit anderen umgehen: Team, Kundschaft, Konflikte</p></div>
-        </div>
-        <div class="soon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 19h16"/></svg>
-          <div>Import aus dem <b>Kompetenz-Spiegel</b> (JSON) ist geplant. Pro Kompetenz: Beleg aus dem Berufsalltag und Stern für die Top 3.</div></div>
+        <div class="card-head"><h2>Meine drei stärksten Argumente</h2></div>
+        <div class="list" id="komp-top"></div>
       </div>
-
+      <div id="komp-areas" style="display:flex;flex-direction:column;gap:18px"></div>
       <div class="card glass">
         <div class="card-head"><h2>Mein Ressourcen-Koffer</h2></div>
-        <div class="tiles">
-          <div class="tile glass"><div class="k">Dossier</div><p>Stand Ihrer Unterlagen</p></div>
-          <div class="tile glass"><div class="k">Unterstützung</div><p>Wer Ihnen hilft</p></div>
-          <div class="tile glass"><div class="k">Zeit</div><p>Was Sie pro Woche investieren können</p></div>
-          <div class="tile glass"><div class="k">Mobilität</div><p>Arbeitsweg, Führerschein, ÖV</p></div>
-          <div class="tile glass" style="grid-column:1/-1"><div class="k">Flexibilität</div><p>Pensum, Arbeitszeiten, Branchenwechsel</p></div>
-        </div>
+        <p class="muted">Was trägt Sie durch die Stellensuche, und wo braucht es noch etwas?</p>
+        <div class="list" id="komp-res"></div>
       </div>
     </section>
 
@@ -371,18 +376,40 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4}
     </section>
     <section class="view" id="v-netzwerk" hidden>
       <div class="top"><div><div class="eyebrow">A3 · A4 · A5</div><h1>Mein Netzwerk</h1></div></div>
-      <p class="lead">Der verdeckte Arbeitsmarkt läuft über Menschen. Hier sammeln Sie Kontakte und Zielfirmen.</p>
-      <div class="card glass">
-        <div class="card-head"><h2>Kontakte</h2></div>
-        <div class="tiles">
-          <div class="tile glass"><div class="k">Privat</div><p>Familie, Freundeskreis, Nachbarschaft, Vereine</p></div>
-          <div class="tile glass"><div class="k">Beruflich</div><p>Ehemalige Teams, Vorgesetzte, Kundschaft</p></div>
-        </div>
-        <div class="soon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><div>Geplant: Kontakt erfassen mit „Wer kennt wen?“ und letztem Kontakt.</div></div>
+      <p class="lead">Viele Stellen werden über Menschen vergeben, bevor sie ausgeschrieben sind. Hier sehen Sie, wer Ihnen wobei helfen kann.</p>
+      <div class="seg glass" role="tablist" aria-label="Bereich" id="netz-seg">
+        <button role="tab" data-n="kontakte" aria-selected="true">Kontakte</button>
+        <button role="tab" data-n="karte" aria-selected="false">Karte</button>
+        <button role="tab" data-n="aktiv" aria-selected="false">Aktivieren</button>
+        <button role="tab" data-n="firmen" aria-selected="false">Zielfirmen</button>
       </div>
-      <div class="card glass">
-        <div class="card-head"><h2>Zielfirmen</h2></div>
-        <div class="soon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 19h16"/></svg><div>Import der Firmenliste aus dem A3.II-Tool (JSON) ist geplant. Aus einer Zielfirma wird mit einem Tipp eine Initiativbewerbung im Tracker.</div></div>
+
+      <div class="card glass" data-np="kontakte">
+        <div class="card-head"><div><h2>Meine Kontakte</h2><span class="muted" id="netz-count"></span></div><button class="btn btn-primary" id="netz-add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Neu</button></div>
+        <div class="list" id="netz-list"></div>
+        <label class="btn btn-ghost file-btn" style="align-self:flex-start">Datei aus „Mein Netzwerk“ laden<input type="file" id="netz-import" accept=".json,application/json"></label>
+      </div>
+
+      <div class="card glass" data-np="karte" hidden>
+        <div class="seg" id="netz-lay" style="background:var(--hair)">
+          <button data-l="near" aria-selected="true">Nach Nähe</button>
+          <button data-l="sup" aria-selected="false">Nach Unterstützung</button>
+        </div>
+        <div style="overflow:hidden;border-radius:18px;background:var(--glass)"><svg id="netz-map" viewBox="0 0 720 720" role="img" aria-label="Netzwerkkarte" style="width:100%;height:auto;display:block"></svg></div>
+        <div class="kats" id="netz-legend"></div>
+        <div class="banner" id="netz-insight" style="background:var(--accent-soft)" hidden></div>
+      </div>
+      <div class="card glass" data-np="karte" hidden id="netz-sheet"></div>
+
+      <div class="card glass" data-np="aktiv" hidden>
+        <div class="card-head"><h2>Meine nächsten Schritte</h2></div>
+        <div class="list" id="netz-aktiv"></div>
+      </div>
+
+      <div class="card glass" data-np="firmen" hidden>
+        <div class="card-head"><h2>Zielfirmen</h2><button class="btn btn-primary" id="firm-add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Neu</button></div>
+        <p class="muted">Für den verdeckten Arbeitsmarkt: Wer entscheidet dort, und woran erkennen Sie, dass sich etwas bewegt?</p>
+        <div class="list" id="firm-list"></div>
       </div>
     </section>
 
@@ -531,6 +558,7 @@ if(!S||!S.bewerbungen){S=seed();fresh=true}
 S.docs=S.docs||[];S.meta=S.meta||{};delete S.dossier;
 if(!S.alk){S.alk=seedAlk(S.bewerbungen.some(b=>b.beispiel))}
 S.profil=S.profil||{bar:true,barColor:'#1f5f8b',barText:'#ffffff'};
+S.netz=S.netz||{contacts:[],nextId:1};S.firmen=S.firmen||seedFirmen(S.bewerbungen.some(b=>b.beispiel));S.komp=S.komp||seedKomp(S.bewerbungen.some(b=>b.beispiel));
 let saveT;
 function save(){clearTimeout(saveT);saveT=setTimeout(()=>{kvPut('state',JSON.parse(JSON.stringify(S))).catch(()=>toast('Speichern fehlgeschlagen'))},250)}
 
@@ -539,6 +567,12 @@ function seedAlk(ex){const a={monate:{},faelle:[],kasse:'',tel:'',rahmenfrist:''
     a.monate[k]={zv:true,eingereicht:{avp:true,zv:false},beispiel:true};
     a.faelle.push({id:'f1',von:ago(20),bis:ago(15),ravGemeldet:true,gesundGemeldet:false,inAvp:false,beispiel:true})}
   return a}
+function seedFirmen(ex){return ex?[{id:'z1',name:'Seeländer Getränke AG',ort:'Aarberg',branche:'Logistik',ansprech:'',kanal:'Empfang anrufen, nach Lagerleitung fragen',signal:'Baut ein neues Verteilzentrum',kontaktId:null,beispiel:true}]:[]}
+function seedKomp(ex){return{items:ex?[
+  {id:'k1',bereich:'fach',name:'Staplerfahren (SUVA-Ausweis)',beleg:'Fünf Jahre täglich im Wareneingang, ohne Unfall.',inserat:true,star:true,beispiel:true},
+  {id:'k2',bereich:'meth',name:'Kommissionieren mit Handscanner',beleg:'Rund 300 Positionen pro Schicht bei sehr tiefer Fehlerquote.',inserat:true,star:true,beispiel:true},
+  {id:'k3',bereich:'selbst',name:'Zuverlässig auch im Schichtbetrieb',beleg:'',inserat:true,star:false,beispiel:true},
+  {id:'k4',bereich:'sozial',name:'Neue Mitarbeitende einarbeiten',beleg:'Drei Temporärmitarbeitende angelernt.',inserat:false,star:true,beispiel:true}]:[],res:{}}}
 function seed(){return{
   strategie:{ziele:['Logistiker/in','Lagermitarbeiter/in','Kommissionierer/in'],region:'Biel, Lyss, Grenchen',pensum:'80–100 %',verdeckt:40,botschaft:''},
   ziele:{woche:3,monat:10},
@@ -551,7 +585,7 @@ function seed(){return{
     {id:uid(),text:'Lebenslauf mit Fachkraft durchgehen',due:ahead(1),done:false,beispiel:true},
     {id:uid(),text:'5 Firmen im Seeland für Initiativbewerbungen recherchieren',due:ahead(3),done:false,beispiel:true},
     {id:uid(),text:'Arbeitszeugnisse einscannen',due:ago(1),done:true,beispiel:true}],
-  docs:[], rav:{name:'',tel:'',termin:''}, meta:{}, alk:seedAlk(true)
+  docs:[], rav:{name:'',tel:'',termin:''}, meta:{}, alk:seedAlk(true), netz:{contacts:[],nextId:1}, firmen:seedFirmen(true), komp:seedKomp(true)
 }}
 
 /* ================= Beispieldokumente (nur beim ersten Start) ================= */
@@ -641,10 +675,10 @@ function renderTracker(){
         <div class="row-meta"><span class="pill s-${b.status}">${stLabel(b.status)}</span><span class="tag">${esc(b.kanal)}</span><span class="tag">${fmt(b.datum)}</span>${nd?`<span class="tag">📎 ${nd}</span>`:''}${b.status!=='arbeit'&&!b.adresse?'<span class="tag" style="color:var(--warn)">Adresse fehlt fürs RAV</span>':''}${b.beispiel?'<span class="tag example">Beispiel</span>':''}</div>
       </div></div>`}).join(''):`<div class="empty">Noch keine Bewerbungen in dieser Ansicht.<br>Tippen Sie auf „Neu“, um die erste zu erfassen.</div>`;
   $$('#bew-list .row').forEach(r=>{r.onclick=()=>openBew(r.dataset.id);r.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openBew(r.dataset.id)}}});
-  const hasEx=S.bewerbungen.some(b=>b.beispiel)||S.aufgaben.some(a=>a.beispiel)||S.docs.some(d=>d.beispiel)||S.alk.faelle.some(f=>f.beispiel)||Object.values(S.alk.monate).some(m=>m.beispiel);
+  const hasEx=S.bewerbungen.some(b=>b.beispiel)||S.aufgaben.some(a=>a.beispiel)||S.docs.some(d=>d.beispiel)||S.alk.faelle.some(f=>f.beispiel)||Object.values(S.alk.monate).some(m=>m.beispiel)||S.firmen.some(f=>f.beispiel)||S.komp.items.some(i=>i.beispiel)||S.netz.contacts.some(c=>c.beispiel);
   $('#example-note').innerHTML=hasEx?`<div class="banner" style="background:var(--accent-soft)"><div class="txt"><b>Das sind Beispiele</b><span>So sieht die App gefüllt aus. Entfernt alle Beispiele in allen Tabs.</span></div><button class="btn btn-glass" id="clear-ex">Entfernen</button></div>`:'';
   if(hasEx)$('#clear-ex').onclick=async()=>{for(const d of S.docs.filter(d=>d.beispiel))await blobDel(d.id).catch(()=>{});
-    S.bewerbungen=S.bewerbungen.filter(b=>!b.beispiel);S.aufgaben=S.aufgaben.filter(a=>!a.beispiel);S.docs=S.docs.filter(d=>!d.beispiel);S.alk.faelle=S.alk.faelle.filter(f=>!f.beispiel);Object.keys(S.alk.monate).forEach(k=>{if(S.alk.monate[k].beispiel)delete S.alk.monate[k]});stackIdx=0;save();render();toast('Beispiele entfernt')};
+    S.bewerbungen=S.bewerbungen.filter(b=>!b.beispiel);S.aufgaben=S.aufgaben.filter(a=>!a.beispiel);S.docs=S.docs.filter(d=>!d.beispiel);S.alk.faelle=S.alk.faelle.filter(f=>!f.beispiel);S.firmen=S.firmen.filter(f=>!f.beispiel);S.komp.items=S.komp.items.filter(i=>!i.beispiel);S.netz.contacts=S.netz.contacts.filter(c=>!c.beispiel);S.netz.contacts.forEach(c=>c.knows=c.knows.filter(k=>S.netz.contacts.some(o=>o.id===k)));Object.keys(S.alk.monate).forEach(k=>{if(S.alk.monate[k].beispiel)delete S.alk.monate[k]});stackIdx=0;save();render();toast('Beispiele entfernt')};
 }
 
 /* ================= Sheet ================= */
@@ -662,8 +696,8 @@ $('#sheet-save').onclick=()=>onSave&&onSave();
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#sheet').hidden)closeSheet()});
 function armDelete(btn,fn){let armed=false;btn.onclick=()=>{if(!armed){armed=true;btn.textContent='Wirklich löschen?';return}fn()}}
 
-function openBew(id){
-  const b=S.bewerbungen.find(x=>x.id===id)||{firma:'',stelle:'',datum:iso(today),kanal:'Inserat',status:'arbeit',naechster:''};
+function openBew(id,pre){
+  const b=S.bewerbungen.find(x=>x.id===id)||Object.assign({firma:'',stelle:'',datum:iso(today),kanal:'Inserat',status:'arbeit',naechster:''},pre||{});
   const linked=id?S.docs.filter(d=>d.bewerbungId===id):[];
   openSheet(id?'Bewerbung':'Neue Bewerbung',`
     <div class="field"><label for="f-firma">Firma</label><input class="input" id="f-firma" value="${esc(b.firma)}" placeholder="z.B. Muster AG"></div>
@@ -695,7 +729,7 @@ function openBew(id){
     const rec={...b,id:id||uid(),firma,stelle:$('#f-stelle').value.trim(),datum:$('#f-datum').value,kanal:$('#f-kanal').value,status:st,naechster:$('#f-next').value.trim(),
       adresse:$('#f-adr').value.trim(),kontakt:$('#f-kp').value.trim(),tel:$('#f-tel').value.trim(),art:$('#f-art').value,pensum:$('#f-pens').value,zuweisung:$('#f-zuw').checked,absagegrund:st==='absage'?$('#f-ag').value.trim():''};
     delete rec.beispiel;if(b.beispiel)rec.beispiel=true;
-    if(id){const i=S.bewerbungen.findIndex(x=>x.id===id);S.bewerbungen[i]=rec}else S.bewerbungen.push(rec);
+    delete rec.docId;if(id){const i=S.bewerbungen.findIndex(x=>x.id===id);S.bewerbungen[i]=rec}else{S.bewerbungen.push(rec);if(pre&&pre.docId){const dd=S.docs.find(x=>x.id===pre.docId);if(dd)dd.bewerbungId=rec.id}}
     save();closeSheet();render();toast(id?'Gesichert':'Bewerbung erfasst');
   });
   $$('#f-status button').forEach(btn=>btn.onclick=()=>{$$('#f-status button').forEach(x=>{x.setAttribute('aria-pressed',x===btn);x.style.borderColor=x===btn?'currentColor':'transparent'});$('#f-ag-wrap').hidden=btn.dataset.s!=='absage'});
@@ -852,7 +886,8 @@ async function openDoc(id){
   armDelete($('#d-del'),async()=>{await blobDel(d.id).catch(()=>{});S.docs=S.docs.filter(x=>x.id!==id);save();closeSheet();render();toast('Dokument gelöscht')});
   const v=$('#viewer');
   try{
-    if(d.typ==='text'){v.innerHTML=`<textarea class="text-doc input" id="d-text" aria-label="Text" style="min-height:260px">${esc(d.text)}</textarea>`;return}
+    if(d.typ==='text'){v.innerHTML=`<textarea class="text-doc input" id="d-text" aria-label="Text" style="min-height:260px">${esc(d.text)}</textarea>${d.kat==='inserat'&&!d.bewerbungId?'<button type="button" class="btn btn-primary" id="d-tobew" style="align-self:flex-start">Bewerbung daraus erfassen</button>':''}`;
+      $('#d-tobew')&&($('#d-tobew').onclick=()=>{const p=parseInserat($('#d-text').value);closeSheet();setTimeout(()=>openBew(null,{...p,naechster:'Brief schreiben',docId:d.id}),340)});return}
     const blob=await blobGet(d.id);if(!blob){v.innerHTML='<div class="muted">Datei nicht gefunden. Wurde sie auf einem anderen Gerät abgelegt?</div>';return}
     if(d.typ.startsWith('image/')){const u=URL.createObjectURL(blob);viewerURLs.push(u);v.innerHTML=`<img src="${u}" alt="${esc(d.name)}">`;return}
     if(d.typ==='application/pdf'){const pdf=await openPdf(blob);v.innerHTML='';
@@ -933,6 +968,7 @@ function renderAlk(){
   $$('#m-slots [data-ein]').forEach(c=>c.onchange=()=>{const k=c.dataset.ein;
     if(k.startsWith('arzt:')){S.alk.faelle.find(f=>f.id===k.slice(5)).zeugnisEingereicht=c.checked}else m.eingereicht[k]=c.checked;save();renderAlk()});
   $$('#m-slots [data-up]').forEach(b=>b.onclick=()=>askFile(slots.find(s=>s.key===b.dataset.up).meta));
+  if(m.zv){$('#m-slots').insertAdjacentHTML('beforeend',zvHTML(curM));bindZv(curM)}
   // Verlauf
   const H=[];for(let i=0;i<6;i++)H.push(shiftM(ym(today),-i));
   $('#m-history').innerHTML=H.map(k=>{const x=S.alk.monate[k]||{eingereicht:{}};const done=!!x.eingereicht.avp;
@@ -1054,20 +1090,21 @@ function openNachweis(k){
     <div class="grid2">
       <div class="field"><label for="nw-datum">Datum</label><input class="input" id="nw-datum" value="${fmt(iso(today))}"></div>
       <div class="field"><label for="nw-beil">Beilagen</label><input class="input" id="nw-beil" placeholder="optional"></div>
-    </div>`,
+    </div>
+    ${S.profil.sig?`<label class="row" style="cursor:pointer;border:none"><input type="checkbox" class="check" id="nw-sig" checked><div class="row-main"><div class="row-title">Meine Unterschrift einsetzen</div><div class="row-sub">Aus dem Brief-Assistenten.</div></div></label>`:'<p class="muted">Tipp: Wenn Sie im Brief-Assistenten eine Unterschrift hinterlegen, setzt die App sie hier automatisch ein.</p>'}`,
   async()=>{
     const name=$('#nw-name').value.trim();if(!name){toast('Bitte Namen eintragen');return}
     S.profil.meName=S.profil.meName||name;
     $('#sheet-save').textContent='Erstellt …';
     try{
-      const blob=await buildNachweis(k,name,$('#nw-ahv').value.trim(),$('#nw-datum').value.trim(),$('#nw-beil').value.trim());
+      const blob=await buildNachweis(k,name,$('#nw-ahv').value.trim(),$('#nw-datum').value.trim(),$('#nw-beil').value.trim(),!!($('#nw-sig')&&$('#nw-sig').checked));
       $('#nw-ahv').value='';
       const doc=await storePdf(blob,{name:'Arbeitsbemühungen '+mLabel(k),kat:'alk',bereich:'alk',slot:'nachweis',monat:k},d=>d.slot==='nachweis'&&d.monat===k);
       closeSheet();render();toast('Formular erstellt');setTimeout(()=>openDoc(doc.id),360);
     }catch(e){console.error(e);$('#sheet-save').textContent='Erstellen';toast('Formular konnte nicht erstellt werden')}
   },'Erstellen');
 }
-async function buildNachweis(k,name,ahv,datum,beil){
+async function buildNachweis(k,name,ahv,datum,beil,withSig){
   await loadScript(PDFLIB);const {PDFDocument}=window.PDFLib;
   const bytes=b64ToBytes(document.getElementById('form716007').textContent.trim());
   const L=ravEntries(k), chunks=[];for(let i=0;i<L.length;i+=14)chunks.push(L.slice(i,i+14));if(!chunks.length)chunks.push([]);
@@ -1083,6 +1120,8 @@ async function buildNachweis(k,name,ahv,datum,beil){
       c('schriftlich_'+n,art==='brieflich');c('persönlich_'+n,art==='persoenlich');c('Telefonisch_'+n,art==='telefonisch');
       c('noch offen_'+n,b.status==='versendet');c('Vorstellungsgespräch_'+n,b.status==='gespraech');c('Anstellung_'+n,b.status==='zusage');c('Absage_'+n,b.status==='absage');
       if(b.status==='absage')t('Absagegrund_'+n,b.absagegrund,7)});
+    if(withSig&&S.profil.sig){try{const img=await d.embedJpg(b64ToBytes(S.profil.sig.split(',')[1]));const H=34,W=Math.min(180,H*img.width/img.height);
+      d.getPage(1).drawImage(img,{x:354+H,y:620,width:W,height:H,rotate:window.PDFLib.degrees(90)})}catch(e){console.warn('Unterschrift',e)}}
     f.flatten();(await out.copyPages(d,d.getPageIndices())).forEach(p=>out.addPage(p))}
   return new Blob([await out.save()],{type:'application/pdf'})}
 
@@ -1249,6 +1288,7 @@ const fld=(id,lab,obj,key,attrs='')=>`<div class="field"><label for="${id}">${la
 const nextBtn=t=>`<button class="btn btn-primary" data-next style="align-self:flex-end">${t||'Weiter'} →</button>`;
 function stepAngaben(){return `
   <p class="muted">Das geben Sie nur einmal ein. Es wird auch für das RAV-Formular verwendet.</p>
+  ${oldApp()&&!S.profil.meName?'<div class="banner" style="background:var(--accent-soft)"><div class="txt"><b>Angaben aus „Bewerbung PDF“ gefunden</b><span>Name, Adresse, Briefkopf und Unterschrift übernehmen.</span></div><button type="button" class="btn btn-glass" id="bp-import">Übernehmen</button></div>':''}
   ${fld('bp-name','Vorname und Name','p','meName','autocomplete="name"')}
   ${fld('bp-str','Strasse und Nummer','p','meStrasse','autocomplete="street-address"')}
   <div class="grid2">${fld('bp-plz','PLZ und Ort','p','mePlzOrt','placeholder="3000 Bern"')}${fld('bp-tel','Telefon','p','meTel','type="tel"')}</div>
@@ -1260,7 +1300,9 @@ function stepAngaben(){return `
 function headPreview(){const h=$('#bp-head');if(!h)return;const P=S.profil;h.style.background=P.bar?P.barColor:'#fff';h.style.color=P.bar?P.barText:'#000';
   h.querySelector('.hn').textContent=P.meName||'Vorname Name';h.querySelector('.hc').textContent=contactParts(P).join('  ·  ')||'Adresse  ·  Tel.  ·  E-Mail';
   $$('#bp-sw1 button').forEach(b=>b.style.outline=b.dataset.c===P.barColor?'3px solid var(--accent)':'none');$$('#bp-sw2 button').forEach(b=>b.style.outline=b.dataset.c===P.barText?'3px solid var(--accent)':'none')}
+function oldApp(){try{const o=JSON.parse(localStorage.getItem('bewerbung-pdf.v1')||'null');return o&&o.meName?o:null}catch(e){return null}}
 function bindAngaben(){const P=S.profil;
+  $('#bp-import')&&($('#bp-import').onclick=()=>{const o=oldApp();['meName','meStrasse','mePlzOrt','meTel','meMail','bar','barColor','barText','sigRaw','sig','sigClean','sigRot'].forEach(k=>{if(o[k]!=null)P[k]=o[k]});save();goStep(0);toast('Übernommen')});
   const sw=(box,cols,key,pick)=>{$(box).innerHTML=cols.map(c=>`<button type="button" data-c="${c}" aria-label="Farbe ${c}" style="width:34px;height:34px;border-radius:50%;border:1px solid var(--hair);background:${c};cursor:pointer;outline-offset:2px"></button>`).join('');
     $$(box+' button').forEach(b=>b.onclick=()=>{P[key]=b.dataset.c;pick&&pick(b.dataset.c);save();headPreview()})};
   sw('#bp-sw1',BAR_COLORS.map(c=>c[0]),'barColor',c=>{P.barText=BAR_COLORS.find(x=>x[0]===c)[1]});sw('#bp-sw2',TEXT_COLORS,'barText');
@@ -1375,6 +1417,197 @@ function renderCheck(){S.check=S.check||{};let done=0,all=0;
   $('#chk-count').textContent=`${done} von ${all}`;
   $$('#dos-check [data-ck]').forEach(c=>c.onchange=()=>{S.check[c.dataset.ck]=c.checked;save();const op=[...$$('#dos-check details')].map(d=>d.open);renderCheck();$$('#dos-check details').forEach((d,i)=>d.open=op[i])})}
 
+/* ================= Netzwerk (aus dem A5-Tool „Mein Netzwerk“) ================= */
+const SECT=[{id:'fam',n:'Familie'},{id:'fre',n:'Freunde & Bekannte'},{id:'arb',n:'Arbeit & Ausbildung'},{id:'fach',n:'Fachpersonen & Institutionen'}];
+const NEAR=[{id:1,n:'eng'},{id:2,n:'mittel'},{id:3,n:'locker'}];
+const SUP=[{id:'emo',n:'Mut machen, zuhören',short:'Emotional',v:'--s-emo'},{id:'info',n:'Hinweise auf offene Stellen',short:'Stelleninfos',v:'--s-info'},
+  {id:'door',n:'Türöffner, Empfehlung',short:'Türöffner',v:'--s-door'},{id:'fach',n:'Wissen über Beruf oder Branche',short:'Branchenwissen',v:'--s-fach'},
+  {id:'bew',n:'Dossier gegenlesen, Gespräch üben',short:'Bewerbungshilfe',v:'--s-bew'},{id:'prak',n:'Praktische Hilfe (Betreuung, Fahrt, PC)',short:'Praktisch',v:'--s-prak'}];
+const supById=Object.fromEntries(SUP.map(s=>[s.id,s]));
+const N=()=>S.netz;
+const cById=id=>N().contacts.find(c=>c.id===id);
+let nsub='kontakte', nlayout='near', hiSup=null, selC=null;
+$$('#netz-seg button').forEach(b=>b.onclick=()=>{nsub=b.dataset.n;$$('#netz-seg button').forEach(x=>x.setAttribute('aria-selected',x===b));$$('[data-np]').forEach(p=>p.hidden=p.dataset.np!==nsub);renderNetz()});
+function setKnows(id,list){N().contacts.forEach(o=>{if(o.id===id)return;o.knows=o.knows.filter(k=>k!==id);if(list.includes(o.id))o.knows.push(id)});cById(id).knows=list.slice()}
+const swatch=c=>`<span style="display:inline-flex;gap:3px">${c.sup.map(s=>`<i style="width:10px;height:10px;border-radius:50%;background:var(${supById[s].v})"></i>`).join('')||'<i style="width:10px;height:10px;border-radius:50%;background:var(--hair)"></i>'}</span>`;
+function renderNetz(){
+  const C=N().contacts, tot=C.reduce((a,c)=>a+c.sup.length,0);
+  $('#netz-count').textContent=C.length?`${C.length} Kontakte · ${tot} Unterstützungen`:'';
+  $('#netz-list').innerHTML=C.length?C.map(c=>`<div class="row row-click" data-c="${c.id}" tabindex="0" role="button"><div style="padding-top:5px">${swatch(c)}</div><div class="row-main">
+      <div class="row-title">${esc(c.name)}</div><div class="row-sub">${SECT.find(s=>s.id===c.sec).n} · ${NEAR[c.near-1].n}${c.knows.length?` · kennt ${c.knows.length}`:''}</div>
+      ${c.act?`<div class="row-meta"><span class="pill s-gespraech">aktiviert</span>${c.step?`<span class="tag">→ ${esc(c.step)}</span>`:''}</div>`:''}</div></div>`).join('')
+    :`<div class="empty">Noch keine Kontakte. Denken Sie an Familie, Freundeskreis, ehemalige Teams, Verein und Nachbarschaft.<br><button class="btn btn-glass" id="netz-ex" style="margin-top:10px">Beispiel ansehen</button></div>`;
+  $$('#netz-list [data-c]').forEach(r=>r.onclick=()=>openKontakt(+r.dataset.c));
+  $('#netz-ex')&&($('#netz-ex').onclick=()=>{loadNetzExample();renderNetz()});
+  if(nsub==='karte')buildMap();
+  if(nsub==='aktiv')renderAktiv();
+  renderFirmen();
+}
+function loadNetzExample(){const ex=[['Schwester','fam',1,['emo','prak']],['Ex-Chefin','arb',2,['door','fach','info']],['Trainer FC','fre',3,['info','door']],['Nachbar M.','fre',3,['prak']],['Kollegin Lehre','arb',3,['fach','info']],['RAV-Beraterin','fach',2,['info','bew']],['Freundin S.','fre',1,['emo','bew']],['Onkel','fam',2,[]]];
+  N().contacts=ex.map((e,i)=>({id:i+1,name:e[0]+' (Beispiel)',sec:e[1],near:e[2],sup:e[3],knows:[],step:'',act:false,beispiel:true}));N().nextId=ex.length+1;
+  setKnows(2,[5]);setKnows(3,[4]);setKnows(1,[7]);save()}
+function openKontakt(id){
+  const c=id?cById(id):{name:'',sec:'fre',near:2,sup:[],knows:[],step:'',act:false};
+  const others=N().contacts.filter(o=>o.id!==id);
+  openSheet(id?'Kontakt':'Kontakt hinzufügen',`
+    <div class="field"><label for="k-nm">Kürzel oder Rolle</label><input class="input" id="k-nm" value="${esc(c.name)}" placeholder="z.B. Ex-Chefin, Nachbar M."><span class="muted">Ein Kürzel genügt. Volle Namen braucht es nicht.</span></div>
+    <div class="field"><label>Woher kennen Sie die Person?</label><div class="chips" id="k-sec">${SECT.map(s=>`<button type="button" class="kat" data-v="${s.id}" aria-pressed="${s.id===c.sec}">${s.n}</button>`).join('')}</div></div>
+    <div class="field"><label>Wie nah stehen Sie sich?</label><div class="chips" id="k-near">${NEAR.map(s=>`<button type="button" class="kat" data-v="${s.id}" aria-pressed="${s.id===c.near}">${s.n}</button>`).join('')}</div></div>
+    <div class="field"><label>Was kann diese Person beitragen?</label><div class="chips" id="k-sup">${SUP.map(s=>`<button type="button" class="kat" data-v="${s.id}" aria-pressed="${c.sup.includes(s.id)}" style="border-color:var(${s.v})"><i style="width:9px;height:9px;border-radius:50%;background:var(${s.v})"></i>${s.n}</button>`).join('')}</div></div>
+    ${others.length?`<div class="field"><label>Kennt auch</label><div class="chips" id="k-knows">${others.map(o=>`<button type="button" class="kat" data-v="${o.id}" aria-pressed="${c.knows.includes(o.id)}">${esc(o.name)}</button>`).join('')}</div></div>`:''}
+    <div class="field"><label for="k-step">Nächster Schritt mit dieser Person</label><textarea class="input" id="k-step" placeholder="z.B. anrufen und fragen, ob in ihrer Firma jemand gesucht wird">${esc(c.step)}</textarea></div>
+    <label class="row" style="cursor:pointer;border:none"><input type="checkbox" class="check" id="k-act" ${c.act?'checked':''}><div class="row-main"><div class="row-title">Diesen Kontakt aktivieren</div><div class="row-sub">Erscheint dann unter „Aktivieren“ und kann in den Aktionsplan.</div></div></label>
+    ${id?`<div class="sheet-actions"><span></span><button class="btn btn-ghost" id="k-del" style="color:var(--bad)">Kontakt löschen</button></div>`:''}`,
+  ()=>{const name=$('#k-nm').value.trim();if(!name){toast('Bitte Kürzel oder Rolle eintragen');return}
+    const pick=sel=>$$(sel+' [aria-pressed="true"]').map(b=>b.dataset.v);
+    const rec={name,sec:pick('#k-sec')[0]||'fre',near:+(pick('#k-near')[0]||2),sup:pick('#k-sup'),step:$('#k-step').value.trim(),act:$('#k-act').checked};
+    const knows=$('#k-knows')?pick('#k-knows').map(Number):[];
+    if(id){Object.assign(cById(id),rec);delete cById(id).beispiel;setKnows(id,knows)}else{const nid=N().nextId++;N().contacts.push({id:nid,...rec,knows:[]});setKnows(nid,knows)}
+    save();closeSheet();renderNetz();toast('Gesichert')});
+  ['#k-sec','#k-near'].forEach(g=>$$(g+' button').forEach(b=>b.onclick=()=>$$(g+' button').forEach(x=>x.setAttribute('aria-pressed',x===b))));
+  ['#k-sup','#k-knows'].forEach(g=>$$(g+' button').forEach(b=>b.onclick=()=>b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')!=='true')));
+  if(id)armDelete($('#k-del'),()=>{N().contacts=N().contacts.filter(x=>x.id!==id);N().contacts.forEach(x=>x.knows=x.knows.filter(k=>k!==id));if(selC===id)selC=null;save();closeSheet();renderNetz()});
+}
+$('#netz-add').onclick=()=>openKontakt(null);
+
+/* Karte */
+const CX=360,CY=360,RAD={1:120,2:215,3:305};
+function posNear(){const P={};SECT.forEach((s,si)=>{const g0=N().contacts.filter(c=>c.sec===s.id);[1,2,3].forEach(r=>{const g=g0.filter(c=>c.near===r);const a0=-Math.PI/2+si*Math.PI/2;
+  g.forEach((c,i)=>{const a=a0+(i+1)*(Math.PI/2)/(g.length+1);P[c.id]=[CX+RAD[r]*Math.cos(a),CY+RAD[r]*Math.sin(a)]})})});return P}
+const CL={};SUP.forEach((s,i)=>{const a=-Math.PI/2+i*2*Math.PI/SUP.length;CL[s.id]=[CX+250*Math.cos(a),CY+250*Math.sin(a)]});
+function posSup(){const C=N().contacts,P={};const noSup=C.filter(c=>!c.sup.length);
+  C.filter(c=>c.sup.length).forEach(c=>{let vx=0,vy=0;c.sup.forEach(s=>{vx+=CL[s][0]-CX;vy+=CL[s][1]-CY});vx/=c.sup.length;vy/=c.sup.length;
+    if(Math.hypot(vx,vy)<60){vx=CL[c.sup[0]][0]-CX;vy=CL[c.sup[0]][1]-CY}const d=Math.hypot(vx,vy),R=c.sup.length===1?255:200;P[c.id]=[CX+vx/d*R,CY+vy/d*R]});
+  noSup.forEach((c,i)=>{const a=Math.PI*.62+i*.3;P[c.id]=[CX+315*Math.cos(a),CY+315*Math.sin(a)]});
+  const ids=Object.keys(P);for(let it=0;it<120;it++){ids.forEach(a=>{ids.forEach(b=>{if(a>=b)return;const p=P[a],q=P[b];const dx=q[0]-p[0],dy=q[1]-p[1];const d=Math.hypot(dx,dy)||.01;if(d<96){const k=(96-d)/2/d;p[0]-=dx*k;p[1]-=dy*k;q[0]+=dx*k;q[1]+=dy*k}});
+    const p=P[a];const dx=p[0]-CX,dy=p[1]-CY,d=Math.hypot(dx,dy)||.01;if(d<120){p[0]=CX+dx/d*120;p[1]=CY+dy/d*120}})}
+  Object.values(P).forEach(p=>{p[0]=Math.max(50,Math.min(670,p[0]));p[1]=Math.max(50,Math.min(670,p[1]))});return P}
+const nodeR=c=>16+c.sup.length*4;
+const arcPath=(r,a0,a1)=>`M ${Math.cos(a0)*r} ${Math.sin(a0)*r} A ${r} ${r} 0 ${a1-a0>Math.PI?1:0} 1 ${Math.cos(a1)*r} ${Math.sin(a1)*r}`;
+function buildMap(){const C=N().contacts,svg=$('#netz-map');if(!svg)return;
+  if(!C.length){svg.innerHTML=`<text x="360" y="360" text-anchor="middle" class="ringlbl">Erfassen Sie zuerst Kontakte.</text>`;$('#netz-legend').innerHTML='';$('#netz-sheet').innerHTML='';$('#netz-insight').hidden=true;return}
+  const P=nlayout==='near'?posNear():posSup();let h='';
+  if(nlayout==='near'){[1,2,3].forEach(r=>h+=`<circle class="ring" cx="${CX}" cy="${CY}" r="${RAD[r]+(r===3?40:45)}"/>`);
+    [['eng',1],['mittel',2],['locker',3]].forEach(([t,r])=>h+=`<text class="ringlbl" x="${CX+6}" y="${CY-RAD[r]-(r===3?40:45)+16}">${t}</text>`);
+    h+=`<line class="sector" x1="${CX}" y1="10" x2="${CX}" y2="710"/><line class="sector" x1="10" y1="${CY}" x2="710" y2="${CY}"/>`;
+    SECT.forEach((s,i)=>{const[x,y,an]=[[700,28,'end'],[700,706,'end'],[20,706,'start'],[20,28,'start']][i];h+=`<text class="sectorlbl" x="${x}" y="${y}" text-anchor="${an}">${s.n}</text>`})}
+  else SUP.forEach(s=>{const[x,y]=CL[s.id];h+=`<text class="clusterlbl" x="${x+(x-CX)*.22}" y="${y+(y-CY)*.22}" text-anchor="middle" fill="var(${s.v})">${s.short}</text>`});
+  C.forEach(c=>{const[x,y]=P[c.id];h+=`<line class="edge" x1="${CX}" y1="${CY}" x2="${x}" y2="${y}"/>`});
+  const done=new Set();C.forEach(c=>c.knows.forEach(k=>{const key=[c.id,k].sort().join('-');if(done.has(key)||!P[k])return;done.add(key);h+=`<line class="kennt" x1="${P[c.id][0]}" y1="${P[c.id][1]}" x2="${P[k][0]}" y2="${P[k][1]}"/>`}));
+  h+=`<g class="me"><circle cx="${CX}" cy="${CY}" r="34"/><text x="${CX}" y="${CY+6}" text-anchor="middle">Ich</text></g>`;
+  C.forEach(c=>{const[x,y]=P[c.id],r=nodeR(c);let arcs='';
+    if(c.sup.length===1)arcs=`<circle r="${r+5}" fill="none" stroke="var(${supById[c.sup[0]].v})" stroke-width="7"/>`;
+    else c.sup.forEach((s,i)=>{const n=c.sup.length,a0=-Math.PI/2+i*2*Math.PI/n+.06,a1=-Math.PI/2+(i+1)*2*Math.PI/n-.06;arcs+=`<path d="${arcPath(r+5,a0,a1)}" fill="none" stroke="var(${supById[s].v})" stroke-width="7" stroke-linecap="round"/>`});
+    const dim=hiSup&&!c.sup.includes(hiSup);
+    h+=`<g class="node${selC===c.id?' sel':''}" data-id="${c.id}" tabindex="0" role="button" aria-label="${esc(c.name)}" transform="translate(${x},${y})" opacity="${dim?.18:1}">${arcs}<circle class="core" r="${r}"/><text y="${r+24}" text-anchor="middle">${esc(c.name)}</text></g>`});
+  svg.innerHTML=h;
+  $$('#netz-map .node').forEach(g=>{g.onclick=()=>{selC=+g.dataset.id;buildMap()};g.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selC=+g.dataset.id;buildMap()}}});
+  $('#netz-legend').innerHTML=SUP.map(s=>`<button type="button" class="kat" data-hi="${s.id}" aria-pressed="${hiSup===s.id}"><i style="width:9px;height:9px;border-radius:50%;background:var(${s.v})"></i>${s.short} (${C.filter(c=>c.sup.includes(s.id)).length})</button>`).join('');
+  $$('#netz-legend [data-hi]').forEach(b=>b.onclick=()=>{hiSup=hiSup===b.dataset.hi?null:b.dataset.hi;buildMap()});
+  const loose=C.filter(c=>c.near===3&&c.sup.some(s=>['info','door','fach'].includes(s)));
+  $('#netz-insight').hidden=nlayout!=='sup';
+  $('#netz-insight').innerHTML=`<div class="txt"><b>${loose.length?`${loose.length} lockere Kontakte können Ihnen Stelleninfos, Branchenwissen oder eine Tür öffnen.`:'Gut zu wissen'}</b><span>Der Soziologe Mark Granovetter hat gezeigt, dass Stellen oft über lockere Bekanntschaften gefunden werden, weil diese andere Informationen haben als der enge Kreis.</span></div>`;
+  const c=selC&&cById(selC);
+  $('#netz-sheet').innerHTML=c?`<div class="card-head"><div><div class="eyebrow">${SECT.find(s=>s.id===c.sec).n} · ${NEAR[c.near-1].n}</div><h2>${esc(c.name)}</h2></div><button class="btn btn-glass" id="ns-edit">Bearbeiten</button></div>
+    <div class="list">${SUP.map(s=>`<div class="row" style="padding:6px 0"><div class="row-main"><div class="row-sub">${s.short}</div></div><div class="meter" style="width:45%;margin:0;align-self:center"><div style="width:${c.sup.includes(s.id)?100:0}%;background:var(${s.v})"></div></div></div>`).join('')}</div>
+    <p class="muted">${c.knows.length?'Kennt auch: '+c.knows.map(k=>esc(cById(k).name)).join(', '):'Noch keine Verbindungen erfasst.'}</p>`:'<p class="muted">Tippen Sie auf einen Kontakt, um sein Kontaktblatt zu sehen.</p>';
+  $('#ns-edit')&&($('#ns-edit').onclick=()=>openKontakt(c.id));
+}
+$$('#netz-lay button').forEach(b=>b.onclick=()=>{nlayout=b.dataset.l;$$('#netz-lay button').forEach(x=>x.setAttribute('aria-selected',x===b));buildMap()});
+
+/* Aktivieren */
+function renderAktiv(){const A=N().contacts.filter(c=>c.act);
+  $('#netz-aktiv').innerHTML=A.length?A.map(c=>{const inPlan=S.aufgaben.some(a=>a.kontaktId===c.id);return `<div class="row"><div style="padding-top:5px">${swatch(c)}</div><div class="row-main"><div class="row-title">${esc(c.name)}</div>
+      <div class="row-sub">${c.sup.map(s=>supById[s].short).join(' · ')||'Noch keine Unterstützung erfasst'}</div>
+      <div class="row-sub" style="color:var(--fg)">${c.step?'→ '+esc(c.step):'<span class="muted">Noch kein nächster Schritt notiert.</span>'}</div>
+      <div class="row-meta">${c.step?(inPlan?'<span class="pill s-zusage">im Aktionsplan</span>':`<button class="tag" data-plan="${c.id}" style="cursor:pointer;color:var(--accent);border-color:var(--accent-soft)">+ In den Aktionsplan</button>`):''}<button class="tag" data-ed="${c.id}" style="cursor:pointer">Bearbeiten</button></div></div></div>`}).join('')
+    :'<div class="empty">Noch keine Kontakte aktiviert. Öffnen Sie einen Kontakt und setzen Sie das Häkchen „Diesen Kontakt aktivieren“.</div>';
+  $$('#netz-aktiv [data-plan]').forEach(b=>b.onclick=()=>{const c=cById(+b.dataset.plan);S.aufgaben.push({id:uid(),text:`${c.name}: ${c.step}`,due:ahead(3),done:false,kontaktId:c.id});save();renderAktiv();renderPlan();toast('Im Aktionsplan')});
+  $$('#netz-aktiv [data-ed]').forEach(b=>b.onclick=()=>openKontakt(+b.dataset.ed))}
+
+/* Zielfirmen */
+function renderFirmen(){const F=S.firmen;
+  $('#firm-list').innerHTML=F.length?F.map(f=>{const bw=f.bewerbungId&&S.bewerbungen.find(b=>b.id===f.bewerbungId);const k=f.kontaktId&&cById(f.kontaktId);return `<div class="row row-click" data-f="${f.id}" tabindex="0" role="button"><div class="row-main">
+      <div class="row-title">${esc(f.name)}</div><div class="row-sub">${[f.ort,f.branche].filter(Boolean).map(esc).join(' · ')}</div>
+      ${f.signal?`<div class="row-sub" style="color:var(--fg)">Signal: ${esc(f.signal)}</div>`:''}
+      <div class="row-meta">${f.ansprech?`<span class="tag">${esc(f.ansprech)}</span>`:'<span class="tag" style="color:var(--warn)">Ansprechperson fehlt</span>'}${k?`<span class="tag">über ${esc(k.name)}</span>`:''}${bw?`<span class="pill s-${bw.status}">${stLabel(bw.status)}</span>`:''}${f.beispiel?'<span class="tag example">Beispiel</span>':''}</div></div></div>`}).join('')
+    :'<div class="empty">Noch keine Zielfirmen. Notieren Sie Firmen, bei denen Sie sich initiativ melden möchten.</div>';
+  $$('#firm-list [data-f]').forEach(r=>r.onclick=()=>openFirma(r.dataset.f))}
+function openFirma(id){const f=S.firmen.find(x=>x.id===id)||{name:'',ort:'',branche:'',ansprech:'',kanal:'',signal:'',kontaktId:null};
+  openSheet(id?'Zielfirma':'Zielfirma hinzufügen',`
+    <div class="field"><label for="z-nm">Firma</label><input class="input" id="z-nm" value="${esc(f.name)}" placeholder="z.B. Muster AG"></div>
+    <div class="grid2"><div class="field"><label for="z-ort">Ort</label><input class="input" id="z-ort" value="${esc(f.ort)}"></div><div class="field"><label for="z-br">Branche</label><input class="input" id="z-br" value="${esc(f.branche)}" placeholder="z.B. Logistik"></div></div>
+    <div class="field"><label for="z-an">Ansprechperson mit Funktion</label><input class="input" id="z-an" value="${esc(f.ansprech)}" placeholder="Ein Name, keine Abteilung"></div>
+    <div class="field"><label for="z-ka">Wie erreichen Sie diese Person?</label><input class="input" id="z-ka" value="${esc(f.kanal)}" placeholder="Telefon, Empfang, Messe, gemeinsame Bekannte"></div>
+    <div class="field"><label for="z-si">Ein Signal für Bewegung in der Firma</label><textarea class="input" id="z-si" placeholder="Neubau, Übernahme, neuer Standort, Grossauftrag, Medienbericht">${esc(f.signal)}</textarea></div>
+    <div class="field"><label for="z-kt">Wer aus Ihrem Netzwerk kennt jemanden dort?</label><select class="input" id="z-kt"><option value="">Niemand bekannt</option>${N().contacts.map(c=>`<option value="${c.id}" ${c.id===f.kontaktId?'selected':''}>${esc(c.name)}</option>`).join('')}</select></div>
+    ${id?`<div class="chips">${f.bewerbungId?'':'<button type="button" class="btn btn-primary" id="z-init">Initiativbewerbung starten</button>'}</div>
+      <div class="sheet-actions"><span></span><button class="btn btn-ghost" id="z-del" style="color:var(--bad)">Firma löschen</button></div>`:''}`,
+  ()=>{const name=$('#z-nm').value.trim();if(!name){toast('Bitte Firma eintragen');return}
+    const rec={...f,id:id||uid(),name,ort:$('#z-ort').value.trim(),branche:$('#z-br').value.trim(),ansprech:$('#z-an').value.trim(),kanal:$('#z-ka').value.trim(),signal:$('#z-si').value.trim(),kontaktId:+$('#z-kt').value||null};
+    delete rec.beispiel;if(id)S.firmen[S.firmen.findIndex(x=>x.id===id)]=rec;else S.firmen.push(rec);save();closeSheet();renderFirmen();toast('Gesichert')});
+  if(id){armDelete($('#z-del'),()=>{S.firmen=S.firmen.filter(x=>x.id!==id);save();closeSheet();renderFirmen()});
+    $('#z-init')&&($('#z-init').onclick=()=>{const k=f.kontaktId&&cById(f.kontaktId);const bid=uid();
+      S.bewerbungen.push({id:bid,firma:f.name,adresse:f.ort,kontakt:f.ansprech,stelle:'',datum:iso(today),kanal:k?'Netzwerk':'Initiativ',status:'arbeit',naechster:f.kanal?'Kontakt aufnehmen: '+f.kanal:'Brief schreiben'});
+      f.bewerbungId=bid;save();closeSheet();render();toast('Im Tracker erfasst');setTimeout(()=>openBew(bid),360)})}}
+$('#firm-add').onclick=()=>openFirma(null);
+$('#netz-import').onchange=e=>{const fl=e.target.files[0];if(!fl)return;const r=new FileReader();
+  r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.contacts))throw 0;N().contacts=d.contacts.map(c=>({knows:[],sup:[],step:'',act:false,...c}));N().nextId=Math.max(0,...N().contacts.map(c=>c.id))+1;save();renderNetz();toast(`${N().contacts.length} Kontakte geladen`)}
+    catch(err){toast('Bitte die Datei „mein-netzwerk.json“ aus dem Werkzeug „Mein Netzwerk“ wählen')}};r.readAsText(fl);e.target.value=''};
+
+/* ================= Kompetenzen & Ressourcen ================= */
+const KB=[{id:'fach',l:'Fachkompetenz',h:'Berufliches Wissen und Können, Ausbildungen, Zertifikate',ph:'z.B. Staplerfahren, Warenkontrolle'},
+  {id:'meth',l:'Methodenkompetenz',h:'Wie Sie arbeiten: planen, organisieren, Probleme lösen',ph:'z.B. Touren planen'},
+  {id:'selbst',l:'Selbstkompetenz',h:'Wie Sie mit sich umgehen: Belastbarkeit, Zuverlässigkeit',ph:'z.B. bleibe ruhig unter Zeitdruck'},
+  {id:'sozial',l:'Sozialkompetenz',h:'Wie Sie mit anderen umgehen: Team, Kundschaft, Konflikte',ph:'z.B. neue Kollegen einarbeiten'}];
+const RES=[{id:'dossier',l:'Dossier'},{id:'unterst',l:'Unterstützung'},{id:'zeit',l:'Zeit'},{id:'mob',l:'Mobilität'},{id:'flex',l:'Flexibilität'}];
+const AMPEL=[{id:'gut',l:'stark',c:'s-zusage'},{id:'teil',l:'teilweise',c:'s-gespraech'},{id:'fehlt',l:'ausbauen',c:'s-absage'}];
+function renderKomp(){const K=S.komp;
+  const stars=K.items.filter(i=>i.star);
+  $('#komp-top').innerHTML=stars.length?stars.map(i=>`<div class="row"><div class="row-main"><div class="row-title">★ ${esc(i.name)}</div><div class="row-sub">${i.beleg?esc(i.beleg):'<span style="color:var(--warn)">Beleg fehlt: Woran sieht man das im Berufsalltag?</span>'}</div><div class="row-meta"><span class="tag">${KB.find(k=>k.id===i.bereich).l}</span></div></div></div>`).join('')
+    :'<div class="empty">Markieren Sie bis zu drei Kompetenzen mit dem Stern. Das sind Ihre Argumente fürs Vorstellungsgespräch.</div>';
+  $('#komp-areas').innerHTML=KB.map(k=>{const L=K.items.filter(i=>i.bereich===k.id);return `<div class="card glass"><div class="card-head"><div><h2>${k.l}</h2><p class="muted">${k.h}</p></div><button class="icon-btn btn-glass" data-addk="${k.id}" aria-label="${k.l} hinzufügen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>
+    <div class="list">${L.map(i=>`<div class="row row-click" data-k="${i.id}" tabindex="0" role="button"><button class="icon-btn" data-star="${i.id}" aria-label="Stern" style="background:transparent;color:${i.star?'var(--accent)':'var(--fg3)'};width:30px;height:30px;font-size:20px">${i.star?'★':'☆'}</button>
+      <div class="row-main"><div class="row-title">${esc(i.name)}</div><div class="row-sub">${i.beleg?esc(i.beleg):'<span style="color:var(--fg3)">Noch kein Beleg</span>'}</div>${i.inserat||i.beispiel?`<div class="row-meta">${i.inserat?'<span class="pill s-zusage">in Inseraten gefragt</span>':''}${i.beispiel?'<span class="tag example">Beispiel</span>':''}</div>`:''}</div></div>`).join('')||`<div class="muted">${k.ph}</div>`}</div></div>`}).join('');
+  $$('#komp-areas [data-addk]').forEach(b=>b.onclick=()=>openKomp(null,b.dataset.addk));
+  $$('#komp-areas [data-k]').forEach(r=>r.onclick=e=>{if(e.target.closest('[data-star]'))return;openKomp(r.dataset.k)});
+  $$('#komp-areas [data-star]').forEach(b=>b.onclick=e=>{e.stopPropagation();const i=K.items.find(x=>x.id===b.dataset.star);
+    if(!i.star&&K.items.filter(x=>x.star).length>=3){toast('Höchstens drei Sterne. Entfernen Sie zuerst einen.');return}i.star=!i.star;save();renderKomp()});
+  $('#komp-res').innerHTML=RES.map(r=>{const v=K.res[r.id]||{};return `<div class="row" style="flex-direction:column;align-items:stretch;gap:8px"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><b>${r.l}</b>
+    <div class="chips">${AMPEL.map(a=>`<button type="button" class="pill ${a.c}" data-res="${r.id}" data-a="${a.id}" style="cursor:pointer;border:2px solid ${v.a===a.id?'currentColor':'transparent'}">${a.l}</button>`).join('')}</div></div>
+    <input class="input" data-rtext="${r.id}" value="${esc(v.t||'')}" placeholder="${{dossier:'Stand Ihrer Unterlagen',unterst:'Wer hilft Ihnen?',zeit:'Wie viele Stunden pro Woche für die Suche?',mob:'Arbeitsweg, Führerschein, ÖV',flex:'Pensum, Arbeitszeiten, Branchenwechsel'}[r.id]}"></div>`}).join('');
+  $$('#komp-res [data-res]').forEach(b=>b.onclick=()=>{const r=b.dataset.res;K.res[r]=K.res[r]||{};K.res[r].a=K.res[r].a===b.dataset.a?null:b.dataset.a;save();renderKomp()});
+  $$('#komp-res [data-rtext]').forEach(el=>el.oninput=()=>{const r=el.dataset.rtext;K.res[r]=K.res[r]||{};K.res[r].t=el.value;save()})}
+function openKomp(id,bereich){const K=S.komp;const i=K.items.find(x=>x.id===id)||{name:'',bereich,beleg:'',inserat:false,star:false};
+  openSheet(id?'Kompetenz':'Kompetenz hinzufügen',`
+    <div class="field"><label for="kp-b">Bereich</label><select class="input" id="kp-b">${KB.map(k=>`<option value="${k.id}" ${k.id===i.bereich?'selected':''}>${k.l}</option>`).join('')}</select></div>
+    <div class="field"><label for="kp-n">Kompetenz</label><input class="input" id="kp-n" value="${esc(i.name)}" placeholder="${KB.find(k=>k.id===i.bereich).ph}"></div>
+    <div class="field"><label for="kp-bl">Beleg aus dem Berufsalltag</label><textarea class="input" id="kp-bl" placeholder="Situation, was Sie getan haben, was dabei herauskam. So können Sie es im Gespräch begründen.">${esc(i.beleg)}</textarea></div>
+    <label class="row" style="cursor:pointer;border:none"><input type="checkbox" class="check" id="kp-in" ${i.inserat?'checked':''}><div class="row-main"><div class="row-title">Wird in meinen Zielinseraten verlangt</div><div class="row-sub">Zeigt Ihnen, wie gefragt diese Kompetenz auf dem Arbeitsmarkt ist.</div></div></label>
+    ${id?`<div class="sheet-actions"><span></span><button class="btn btn-ghost" id="kp-del" style="color:var(--bad)">Löschen</button></div>`:''}`,
+  ()=>{const name=$('#kp-n').value.trim();if(!name){toast('Bitte Kompetenz eintragen');return}
+    const rec={...i,id:id||uid(),name,bereich:$('#kp-b').value,beleg:$('#kp-bl').value.trim(),inserat:$('#kp-in').checked};delete rec.beispiel;
+    if(id)K.items[K.items.findIndex(x=>x.id===id)]=rec;else K.items.push(rec);save();closeSheet();renderKomp();toast('Gesichert')});
+  if(id)armDelete($('#kp-del'),()=>{K.items=K.items.filter(x=>x.id!==id);save();closeSheet();renderKomp()})}
+
+/* ================= Zwischenverdienst-Stunden (Abgleich mit 716.105) ================= */
+function zvHTML(k){const m=mon(k);m.zvStd=m.zvStd||[];const tot=m.zvStd.reduce((a,x)=>a+(+x.h||0),0);
+  return `<div class="field" style="margin-top:6px"><label>Meine Stunden im Zwischenverdienst</label>
+    <div class="list">${m.zvStd.sort((a,b)=>a.d.localeCompare(b.d)).map((x,i)=>`<div class="row" style="align-items:center;padding:6px 0"><div class="row-main"><div class="row-title">${fmt(x.d)}</div></div><b style="font-variant-numeric:tabular-nums">${(+x.h).toLocaleString('de-CH')} Std.</b><button class="icon-btn" data-zvdel="${i}" aria-label="Eintrag entfernen" style="background:transparent;color:var(--fg3)">×</button></div>`).join('')}</div>
+    <div class="inline-add"><input class="input" type="date" id="zv-d" value="${k===ym(today)?iso(today):k+'-01'}" aria-label="Tag"><input class="input" type="number" id="zv-h" min="0" max="24" step="0.25" placeholder="Std." aria-label="Stunden" style="flex:0 0 90px"><button class="icon-btn btn-primary" id="zv-add" aria-label="Stunden erfassen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>
+    <span class="muted">Total ${tot.toLocaleString('de-CH')} Stunden. Vergleichen Sie das mit der Bescheinigung, die Ihr Arbeitgeber ausfüllt.</span></div>`}
+function bindZv(k){const m=mon(k);
+  $('#zv-add')&&($('#zv-add').onclick=()=>{const d=$('#zv-d').value,h=parseFloat($('#zv-h').value);if(!d||!(h>=0)){toast('Bitte Tag und Stunden eintragen');return}m.zvStd.push({d,h});save();renderAlk()});
+  $$('[data-zvdel]').forEach(b=>b.onclick=()=>{m.zvStd.splice(+b.dataset.zvdel,1);save();renderAlk()})}
+
+/* ================= Inserat-Parser ================= */
+function parseInserat(t){const L=t.split('\n').map(l=>l.trim()).filter(Boolean);const r={stelle:'',firma:'',adresse:'',pensum:''};
+  const pm=t.match(/(\d{2,3})\s*(?:[-–]\s*(\d{2,3}))?\s*%/);if(pm)r.pensum=pm[0].replace(/\s+/g,'');
+  const fi=L.find(l=>/\b(AG|GmbH|SA|Sàrl|S\.A\.|Genossenschaft|Stiftung|KlG|& Co)\b/.test(l));if(fi)r.firma=fi.replace(/,.*$/,'').trim();
+  const ad=L.find(l=>/\b\d{4}\s+[A-ZÄÖÜ][a-zäöüé]/.test(l));if(ad){const m=ad.match(/([^,]*\d+[a-z]?\s*,\s*)?\d{4}\s+[^,]+/);r.adresse=m?m[0].trim():''}
+  r.stelle=(L.find(l=>l!==fi&&!/^(ihre|ihr|wir|was|aufgaben|profil|eintritt)/i.test(l))||'').slice(0,80);
+  return r}
+
 /* ================= Sicherung (ZIP) ================= */
 function renderBackupRemind(){
   const last=S.meta.lastBackup, days=last?Math.floor((Date.now()-new Date(last))/864e5):null;
@@ -1394,7 +1627,7 @@ async function restore(file){
   else{const j=JSON.parse(await file.text());state=j.state||j}
   if(!state||!state.bewerbungen)throw new Error('ungültig');
   if(zip)for(const d of state.docs||[]){const f=zip.file('dokumente/'+d.id);if(f)await blobPut(d.id,await f.async('blob'))}
-  state.docs=state.docs||[];state.meta=state.meta||{};state.alk=state.alk||seedAlk(false);state.profil=state.profil||{bar:true,barColor:'#1f5f8b',barText:'#ffffff'};S=state;save();
+  state.docs=state.docs||[];state.meta=state.meta||{};state.alk=state.alk||seedAlk(false);state.netz=state.netz||{contacts:[],nextId:1};state.firmen=state.firmen||[];state.komp=state.komp||{items:[],res:{}};state.profil=state.profil||{bar:true,barColor:'#1f5f8b',barText:'#ffffff'};S=state;save();
 }
 function openBackup(){
   const n=S.docs.filter(d=>d.typ!=='text').length;
@@ -1425,7 +1658,7 @@ $('#btn-backup').onclick=openBackup;
 $('#btn-brief').onclick=()=>openBrief(null);
 
 /* ================= Start ================= */
-function render(){renderStats();renderTracker();renderPlan();renderStrategie();renderDossier();renderRav();renderNachweis();renderAlk();renderCheck();renderBackupRemind()}
+function render(){renderStats();renderTracker();renderPlan();renderStrategie();renderDossier();renderRav();renderNachweis();renderAlk();renderCheck();renderNetz();renderKomp();renderBackupRemind()}
 route();
 if(fresh){await seedDocs();render()}
 else if(!S.docs.length&&!S.meta.docsSeeded&&S.bewerbungen.some(b=>b.beispiel)){await seedDocs();render()}
