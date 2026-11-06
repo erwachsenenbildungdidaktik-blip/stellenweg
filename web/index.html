@@ -230,7 +230,7 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4}
 /* Tab bar */
 .tabbar{position:fixed;z-index:20;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom, 0px));
   width:min(560px, calc(100% - 24px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px)));
-  border-radius:999px;padding:6px;display:grid;grid-template-columns:repeat(6,1fr);gap:2px}
+  border-radius:999px;padding:6px;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:2px}
 .tab{border:none;background:transparent;border-radius:999px;padding:7px 2px 6px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;color:var(--fg2);min-height:52px;transition:background .25s,color .25s}
 .tab svg{width:23px;height:23px}
 .tab span{font-size:9.5px;letter-spacing:-.01em;font-weight:600;letter-spacing:.01em;white-space:nowrap}
@@ -962,6 +962,18 @@ html.editing .side-handle,html.sheet-open .side-handle{opacity:0;pointer-events:
   background:linear-gradient(145deg,var(--lg-rim-a) 0%,var(--lg-rim-b) 32%,var(--lg-rim-b) 62%,var(--lg-rim-c) 100%);
   -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
 .w-link{background:color-mix(in srgb,var(--accent) 78%,transparent)!important}
+/* Kurs-Leiste und selbständiger Modus */
+.kursbar{position:fixed;z-index:21;left:50%;transform:translateX(-50%);bottom:calc(92px + env(safe-area-inset-bottom,0px));display:none;gap:4px;padding:5px;border-radius:999px;
+  background:var(--lg-fill,var(--glass));-webkit-backdrop-filter:var(--lg-blur,blur(24px));backdrop-filter:var(--lg-blur,blur(24px));box-shadow:var(--lg-inner,none),var(--lg-shadow,0 10px 30px -12px rgba(0,0,0,.3))}
+html.kurs-sub .kursbar{display:flex;animation:kb-in .45s var(--spring)}
+@keyframes kb-in{from{opacity:0;translate:0 14px}to{opacity:1;translate:0 0}}
+.kursbar button{border:none;background:transparent;border-radius:999px;padding:9px 18px;font-weight:600;font-size:14.5px;color:var(--fg2);cursor:pointer;min-height:40px;transition:background .25s,color .25s}
+.kursbar button[aria-selected="true"]{background:var(--lg-fill-strong,var(--glass-strong));color:var(--accent);box-shadow:inset 0 1px 1px rgba(255,255,255,.8),0 4px 12px -6px var(--glass-shade)}
+html.kurs-sub .fab{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+html.kurs-sub .scroll{padding-bottom:200px}
+html.editing .kursbar{display:none}
+html.selbst .eyebrow.kurs{display:none}
+.ospick button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
 /* App weitergeben */
 .sa{display:flex;flex-direction:column;gap:14px}
 .ospick{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -1164,7 +1176,7 @@ html.editing .tab:nth-child(2n){animation-delay:-.17s}
     </section>
 
     <section class="view" id="v-kompetenzen" hidden>
-      <div class="top"><div><div class="eyebrow">A1.II · A1.III</div><h1>Kompetenzen &amp; Ressourcen</h1></div></div>
+      <div class="top"><div><div class="eyebrow kurs">A1.II · A1.III</div><h1>Kompetenzen &amp; Ressourcen</h1></div></div>
       <p class="lead">Was Sie können und wie Sie es im Vorstellungsgespräch belegen. Zu jeder Kompetenz gehört ein Beispiel aus Ihrem Berufsalltag.</p>
       <div class="card glass">
         <div class="card-head"><h2>Meine drei stärksten Argumente</h2></div>
@@ -1181,7 +1193,7 @@ html.editing .tab:nth-child(2n){animation-delay:-.17s}
     <!-- ============ STRATEGIE ============ -->
     <section class="view" id="v-strategie" hidden>
       <div class="top">
-        <div><div class="eyebrow">A1.IV · A1.V</div><h1>Strategie &amp; Aktionsplan</h1></div>
+        <div><div class="eyebrow kurs">A1.IV · A1.V</div><h1>Strategie &amp; Aktionsplan</h1></div>
         <button class="icon-btn btn-glass" id="btn-backup" aria-label="Daten sichern oder laden"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3M12 4v11m0 0-4-4m4 4 4-4"/></svg></button>
       </div>
 
@@ -1495,7 +1507,7 @@ html.editing .tab:nth-child(2n){animation-delay:-.17s}
     <!-- ============ DOSSIER ============ -->
     <section class="view" id="v-dossier" hidden>
       <div class="top">
-        <div><div class="eyebrow">A2</div><h1>Dossier &amp; Portfolio</h1></div>
+        <div><div class="eyebrow kurs">A2</div><h1>Dossier &amp; Portfolio</h1></div>
         <button class="btn btn-primary" id="btn-add-doc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Hinzufügen</button>
       </div>
       <div class="backup-remind"></div>
@@ -1528,7 +1540,7 @@ html.editing .tab:nth-child(2n){animation-delay:-.17s}
       <div class="card glass ext-card frs" data-dp="init" hidden id="dos-init"></div>
     </section>
     <section class="view" id="v-netzwerk" hidden>
-      <div class="top"><div><div class="eyebrow">A3 · A4 · A5</div><h1>Mein Netzwerk</h1></div></div>
+      <div class="top"><div><div class="eyebrow kurs">A3 · A4 · A5</div><h1>Mein Netzwerk</h1></div></div>
       <p class="lead">Viele Stellen werden über Menschen vergeben, bevor sie ausgeschrieben sind. Hier sehen Sie, wer Ihnen wobei helfen kann.</p>
       <div class="seg glass" role="tablist" aria-label="Bereich" id="netz-seg">
         <button role="tab" data-n="kontakte" aria-selected="true">Kontakte</button>
@@ -1881,12 +1893,14 @@ html.editing .tab:nth-child(2n){animation-delay:-.17s}
 
   <nav class="tabbar glass" role="tablist" aria-label="Hauptnavigation">
     <button class="tab" role="tab" data-tab="heute"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.5 12 5l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-4V15h-5v5.5h-4A1.5 1.5 0 0 1 4 19z"/></svg><span>Heute</span></button>
+    <button class="tab" role="tab" data-tab="kurs" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m2.5 9 9.5-4.5L21.5 9 12 13.5z"/><path d="M6.5 11v4.5c0 1.4 2.5 2.8 5.5 2.8s5.5-1.4 5.5-2.8V11M21.5 9v5"/></svg><span>Kurs</span></button>
     <button class="tab" role="tab" data-tab="kompetenzen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z"/></svg><span>Kompetenzen</span></button>
     <button class="tab" role="tab" data-tab="strategie"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></svg><span>Strategie</span></button>
     <button class="tab" role="tab" data-tab="dossier"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Dossier</span></button>
     <button class="tab" role="tab" data-tab="netzwerk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="7" r="2.5"/><circle cx="18" cy="7" r="2.5"/><circle cx="12" cy="17" r="2.5"/><path d="M8 8.5 10.5 15M16 8.5 13.5 15M8.5 7h7"/></svg><span>Netzwerk</span></button>
     <button class="tab" role="tab" data-tab="rav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="16" rx="2.5"/><path d="M4 10h16M9 3v4M15 3v4"/></svg><span>RAV &amp; ALK</span></button>
   </nav>
+  <nav class="kursbar" id="kursbar" role="tablist" aria-label="Kurs"><button role="tab" data-k="kompetenzen">Kompetenzen</button><button role="tab" data-k="strategie">Strategie</button></nav>
   <div class="editbar glass" id="editbar" role="toolbar" aria-label="Startseite anpassen">
     <button class="btn btn-glass" id="eb-add">+ Widget</button>
     <button class="btn btn-ghost" id="eb-reset">Zurücksetzen</button>
@@ -2133,9 +2147,14 @@ async function openPdf(blob){
 /* ================= Routing ================= */
 const TABS=['heute','kompetenzen','strategie','dossier','netzwerk','rav'];
 function route(){
-  const h=(location.hash||'').slice(1); const t=TABS.includes(h)?h:'heute';
+  let h=(location.hash||'').slice(1);
+  /* „Kurs“ öffnet die zuletzt benutzte Kursseite; selbständig gibt es keine Kompetenzen */
+  if(h==='kurs'){h=S.meta.kursTab||'kompetenzen';history.replaceState(null,'','#'+h)}
+  if(isSelbst()&&h==='kompetenzen'){h='heute';history.replaceState(null,'','#heute')}
+  const t=TABS.includes(h)?h:'heute';
   TABS.forEach(x=>{$('#v-'+x).hidden=x!==t});
   $$('.tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===t));
+  applyRouteMode(t);
   $('#scroll').scrollTop=0; render();
 }
 $$('.tab').forEach(b=>b.onclick=()=>{if(editing)return;location.hash=b.dataset.tab});
@@ -4530,7 +4549,9 @@ async function clearExamples(){for(const d of S.docs.filter(d=>d.beispiel))await
     S.bewerbungen=S.bewerbungen.filter(b=>!b.beispiel);S.aufgaben=S.aufgaben.filter(a=>!a.beispiel);S.docs=S.docs.filter(d=>!d.beispiel);S.alk.faelle=S.alk.faelle.filter(f=>!f.beispiel);S.zr=S.zr.filter(o=>!o.beispiel);S.fr.firmen=S.fr.firmen.filter(f=>!f.beispiel);S.komp.items=S.komp.items.filter(i=>!i.beispiel);S.netz.contacts=S.netz.contacts.filter(c=>!c.beispiel);S.netz.contacts.forEach(c=>c.knows=c.knows.filter(k=>S.netz.contacts.some(o=>o.id===k)));Object.keys(S.alk.monate).forEach(k=>{if(S.alk.monate[k].beispiel)delete S.alk.monate[k]});stackIdx=0;save();
   render()}
 /* ================= Navigation zwischen Bereichen ================= */
-function goTo(spec){const [tab,sub]=spec.split(':');
+function goTo(spec){let [tab,sub]=spec.split(':');
+  if(isSelbst()){if(tab==='kompetenzen'){tab='heute';sub=undefined}
+    if(tab==='strategie'&&sub==='strategie')sub='tracker';if(tab==='netzwerk'&&(sub==='karte'||sub==='aktiv'))sub='kontakte'}
   if(tab==='bew'){openBew(sub);return}
   if(location.hash!=='#'+tab)location.hash=tab;else route();
   if(!sub)return;
@@ -4566,7 +4587,7 @@ const WOCHEN=[
   {id:2,l:'Woche 2',t:'Ein vollständiges Bewerbungsdossier.',go:[['dossier:unterlagen','Unterlagen','Lebenslauf, Zeugnisse, Diplome'],['dossier-brief','Bewerbungsbrief','Auf ein Inserat schreiben'],['dossier-check','Dossier-Check','Nach der beco-Checkliste']]},
   {id:3,l:'Woche 3',t:'Arbeitsmarkt und Netzwerk: Firmenliste und Initiativbewerbung.',go:[['netzwerk:kontakte','Netzwerk','Wer Ihnen wobei helfen kann'],['netzwerk:firmen','Firmen recherchieren','Signal, Ansprechperson, Aufhänger'],['dossier:init','Initiativbewerbung','Brief an eine Firma']]},
   {id:4,l:'Woche 4',t:'Vorstellungsgespräch, Abschluss und Aktionsplan für die Zeit nach dem Kurs.',go:[['strategie:tracker','Meine Bewerbungen','Gespräche vorbereiten'],['dossier:unterlagen','Dossier mit Inserat','Für die Simulation am Montag'],['strategie:plan','Aktionsplan danach','Wie es nach dem Kurs weitergeht']]},
-  {id:0,l:'Selbständig',t:'Nach dem Kurs: dranbleiben, Bemühungen festhalten, Fristen einhalten.',go:[['strategie:tracker','Meine Bewerbungen','Erfassen und nachfassen'],['rav:rav','RAV-Formular','Monatlich ausfüllen'],['rav:alk','Arbeitslosenkasse','Monatsformulare ablegen']]}];
+  {id:0,l:'Selbständig',t:'Dranbleiben: Bewerbungen erfassen, Fristen einhalten, Kontakte pflegen.',go:[['strategie:tracker','Meine Bewerbungen','Erfassen und nachfassen'],['rav:rav','RAV-Formular','Monatlich ausfüllen'],['rav:alk','Arbeitslosenkasse','Monatsformulare ablegen']]}];
 function nextSteps(){const t=iso(today),L=[];
   S.aufgaben.filter(a=>!a.done).forEach(a=>L.push({txt:a.text,due:a.due,src:'Aktionsplan',go:'strategie:plan',task:a.id,ex:a.beispiel}));
   S.bewerbungen.filter(b=>b.naechster&&['arbeit','versendet','gespraech'].includes(b.status)).forEach(b=>L.push({txt:b.naechster,ctx:b.firma,src:'Bewerbung',go:'bew:'+b.id,ex:b.beispiel}));
@@ -4611,6 +4632,50 @@ function closeWarnPop(){if($('#wpop').hidden)return;$('#wp-scrim').classList.rem
 function maybeWarnPop(){if(warnShown||tour||!$('#sheet').hidden||!S.meta.onboarded)return;setTimeout(()=>{if(!tour&&$('#sheet').hidden)openWarnPop()},650)}
 $('#h-bell').onclick=openWarnPop;$('#wp-ok').onclick=closeWarnPop;$('#wp-scrim').onclick=closeWarnPop;
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#wpop').hidden){e.stopPropagation();closeWarnPop()}},true);
+
+/* ================= Kurs oder selbständig ================= */
+/* Im Kurs: Tab „Kurs“ mit eigener Leiste (Kompetenzen, Strategie).
+   Selbständig: nur die Stellensuche; Kompetenzen fällt weg, Strategie wird zu „Bewerbungen“ (ohne Zielrichtungen),
+   im Netzwerk fallen Karte und Aktivieren weg. S.meta.woche: 0 = selbständig, 1–4 = Kurswoche. */
+const isSelbst=()=>(S.meta.woche??1)===0;
+const KURS_VIEWS=['kompetenzen','strategie'];
+const IC_KURS='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m2.5 9 9.5-4.5L21.5 9 12 13.5z"/><path d="M6.5 11v4.5c0 1.4 2.5 2.8 5.5 2.8s5.5-1.4 5.5-2.8V11M21.5 9v5"/></svg>';
+const IC_SUCHE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>';
+function applyMode(){const sel=isSelbst(),r=document.documentElement;r.classList.toggle('selbst',sel);
+  const tb=n=>tabbar.querySelector(`[data-tab="${n}"]`);
+  tb('kompetenzen').hidden=true;tb('kurs').hidden=sel;tb('strategie').hidden=!sel;
+  tb('strategie').querySelector('span').textContent=sel?'Bewerbungen':'Strategie';
+  $('#v-strategie h1').innerHTML=sel?'Bewerbungen &amp; Aktionsplan':'Strategie &amp; Aktionsplan';
+  $('#v-strategie > .seg [data-sub="strategie"]').hidden=sel;
+  if(sel&&sub==='strategie')$('#v-strategie > .seg [data-sub="tracker"]').click();
+  ['karte','aktiv'].forEach(n=>{$(`#netz-seg [data-n="${n}"]`).hidden=sel});
+  if(sel&&(nsub==='karte'||nsub==='aktiv'))$('#netz-seg [data-n="kontakte"]').click();
+  const h=(location.hash||'').slice(1);
+  if(sel&&h==='kompetenzen')location.hash='heute';else applyRouteMode(TABS.includes(h)?h:'heute');
+  renderBadges()}
+/* Kurs-Leiste zeigen, wenn eine Kursseite offen ist */
+function applyRouteMode(t){const kursSub=!isSelbst()&&KURS_VIEWS.includes(t);
+  document.documentElement.classList.toggle('kurs-sub',kursSub);
+  if(kursSub){S.meta.kursTab=t;$$('#kursbar [data-k]').forEach(b=>b.setAttribute('aria-selected',b.dataset.k===t))}
+  const k=tabbar.querySelector('[data-tab="kurs"]');if(k)k.setAttribute('aria-selected',kursSub)}
+$$('#kursbar [data-k]').forEach(b=>b.onclick=()=>{location.hash=b.dataset.k});
+/* Frage „Besuchen Sie einen Kurs?“ samt Kurswoche, in der Einrichtung und in den Einstellungen */
+function kursPicker(help){const sel=isSelbst(),wk=S.meta.woche||S.meta.lastWeek||1;
+  return `<div class="field"><label>Besuchen Sie einen Kurs?${help||''}</label>
+    <div class="ospick" data-kurs-pick>
+      <button type="button" data-kurs="1" aria-pressed="${!sel}"><span class="os-ic">${IC_KURS}</span><b>Ja, im Kurs</b><small>Mit Kompetenzen und Strategie</small></button>
+      <button type="button" data-kurs="0" aria-pressed="${sel}"><span class="os-ic">${IC_SUCHE}</span><b>Nein, selbständig</b><small>Nur die Stellensuche</small></button>
+    </div></div>
+    <div class="field" data-kurs-week ${sel?'hidden':''}><label>In welcher Kurswoche sind Sie?</label>
+      <div class="seg" style="background:var(--hair)" role="radiogroup" aria-label="Kurswoche">${[1,2,3,4].map(n=>`<button type="button" role="radio" data-wk="${n}" aria-selected="${!sel&&wk===n}" aria-checked="${!sel&&wk===n}">Woche ${n}</button>`).join('')}</div></div>`}
+function bindKursPicker(root){if(!root)return;
+  const week=root.querySelector('[data-kurs-week]');
+  const markWeek=()=>root.querySelectorAll('[data-wk]').forEach(x=>{const on=+x.dataset.wk===S.meta.woche;x.setAttribute('aria-selected',on);x.setAttribute('aria-checked',on)});
+  root.querySelectorAll('[data-kurs]').forEach(b=>b.onclick=()=>{
+    if(b.dataset.kurs==='1'){if(!S.meta.woche)S.meta.woche=S.meta.lastWeek||1}else{if(S.meta.woche)S.meta.lastWeek=S.meta.woche;S.meta.woche=0}
+    save();applyMode();renderHeute();
+    root.querySelectorAll('[data-kurs]').forEach(x=>x.setAttribute('aria-pressed',x===b));week.hidden=isSelbst();markWeek()});
+  root.querySelectorAll('[data-wk]').forEach(b=>b.onclick=()=>{S.meta.woche=S.meta.lastWeek=+b.dataset.wk;save();renderHeute();markWeek()})}
 
 /* ================= Startseite: Widgets ================= */
 /* Raster mit 4 Spalten; jedes Widget hat erlaubte Grössen [Breite, Höhe] in Rasterfeldern */
@@ -4661,8 +4726,8 @@ function wRav(x){const c=monthCount(),z=S.ziele.monat,p=Math.min(100,Math.round(
 function wZahlen(x){const w=weekCount(),m=monthCount(),g=S.bewerbungen.filter(b=>b.status==='gespraech').length;
   if(x.w<4)return `${wHead('Bewerbungen',1)}<div class="w-big">${w}<small> / ${S.ziele.woche}</small></div><div class="w-sub">diese Woche · ${m} im Monat${g?` · ${g} Gespräch${g>1?'e':''}`:''}</div>`;
   return `${wHead('Bewerbungen',1)}<div class="w-cols"><div><b>${w}</b><span>diese Woche</span></div><div><b>${m}</b><span>diesen Monat</span></div><div><b>${g}</b><span>Gespräche</span></div></div>`}
-function wFokus(x){const wk=S.meta.woche??1,W2=WOCHEN.find(o=>o.id===wk)||WOCHEN[0];
-  return `${wHead('Mein Fokus')}<div class="seg" style="background:var(--hair)" role="tablist" aria-label="Kurswoche">${WOCHEN.map(o=>`<button data-wk="${o.id}" aria-selected="${o.id===wk}">${o.id?'W'+o.id:'Selbst.'}</button>`).join('')}</div>
+function wFokus(x){const wk=S.meta.woche??1,W2=WOCHEN.find(o=>o.id===wk)||WOCHEN[0],sel=isSelbst();
+  return `${wHead(sel?'Meine Stellensuche':'Mein Fokus')}${sel?'':`<div class="seg" style="background:var(--hair)" role="tablist" aria-label="Kurswoche">${WOCHEN.filter(o=>o.id).map(o=>`<button data-wk="${o.id}" aria-selected="${o.id===wk}">W${o.id}</button>`).join('')}</div>`}
     <div class="w-sub">${esc((W2.id?W2.l+': ':'')+W2.t)}</div>
     ${x.h>=4?`<div class="w-tiles">${W2.go.map(([g,l,s])=>`<button data-go="${g}"><b>${l}</b><span>${s}</span></button>`).join('')}</div>`
       :`<div class="w-chips">${W2.go.map(([g,l])=>`<button class="tag" data-go="${g}" style="cursor:pointer;background:var(--glass)">${l} ›</button>`).join('')}</div>`}`}
@@ -4695,7 +4760,9 @@ function wLink(x){const L=LINKS.find(l=>l[0]===x.cfg)||LINKS[0];
 function wHTML(x){const W=WIDGETS[x.k],go=x.k==='link'?'':W.go||'';
   return `<div class="w${x.k==='link'?' w-link':''}" data-id="${x.id}" data-k="${x.k}" data-sz="${x.w}x${x.h}" ${go?`data-wgo="${go}"`:''} ${x.k==='link'?`data-link="${x.cfg}" role="button"`:''} tabindex="${editing||x.k==='link'?0:-1}" aria-label="${esc(x.k==='link'?(LINKS.find(l=>l[0]===x.cfg)||LINKS[0])[1]:W.t)}" style="grid-column:span ${x.w};grid-row:span ${x.h}">
     <div class="w-body">${W.fn(x)}</div><button class="w-del" data-del aria-label="${esc(W.t)} entfernen" tabindex="-1">−</button><div class="w-grip" data-grip aria-hidden="true"></div></div>`}
-function renderGrid(){grid.innerHTML=home().map(wHTML).join('')}
+/* selbständig: kein Kompetenz-Widget */
+const homeVisible=()=>home().filter(x=>!(isSelbst()&&x.k==='top3'));
+function renderGrid(){grid.innerHTML=homeVisible().map(wHTML).join('')}
 function homeGo(g){
   if(g==='dossier-brief'){openBrief(null);return}
   if(g==='dossier-check'){goTo('dossier:unterlagen');setTimeout(()=>{chkOpen=true;const d=$('#dos-check > details');if(d)d.open=true;$('#dos-check').scrollIntoView({behavior:'smooth',block:'start'})},120);return}
@@ -4758,7 +4825,7 @@ grid.addEventListener('keydown',e=>{const el=e.target.closest('.w');if(!el)retur
   if(!editing){if((e.key==='Enter'||e.key===' ')&&e.target.matches('[role=button]')){e.preventDefault();e.target.click()}return}
   const L=home(),i=L.findIndex(x=>x.id===el.dataset.id),x=L[i],Z=WIDGETS[x.k].sizes,si=Z.findIndex(s=>s[0]===x.w&&s[1]===x.h);
   if(e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='ArrowRight'||e.key==='ArrowDown'){e.preventDefault();const j=i+(e.key==='ArrowLeft'||e.key==='ArrowUp'?-1:1);if(j<0||j>=L.length)return;
-    flip(grid,()=>{L.splice(j,0,L.splice(i,1)[0]);L.forEach(o=>grid.appendChild(grid.querySelector(`[data-id="${o.id}"]`)))});el.focus();save()}
+    flip(grid,()=>{L.splice(j,0,L.splice(i,1)[0]);L.forEach(o=>{const e=grid.querySelector(`[data-id="${o.id}"]`);e&&grid.appendChild(e)})});el.focus();save()}
   else if(e.key==='+'||e.key==='-'){e.preventDefault();const n=Z[Math.max(0,Math.min(Z.length-1,si+(e.key==='+'?1:-1)))];resizeTo(el,x,n);save()}
   else if(e.key==='Delete'||e.key==='Backspace'){e.preventDefault();removeWidget(el)}});
 
@@ -4780,7 +4847,7 @@ function startDrag(e,el){e.preventDefault();
     for(const o of grid.children){if(o===el)continue;const r=o.getBoundingClientRect(),ix=r.width*.22,iy=r.height*.22;
       if(last.clientX>r.left+ix&&last.clientX<r.right-ix&&last.clientY>r.top+iy&&last.clientY<r.bottom-iy){
         const L=home(),from=L.findIndex(x=>x.id===el.dataset.id),to=L.findIndex(x=>x.id===o.dataset.id);
-        swapAt=now;flip(grid,()=>{L.splice(to,0,L.splice(from,1)[0]);L.forEach(x=>grid.appendChild(grid.querySelector(`[data-id="${x.id}"]`)))},el);
+        swapAt=now;flip(grid,()=>{L.splice(to,0,L.splice(from,1)[0]);L.forEach(x=>{const e=grid.querySelector(`[data-id="${x.id}"]`);e&&grid.appendChild(e)})},el);
         buzz(6);follow();return}}};
   const tick=()=>{if(!on)return;const sc=$('#scroll'),top=sc.getBoundingClientRect().top;let d=0;
     if(last.clientY<top+70)d=-12;else if(last.clientY>innerHeight-180)d=12;
@@ -4816,10 +4883,10 @@ function removeWidget(el){if(!el)return;homeBusy=true;
   el.animate([{scale:'1',opacity:1},{scale:'1.1 .86',opacity:1,offset:.4},{scale:'.2',opacity:0}],{duration:340,easing:'ease-in',fill:'forwards'}).onfinish=done}
 function openAddWidget(){const L=home();
   const row=(attr,t,d,dis)=>`<button class="row row-click" ${attr} ${dis?'disabled':''} style="background:none;border:none;border-top:1px solid var(--hair);text-align:left;width:100%;cursor:${dis?'default':'pointer'};${dis?'opacity:.45':''}"><div class="row-main"><div class="row-title">${t}</div><div class="row-sub">${d}</div></div><span style="color:var(--fg3);font-size:20px">${dis?'✓':'+'}</span></button>`;
-  openSheet('Widget hinzufügen',`<div class="list">${Object.entries(WIDGETS).map(([k,w])=>{const has=!w.multi&&L.some(x=>x.k===k);return row(`data-addw="${k}"`,w.t,has?'Schon auf der Startseite':w.d,has)}).join('')}</div>`,null);
+  openSheet('Widget hinzufügen',`<div class="list">${Object.entries(WIDGETS).filter(([k])=>!(isSelbst()&&k==='top3')).map(([k,w])=>{const has=!w.multi&&L.some(x=>x.k===k);return row(`data-addw="${k}"`,w.t,has?'Schon auf der Startseite':w.d,has)}).join('')}</div>`,null);
   $$('#sheet-body [data-addw]').forEach(b=>b.onclick=()=>{const k=b.dataset.addw;if(k!=='link'){addWidget(k);return}
     $('#sheet-title').textContent='Schnellzugriff wählen';
-    $('#sheet-body').innerHTML=`<div class="list">${LINKS.map(l=>row(`data-addl="${l[0]}"`,l[1],'Als Abkürzung auf die Startseite')).join('')}</div>`;
+    $('#sheet-body').innerHTML=`<div class="list">${LINKS.filter(l=>!(isSelbst()&&l[0]==='zr')).map(l=>row(`data-addl="${l[0]}"`,l[1],'Als Abkürzung auf die Startseite')).join('')}</div>`;
     $$('#sheet-body [data-addl]').forEach(c=>c.onclick=()=>addWidget('link',c.dataset.addl))})}
 function addWidget(k,cfg){closeSheet();const W=WIDGETS[k],x={id:uid(),k,w:W.def[0],h:W.def[1]};if(cfg)x.cfg=cfg;
   home().push(x);save();
@@ -4828,7 +4895,11 @@ function addWidget(k,cfg){closeSheet();const W=WIDGETS[k],x={id:uid(),k,w:W.def[
     if(!calm())el.animate([{scale:'.3',opacity:0},{scale:'1.14',opacity:1,offset:.42},{scale:'.94 .98',offset:.65},{scale:'1.02',offset:.84},{scale:'1'}],{duration:760,easing:'ease-out'})},360)}
 
 /* Untere Leiste: im Bearbeitungsmodus Symbole nach vorne oder hinten ziehen */
-function applyTabOrder(){const o=Array.isArray(S.meta.tabs)?S.meta.tabs:TABS;o.forEach(t=>{const b=tabbar.querySelector(`[data-tab="${t}"]`);b&&tabbar.appendChild(b)})}
+/* Gespeicherte Reihenfolge; Tabs, die sie noch nicht kennt (z.B. „Kurs“), kommen an ihren vorgesehenen Platz */
+const TAB_DEF=['heute','kurs','kompetenzen','strategie','dossier','netzwerk','rav'];
+function applyTabOrder(){const o=(Array.isArray(S.meta.tabs)?S.meta.tabs:TAB_DEF).filter(t=>TAB_DEF.includes(t));
+  TAB_DEF.forEach((t,i)=>{if(o.includes(t))return;const prev=TAB_DEF.slice(0,i).reverse().find(x=>o.includes(x));o.splice(prev?o.indexOf(prev)+1:0,0,t)});
+  o.forEach(t=>{const b=tabbar.querySelector(`[data-tab="${t}"]`);b&&tabbar.appendChild(b)})}
 applyTabOrder();
 tabbar.addEventListener('pointerdown',e=>{if(!editing||e.button>0)return;const el=e.target.closest('.tab');if(!el)return;e.preventDefault();
   const r0=el.getBoundingClientRect(),gx=e.clientX-r0.left,c=r0.left-el.offsetLeft,sx=e.clientX;let on=false,last=e,swapAt=0,px=sx,pt=performance.now(),tilt=0,calmT=0;
@@ -4852,6 +4923,7 @@ function renderBadges(){const t=iso(today),d=today.getDate();
     dossier:!KAT.filter(k=>k.core).every(k=>S.docs.some(x=>!x.bereich&&x.kat===k.id)),
     netzwerk:(S.fr.firmen||[]).some(f=>f.next&&f.next.datum&&f.next.datum<t&&(f.status||0)<5),
     rav:warnings().some(w=>w.go.startsWith('rav'))};
+  dot.kurs=dot.strategie;
   $$('.tab').forEach(b=>{let s=b.querySelector('.tab-dot');const on=!!dot[b.dataset.tab];
     if(on&&!s){s=document.createElement('i');s.className='tab-dot';s.setAttribute('aria-hidden','true');b.appendChild(s)}
     if(s)s.hidden=!on;b.setAttribute('aria-label',b.textContent.trim()+(on?', braucht Aufmerksamkeit':''))})}
@@ -4865,7 +4937,7 @@ const FAB=[
   ['Firma recherchieren','Für eine Initiativbewerbung',()=>{goTo('netzwerk:firmen');setTimeout(()=>{frWiz&&frWiz.reset();const f=document.getElementById('fr-fName');f&&f.focus()},150)}],
   ['Zielrichtung bewerten','Lohnt sich diese Richtung?',()=>{goTo('strategie:strategie');setTimeout(()=>{zrWiz&&zrWiz.reset();const f=document.getElementById('zr-name');f&&f.focus()},150)}],
   ['Krank melden','Fristen für Zeugnis und Kasse',()=>openFall(null)]];
-$('#fab').onclick=()=>{openSheet('Neu erfassen',`<div class="list">${FAB.map((f,i)=>`<button class="row row-click" data-fab="${i}" style="background:none;border:none;border-top:1px solid var(--hair);text-align:left;width:100%;cursor:pointer"><div class="row-main"><div class="row-title">${f[0]}</div><div class="row-sub">${f[1]}</div></div><span style="color:var(--fg3);font-size:20px">›</span></button>`).join('')}</div>`,null);
+$('#fab').onclick=()=>{openSheet('Neu erfassen',`<div class="list">${FAB.map((f,i)=>isSelbst()&&f[0]==='Zielrichtung bewerten'?'':`<button class="row row-click" data-fab="${i}" style="background:none;border:none;border-top:1px solid var(--hair);text-align:left;width:100%;cursor:pointer"><div class="row-main"><div class="row-title">${f[0]}</div><div class="row-sub">${f[1]}</div></div><span style="color:var(--fg3);font-size:20px">›</span></button>`).join('')}</div>`,null);
   $$('#sheet-body [data-fab]').forEach(b=>b.onclick=()=>{const fn=FAB[+b.dataset.fab][2];closeSheet();setTimeout(fn,340)})};
 
 /* ================= Einstellungen, grosse Schrift ================= */
@@ -4932,9 +5004,7 @@ function openSettings(){
       <span class="muted">Automatisch folgt der Einstellung Ihres Geräts.</span></div>
     <label class="row" style="cursor:pointer;border:none"><input type="checkbox" class="check" id="set-calm" ${S.meta.calm?'checked':''}><div class="row-main"><div class="row-title">Animationen reduzieren</div><div class="row-sub">${sysCalm?'Ihr Gerät hat Bewegung bereits reduziert. Die App zeigt darum keine Animationen.':'Weniger Bewegung, wenn Ihnen das angenehmer ist.'}</div></div></label>
     ${setHead('Kurs')}
-    <div class="field"><label>Meine Kurswoche</label><div class="seg" id="set-woche" style="background:var(--hair)" role="radiogroup" aria-label="Kurswoche">
-      ${WOCHEN.map(o=>`<button type="button" role="radio" data-wk="${o.id}" aria-selected="${o.id===wk}" aria-checked="${o.id===wk}">${o.id?'W'+o.id:'Selbständig'}</button>`).join('')}</div>
-      <span class="muted">Bestimmt, was das Widget „Mein Fokus“ auf der Startseite zeigt.</span></div>
+    <div id="set-kurs">${kursPicker('')}</div>
     ${setHead('Mitteilungen')}
     <label class="row" style="cursor:pointer;border:none"><input type="checkbox" class="check" id="set-notify" ${S.meta.notify?'checked':''} ${canNotify()?'':'disabled'}><div class="row-main"><div class="row-title">Erinnerungen als Mitteilung</div><div class="row-sub">Fristen fürs RAV und die Kasse, Termine, geplante Schritte und Warnungen erscheinen als Mitteilung auf dem Handy. ${notifyNote()}</div></div></label>
     ${setHead('Schnellauswahl')}
@@ -4959,8 +5029,7 @@ function openSettings(){
   $('#set-notify').onchange=async e=>{const want=e.target.checked;const ok=await setNotify(want);e.target.checked=ok};
   $$('#set-theme [data-th]').forEach(b=>b.onclick=()=>{S.meta.theme=b.dataset.th==='auto'?null:b.dataset.th;save();applyLook();
     $$('#set-theme [data-th]').forEach(x=>{x.setAttribute('aria-selected',x===b);x.setAttribute('aria-checked',x===b)})});
-  $$('#set-woche [data-wk]').forEach(b=>b.onclick=()=>{S.meta.woche=+b.dataset.wk;save();renderHeute();
-    $$('#set-woche [data-wk]').forEach(x=>{x.setAttribute('aria-selected',x===b);x.setAttribute('aria-checked',x===b)})});
+  bindKursPicker($('#set-kurs'));
   $('#set-profil').onclick=()=>{closeSheet();setTimeout(openProfil,340)};
   $('#set-side').onclick=()=>{closeSheet();setTimeout(openSideEdit,340)};
   $('#set-backup').onclick=()=>{closeSheet();setTimeout(openBackup,340)};
@@ -5076,16 +5145,15 @@ const ONB=[
       ${oFld('alk.tel','Telefon Kasse','Steht auf jedem Brief der Kasse.','type="tel"')}</div>
     ${oFld('alk.rahmenfrist','Beginn Ihrer Rahmenfrist','Steht auf der Verfügung der Kasse. Ab diesem Tag zählt die App die Taggelder bei Krankheit.','type="date"')}`,
    bind:()=>{}},
-  {t:'Kurs und Gerät',html:()=>{const wk=S.meta.woche??1;return `
-    <h1 id="onb-t">Fast geschafft</h1><p class="lead">Noch zwei kleine Einstellungen.</p>
-    <div class="field"><label>In welcher Kurswoche sind Sie?${tip('Die Startseite zeigt passend dazu, was diese Woche wichtig ist. Nach dem Kurs wählen Sie „Selbständig“.')}</label>
-      <div class="seg" id="onb-woche" style="background:var(--hair)" role="radiogroup" aria-label="Kurswoche">${WOCHEN.map(o=>`<button type="button" role="radio" data-wk="${o.id}" aria-selected="${o.id===wk}" aria-checked="${o.id===wk}">${o.id?'W'+o.id:'Selbständig'}</button>`).join('')}</div></div>
+  {t:'Kurs und Gerät',html:()=>{return `
+    <h1 id="onb-t">Fast geschafft</h1><p class="lead">Noch ein paar kleine Einstellungen.</p>
+    <div id="onb-kurs">${kursPicker(tip('Im Kurs zeigt die App unter „Kurs“ die Kursmodule Kompetenzen und Strategie. Selbständig konzentriert sie sich ganz auf die Stellensuche: Bewerbungen, Dossier, Netzwerk und RAV. Sie können das jederzeit in den Einstellungen ändern.'))}</div>
     <label class="row" style="cursor:pointer;border:none"><input type="checkbox" class="check" id="onb-notify" ${S.meta.notify?'checked':''} ${canNotify()?'':'disabled'}><div class="row-main"><div class="row-title">Erinnerungen als Mitteilung ${tip('Das Handy erinnert Sie an die Abgabe der Arbeitsbemühungen, das Monatsformular, Ihren RAV-Termin und geplante Schritte. Jederzeit in den Einstellungen ausschaltbar.')}</div><div class="row-sub">${notifyNote()}</div></div></label>
     <label class="row" style="cursor:pointer;border:none"><input type="checkbox" class="check" id="onb-big" ${S.meta.big?'checked':''}><div class="row-main"><div class="row-title">Grosse Schrift ${tip('Alles wird etwas grösser. Sie können das jederzeit in den Einstellungen ändern.')}</div><div class="row-sub">Für bessere Lesbarkeit.</div></div></label>
     ${isIOS&&!standalone?`<div class="banner warn-banner"><div class="txt"><b>Wichtig auf dem iPhone</b><span>Legen Sie die App auf den Home-Bildschirm: unten in Safari auf das Teilen-Symbol tippen, dann „Zum Home-Bildschirm“. Sonst kann Safari Ihre Daten nach einigen Tagen löschen.</span></div></div>`
       :!standalone?`<div class="banner glass"><div class="txt"><b>Tipp</b><span>Legen Sie die App auf den Startbildschirm: im Browser-Menü „Zum Startbildschirm hinzufügen“ oder „App installieren“.</span></div></div>`:''}
     <div class="banner glass"><div class="txt"><b>Einmal pro Woche sichern</b><span>Unter Einstellungen → Sichern und laden. Am besten zusammen mit Ihrer Fachperson im Einzelgespräch.</span></div></div>`},
-   bind:()=>{$$('#onb-woche [data-wk]').forEach(b=>b.onclick=()=>{S.meta.woche=+b.dataset.wk;save();$$('#onb-woche [data-wk]').forEach(x=>{x.setAttribute('aria-selected',x===b);x.setAttribute('aria-checked',x===b)})});
+   bind:()=>{bindKursPicker($('#onb-kurs'));
      $('#onb-big').onchange=e=>{S.meta.big=e.target.checked;save();applyBig()};
      $('#onb-notify').onchange=async e=>{e.target.checked=await setNotify(e.target.checked)}}},
   {t:'Startklar',nav:false,html:()=>{const C=onbCheck(),miss=C.filter(c=>!c[1]);return `
@@ -5191,13 +5259,20 @@ const TOUR=[
     ['rav:alk',tourCard('#m-slots'),'Monatsordner der Kasse','Pro Monat legen Sie die Angaben der versicherten Person, den Zwischenverdienst und den Nachweis ab. So fehlt nichts.'],
     ['rav:alk',tourCard('#dauer-list'),'Dauerablage','Kündigung, Arbeitsvertrag, Verfügungen und Briefe der Kasse an einem Ort.'],
     ['rav:krank',tourCard('#fall-list'),'Krankheit','Melden Sie hier, wenn Sie krank sind. Die App zeigt die Fristen für Arztzeugnis und Kasse.']]}];
-let tour=null;
+let tour=null,TR=[];
+/* Kapitel passend zum Modus: im Kurs mit Hinweis auf die Kurs-Leiste, selbständig ohne Kursteile */
+function tourChapters(){const sel=isSelbst(),drop=['strategie:strategie','netzwerk:karte','netzwerk:aktiv'];
+  return TOUR.filter(k=>!(sel&&k.l==='Kompetenzen')).map(k=>{let steps=k.steps,l=k.l,d=k.d;
+    if(sel){steps=steps.map(st=>st[1]==='#btn-backup'?['strategie:tracker',...st.slice(1)]:st).filter(st=>!drop.includes(st[0]));
+      if(l==='Strategie'){l='Bewerbungen';d='Bewerbungen und Aktionsplan'}if(l==='Netzwerk')d='Kontakte und Zielfirmen'}
+    else if(l==='Kompetenzen')steps=[['kompetenzen','#kursbar','Der Kurs','Unter „Kurs“ liegen die Kursmodule. Mit dieser Leiste wechseln Sie zwischen Kompetenzen und Strategie.'],...steps];
+    return{l,d,steps}})}
 const calm=()=>!!(S.meta.calm||(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches));
 function startTour(){
   if(tour)return;
   if(editing)exitEdit();
   if(!$('#sheet').hidden){closeSheet();setTimeout(startTour,340);return}
-  S.meta.toured=true;save();
+  S.meta.toured=true;save();TR=tourChapters();
   const blk=document.createElement('div');blk.className='tour-block';
   const hole=document.createElement('div');hole.className='tour-hole none';
   const pop=document.createElement('div');pop.className='tour-pop mid';pop.setAttribute('role','dialog');pop.setAttribute('aria-modal','true');pop.setAttribute('aria-labelledby','tour-t');
@@ -5215,9 +5290,9 @@ function tourResize(){tourPlace()}
 function tourFollow(){if(!tour||!tour.target)return;cancelAnimationFrame(tour.raf);clearTimeout(tour.fin);
   tour.raf=requestAnimationFrame(()=>tourPlace(null,true));tour.fin=setTimeout(()=>tourPlace(),180)}
 function tourStep(d){const t=tour;if(t.c<0){if(d>0)tourGo(0,0);return}
-  const n=TOUR[t.c].steps.length;
+  const n=TR[t.c].steps.length;
   if(d>0){if(t.s<n-1)tourGo(t.c,t.s+1);else tourGo(t.c+1,0)}
-  else{if(t.s>0)tourGo(t.c,t.s-1);else if(t.c>0)tourGo(t.c-1,TOUR[t.c-1].steps.length-1);else tourGo(-1,0)}}
+  else{if(t.s>0)tourGo(t.c,t.s-1);else if(t.c>0)tourGo(t.c-1,TR[t.c-1].steps.length-1);else tourGo(-1,0)}}
 function tourGo(c,s){tour.c=c;tour.s=s;tourDraw()}
 /* Tab nur wechseln, wenn nötig; im selben Tab nur den Unterbereich umschalten (kein Neuaufbau, kein Sprung nach oben) */
 function tourNav(spec){const[tab,sub]=spec.split(':');
@@ -5229,17 +5304,17 @@ function tourDraw(){const t=tour,my=++t.seq,{pop}=t;
   else tourBuild(my);
   t.shown=true}
 function tourBuild(my){const t=tour,{pop}=t;
-  if(t.c>=TOUR.length||t.c<0){tourNav('heute');
-    pop.innerHTML=t.c<0?`<div class="tour-head"><div class="eyebrow">Rundgang · ${TOUR.length} Kapitel</div><button class="tour-x" data-t="x" aria-label="Rundgang beenden">×</button></div>
+  if(t.c>=TR.length||t.c<0){tourNav('heute');
+    pop.innerHTML=t.c<0?`<div class="tour-head"><div class="eyebrow">Rundgang · ${TR.length} Kapitel</div><button class="tour-x" data-t="x" aria-label="Rundgang beenden">×</button></div>
       <h2 id="tour-t">Alle Funktionen in ein paar Minuten</h2>
       <p>Wir zeigen Ihnen jeden Bereich der App. Sie können jedes Kapitel überspringen oder den Rundgang jederzeit beenden. Oder tippen Sie auf ein Kapitel, um direkt dort zu beginnen.</p>
-      <div class="tour-chaps">${TOUR.map((k,i)=>`<button data-c="${i}"><b>${i+1}</b><span>${k.l}<br><small>${k.d}</small></span>›</button>`).join('')}</div>
+      <div class="tour-chaps">${TR.map((k,i)=>`<button data-c="${i}"><b>${i+1}</b><span>${k.l}<br><small>${k.d}</small></span>›</button>`).join('')}</div>
       <div class="tour-nav"><button class="btn btn-glass" data-t="x">Überspringen</button><button class="btn btn-primary" data-t="next">Rundgang starten</button></div>`
      :`<div class="tour-head"><div class="eyebrow">Rundgang</div></div><h2 id="tour-t">Sie kennen jetzt alle Bereiche</h2><p>Den Rundgang finden Sie jederzeit wieder unter Einstellungen (Zahnrad auf der Startseite).</p><div class="tour-nav"><span></span><button class="btn btn-primary" data-t="end">Fertig</button></div>`;
     pop.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>tourGo(+b.dataset.c,0));
     const e=pop.querySelector('[data-t=end]');e&&(e.onclick=()=>endTour(false))}
-  else{const K=TOUR[t.c],[spec,,title,text]=K.steps[t.s],lastStep=t.s===K.steps.length-1,lastChap=t.c===TOUR.length-1;
-    pop.innerHTML=`<div class="tour-head"><div class="eyebrow">Kapitel ${t.c+1} von ${TOUR.length} · ${K.l}</div><button class="tour-x" data-t="x" aria-label="Rundgang beenden">×</button></div>
+  else{const K=TR[t.c],[spec,,title,text]=K.steps[t.s],lastStep=t.s===K.steps.length-1,lastChap=t.c===TR.length-1;
+    pop.innerHTML=`<div class="tour-head"><div class="eyebrow">Kapitel ${t.c+1} von ${TR.length} · ${K.l}</div><button class="tour-x" data-t="x" aria-label="Rundgang beenden">×</button></div>
       <div class="tour-prog" aria-hidden="true">${K.steps.map((_,i)=>`<i class="${i<=t.s?'on':''}"></i>`).join('')}</div>
       <h2 id="tour-t">${title}</h2><p>${text}</p>
       <div class="tour-nav"><button class="btn btn-glass" data-t="prev">Zurück</button><span class="muted" style="font-size:13px">${t.s+1} / ${K.steps.length}</span><button class="btn btn-primary" data-t="next">${lastStep?(lastChap?'Abschliessen':'Nächstes Kapitel'):'Weiter'}</button></div>
@@ -5249,15 +5324,15 @@ function tourBuild(my){const t=tour,{pop}=t;
   const nx=pop.querySelector('[data-t=next]'),pv=pop.querySelector('[data-t=prev]'),sk=pop.querySelector('[data-t=skip]');
   nx&&(nx.onclick=()=>tourStep(1));pv&&(pv.onclick=()=>tourStep(-1));sk&&(sk.onclick=()=>tourGo(t.c+1,0));
   const show=()=>{pop.classList.remove('swap');(nx||pop.querySelector('.btn-primary')).focus({preventScroll:true})};
-  if(t.c<0||t.c>=TOUR.length){t.target=null;tourPlace();show();return}
+  if(t.c<0||t.c>=TR.length){t.target=null;tourPlace();show();return}
   /* Ziel erst nach dem Tab- bzw. Bereichswechsel suchen */
   setTimeout(()=>{if(!tour||tour.seq!==my)return;
-    const sel=TOUR[t.c].steps[t.s][1],el=typeof sel==='function'?sel():$(sel);
+    const sel=TR[t.c].steps[t.s][1],el=typeof sel==='function'?sel():$(sel);
     t.target=el&&el.getClientRects().length?el:null;
     const sc=$('#scroll');
     /* Nachkorrektur, falls der Bereich beim Einblenden noch in Bewegung war */
     [350,700,1100,1600].forEach(ms=>setTimeout(()=>{if(tour&&tour.seq===my)tourPlace()},ms));
-    if(!t.target||t.target.closest('.tabbar')||t.target===$('#fab')||t.target===$('#side-handle')){tourPlace();show();return}
+    if(!t.target||t.target.closest('.tabbar,.kursbar')||t.target===$('#fab')||t.target===$('#side-handle')){tourPlace();show();return}
     /* Seite und Rahmen gleiten gleichzeitig zum Ziel: Endlage vorausberechnen */
     const r=t.target.getBoundingClientRect(),from=sc.scrollTop,
       to=Math.max(0,Math.min(sc.scrollHeight-sc.clientHeight,from+r.top-sc.getBoundingClientRect().top-14)),dy=to-from;
@@ -5606,7 +5681,7 @@ document.getElementById('fr-tab-brief').hidden=false;
 zrWiz=wizard(document.getElementById('zr-form'));
 frWiz=wizard(document.getElementById('fr-fForm'));
 briefWiz=wizard(document.getElementById('fr-bBody'));
-applyBig();applyLook();
+applyBig();applyLook();applyMode();
 function render(){syncReminders();zrApi&&zrApi.sync();frApi&&frApi.sync();renderStats();renderTracker();renderPlan();renderStrategie();renderDossier();renderRav();renderNachweis();renderAlk();renderCheck();renderNetz();renderKomp();renderHeute();renderBadges();renderBackupRemind()}
 route();
 if(fresh){await seedDocs();render()}
