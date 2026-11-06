@@ -30,6 +30,17 @@ Tabs (Reihenfolge der Kursmodule):
 | Netzwerk | A3–A5 | fertig: aus Hugos A5-Tool portiert (Kontakte, Karte nach Nähe oder Unterstützung, Aktivieren), Import `mein-netzwerk.json`, **Zielfirmen = Hugos Werkzeug BIN 1** (Firmenrecherche mit Signal, Ansprechperson, Aufhänger, Pipeline; Initiativbewerbung mit Satzrahmen, Selbstcheck, KI-Aufträgen) |
 | RAV & ALK | – | fertig: Arbeitsbemühungen, Formular 716.007 mit Unterschrift, ALK-Monatsordner, Zwischenverdienst-Stunden, Krankheit |
 
+## Bedienung (Stand 6. November 2026)
+
+- **Heute** ist die Startseite: Warnungen (RAV-Frist, Monatsformular, fehlendes Arztzeugnis, überfällige Schritte), die nächsten fünf Schritte aus Aktionsplan, Bewerbungen, Firmen und Netzwerk, RAV-Stand des Monats und **Mein Fokus** nach Kurswoche (W1 bis W4, Selbständig) mit Abkürzungen.
+- **Plus-Knopf** unten rechts für alles Neue (Bewerbung, Dokument, Schritt, Kontakt, Firma, Zielrichtung, Krankmeldung).
+- **Höchstens zwei Ebenen:** Die Initiativbewerbung aus BIN 1 liegt im Dossier (Bereich „Initiativbewerbung“), die Firmenrecherche im Netzwerk. Technisch wird der Bereich `#fr-tab-brief` beim Start ins Dossier verschoben; das CSS von BIN 1 hängt deshalb an der Klasse `.frs`, nicht an der ID.
+- **Schritt für Schritt:** Die Formulare von BIN 6 (Zielrichtung) und BIN 1 (Betrieb, Initiativbrief) zeigen eine Frage nach der anderen mit Fortschrittsbalken (`wizard()`).
+- **Punkte auf den Tab-Symbolen** zeigen, wo etwas fehlt oder fällig ist.
+- **Einführung** beim ersten Öffnen (Name, Beispiele oder leer, Home-Bildschirm auf dem iPhone, grosse Schrift); später über die Einstellungen auf der Startseite.
+- **Grosse Schrift** als Einstellung (`zoom` auf dem Inhalt).
+- Die Sprache ist bewusst noch nicht vereinfacht (Hugos Entscheid). Kandidaten: „Tracker“, „Pipeline“, „Signal“, „AvP“.
+
 ## Architektur
 
 - **Eine Datei** `index.html` mit CSS und JS inline, keine Build-Kette. Bibliotheken lokal in `vendor/`, werden bei Bedarf nachgeladen (`loadScript`).
