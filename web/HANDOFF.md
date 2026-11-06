@@ -32,13 +32,22 @@ Tabs (Reihenfolge der Kursmodule):
 
 ## Bedienung (Stand 6. November 2026)
 
-- **Heute** ist die Startseite: Warnungen (RAV-Frist, Monatsformular, fehlendes Arztzeugnis, überfällige Schritte), die nächsten fünf Schritte aus Aktionsplan, Bewerbungen, Firmen und Netzwerk, RAV-Stand des Monats und **Mein Fokus** nach Kurswoche (W1 bis W4, Selbständig) mit Abkürzungen.
+- **Heute** ist die Startseite: Warnungen (RAV-Frist, Monatsformular, fehlendes Arztzeugnis, überfällige Schritte) fest oben, darunter **Widgets** in einem Raster mit 4 Spalten (`WIDGETS`, Anordnung in `S.meta.home` als `{id,k,w,h,cfg}`). Katalog: Nächste Schritte, RAV-Stand, Bewerbungen, Mein Fokus, Personalberatung, Zielfirmen, Argumente, Netzwerk, Dossier, Kasse, Krankheit, Schnellzugriff (mehrfach, Ziel in `cfg`). Jedes Widget hat erlaubte Grössen; der Inhalt passt sich an.
+- **Bearbeiten** über „Startseite anpassen“ oder langes Drücken: Widgets wackeln, Ziehen verschiebt (andere weichen federnd aus), die Ecke unten rechts skaliert diagonal und rastet auf die nächste erlaubte Grösse ein (Tippen auf die Ecke wechselt die Grösse), Minus entfernt, „+ Widget“ fügt hinzu, „Zurücksetzen“ (zweimal tippen) stellt den Standard her. Tastatur: Pfeile verschieben, +/− Grösse, Entf. **Untere Leiste:** im selben Modus Symbole nach vorne oder hinten ziehen (`S.meta.tabs`). Beendet mit „Fertig“, Escape oder Tipp auf eine freie Stelle.
+- **Hinweise als Popup:** Warnungen erscheinen beim Öffnen der App als Dialog (einmal pro Sitzung, nicht während Einführung oder Rundgang), danach über die Glocke oben rechts mit Zähler (rot bei dringenden). Ein Tipp auf einen Hinweis führt direkt hin.
+- **Brief-Assistent:** Briefkopf als Wahl „Klassisch“ oder „Farbig“. Keine Beilagen im Brief (Schweizer Praxis). Schritt 5: „Per E-Mail senden“ speichert das PDF und öffnet das Standard-Mailprogramm (`mailto:`) mit Empfänger, Betreff und Begleittext; den Anhang fügt man selbst hinzu, weil `mailto:` keine Anhänge kann. „Teilen“ schickt das PDF direkt als Anhang.
+- **Beispieldokumente:** Lebenslauf, Bewerbungsschreiben (linksbündig, Ort und Datum über dem Betreff, Abschnitte Sie, Ich, Wir) und Arbeitszeugnis einer erfundenen Person (Marco Beispiel), als Canvas gezeichnet. `EXV` erhöhen, wenn sich ihr Inhalt ändert; alte Beispiele werden dann beim Start ersetzt.
 - **Plus-Knopf** unten rechts für alles Neue (Bewerbung, Dokument, Schritt, Kontakt, Firma, Zielrichtung, Krankmeldung).
 - **Höchstens zwei Ebenen:** Die Initiativbewerbung aus BIN 1 liegt im Dossier (Bereich „Initiativbewerbung“), die Firmenrecherche im Netzwerk. Technisch wird der Bereich `#fr-tab-brief` beim Start ins Dossier verschoben; das CSS von BIN 1 hängt deshalb an der Klasse `.frs`, nicht an der ID.
 - **Schritt für Schritt:** Die Formulare von BIN 6 (Zielrichtung) und BIN 1 (Betrieb, Initiativbrief) zeigen eine Frage nach der anderen mit Fortschrittsbalken (`wizard()`).
 - **Punkte auf den Tab-Symbolen** zeigen, wo etwas fehlt oder fällig ist.
-- **Einführung** beim ersten Öffnen (Name, Beispiele oder leer, Home-Bildschirm auf dem iPhone, grosse Schrift); später über die Einstellungen auf der Startseite.
-- **Grosse Schrift** als Einstellung (`zoom` auf dem Inhalt).
+- **Einrichtung** beim ersten Öffnen (`openIntro()`, Schritte in `ONB`): ganzer Bildschirm, vor dem Rundgang. Willkommen mit Farbwahl, Über Sie (Name ist Pflicht), Briefkopf, Unterschrift, Unterlagen (Lebenslauf, Zeugnisse, Diplome, Foto, mit Kamera oder Datei), RAV und Kasse (Personalberatung, Termin, Vorgabe, Kasse, Rahmenfrist), Kurswoche, Mitteilungen, grosse Schrift. Zu jedem Feld ein „?“-Tipp; der erste Tipp eines Schritts öffnet sich von selbst. Am Ende eine Übersicht mit „Ergänzen ›“ für Fehlendes, dann Rundgang. Wer einrichtet, startet ohne Beispiele; „Erst mit Beispielen umschauen“ behält sie. Wieder aufrufbar in den Einstellungen.
+- **App-Farbschema** (`APP_THEMES`, `S.meta.color`): Orange, Seeblau, Beere oder eigene Farbe; je ein Satz Farben für hell und dunkel, per `<style id="app-theme">`.
+- **Seitenleiste** am rechten Rand: schwebender Griff (etwa 2 cm × 3 mm), nach links ziehen oder antippen öffnet die Schnellauswahl, senkrecht ziehen verschiebt den Griff. Standard: Job-Room, E-Mail, ChatGPT; das Plus fügt aus dem Katalog `SIDE_APPS` oder eigene Verknüpfungen (`S.meta.sideCustom`) hinzu. Lange drücken hebt einen Eintrag an: hoch oder runter ziehen verschiebt, zur Seite wischen entfernt. Reihenfolge in `S.meta.side`. Eine Web-App kann installierte Apps nicht auflisten oder starten; es sind Webadressen, `tel:`, `mailto:` und `wa.me`, die das Handy in der passenden App öffnet.
+- **Mitteilungen** (`S.meta.notify`, ein- und ausschaltbar): Die App schreibt kommende Erinnerungen nach kv `notify` (Abgabefenster am 22., Frist am 3., AvP am 1., RAV-Termin am Vorabend, geplante Schritte, Firmen-Schritte, Arztzeugnis ab Tag 4, aktuelle Warnungen). `sw.js` zeigt fällige an (periodische Hintergrund-Synchronisation, Nachricht `check` von der Seite) und merkt sie in kv `notified`. Tipp auf die Mitteilung öffnet die richtige Stelle. Grenzen ohne Server: Android im Hintergrund etwa ein- bis zweimal täglich (installierte App), iPhone nur solange die App läuft.
+- **Rundgang** direkt nach der Einführung (`startTour()`, Daten in `TOUR`): 6 Kapitel entlang der Tabs, 31 Schritte, jede Funktion mit Spotlight. Startbild mit Kapitelübersicht (direkt einsteigen möglich); in jeder Sprechblase „Kapitel überspringen“ und „Rundgang beenden“, ausserdem × und Escape. `S.meta.toured` verhindert die Wiederholung; wieder starten über die Einstellungen. Bestehende Nutzerinnen und Nutzer sehen ihn einmal beim nächsten Öffnen.
+- **Einstellungen** (Zahnrad auf der Startseite), nach Bereichen: Darstellung (grosse Schrift, Farbschema automatisch/hell/dunkel in `S.meta.theme`, Animationen reduzieren in `S.meta.calm`), Kurs (Kurswoche für das Widget „Mein Fokus“), Meine Angaben (Name, Adresse, Briefkopf; dieselben Felder wie im Brief-Assistenten), Daten (Sichern und laden, Beispiele entfernen, alle Daten löschen in zwei Schritten), Hilfe (Rundgang, Einführung).
+- **Grosse Schrift** wirkt per `zoom` auf den Inhalt.
 - Die Sprache ist bewusst noch nicht vereinfacht (Hugos Entscheid). Kandidaten: „Tracker“, „Pipeline“, „Signal“, „AvP“.
 
 ## Architektur
@@ -76,7 +85,7 @@ Wenn Hugo die Originalwerkzeuge weiterentwickelt, müssen die Änderungen hier n
 
 - Arbeitsbemühungen: Abgabe ab dem 22., spätestens 5. des Folgemonats (Kanton Bern, Angabe Hugo; Formular 716.007 bestätigt den 5.).
 - Krankheit (Merkblatt Krankheit, AVA Kanton Bern): sofort beim RAV melden, Arztzeugnis ab dem 4. Tag an die Kasse, Krankentage in die AvP, höchstens 30 Kalendertage am Stück, höchstens 44 Taggelder pro Rahmenfrist. Der Zähler in der App ist eine Schätzung (Werktage Mo–Fr, ohne Feiertage).
-- Dossier-Check: Checkliste für Bewerbungsdossiers, beco Berner Wirtschaft.
+- Dossier-Check: Checkliste für Bewerbungsdossiers, beco Berner Wirtschaft. In der App zugeklappt als eine Zeile mit Fortschritt; die Dokumentvorschau darüber ist dafür grösser.
 - AHV-Nummer wird nie gespeichert, nur beim Erstellen des Formulars abgefragt.
 
 ## Konventionen
@@ -86,13 +95,15 @@ Wenn Hugo die Originalwerkzeuge weiterentwickelt, müssen die Änderungen hier n
 - CSP-Farben: Orange `#F79C31`, Dunkel `#1A1A1A`.
 - Beispielbranchen: Logistik, Detailhandel, Bau, Industrie (Seeland).
 - Alle Farben als CSS-Tokens, helles und dunkles Theme.
+- **Bewegung im Stil von ColorOS:** Kurven als Tokens `--spring` (Feder mit leichtem Nachschwingen), `--spring-soft` (Sheets), `--glide` (Abbremsen ohne Überschwingen), `--exit` (schnelles Wegfallen). Öffnen federt, Schliessen ist kürzer und beschleunigt. Offenes Sheet: App rückt auf dem Handy nach hinten (`html.sheet-open .app`), Hintergrund weichgezeichnet, Plus-Symbol dreht sich zum ×. Knöpfe federn beim Antippen. Bei „Bewegung reduzieren“ im System ist alles aus (Windows: Einstellungen → Barrierefreiheit → Animationseffekte).
 
 ## Offene Punkte
 
-1. **Android-APK** wie bei `bewerbung-pdf` bauen (WebView). Die App nutzt für Senden `navigator.share` mit Fallback auf Download; in der WebView braucht es dafür die gleiche `window.AndroidApp`-Brücke wie in `bewerbung-pdf` (`sharePdf`, `savePdf`), oder einen DownloadListener.
+1. **Android-APK:** erledigt, siehe `../README.md` und `../android/`. Hülle in Java mit WebView (WebViewAssetLoader, offline), Brücke `window.AndroidApp`: installierte Apps mit Symbolen und schwebendem Fenster, Mitteilungen per AlarmManager, Teilen-Ziel ins Notizfenster, PDF teilen/speichern, Kamera, Zwischenablage, Vibration. Bauen mit `APK-bauen.cmd`. Noch nicht auf einem echten Gerät getestet.
 2. **Auf echten Geräten testen:** iPhone (Home-Bildschirm, Teilen, Kamera im Dateiwähler), Android, Moodle.
 3. **Import aus dem Kompetenz-Spiegel** (JSON), sobald Hugo die Datei liefert. Der Tab läuft auch ohne.
-4. Die 3D-Ansicht des A5-Tools wurde bewusst weggelassen (Bibliothek 1.2 MB). Die 2D-Karte zeigt dieselben Verbindungen.
+4. **Mitteilungen zuverlässiger:** In der Android-APK exakt getaktete Erinnerungen (AlarmManager); auf dem iPhone ginge das nur mit einem Push-Server.
+5. Die 3D-Ansicht des A5-Tools wurde bewusst weggelassen (Bibliothek 1.2 MB). Die 2D-Karte zeigt dieselben Verbindungen.
 
 Erledigt in dieser Runde: Unterschrift auf dem RAV-Formular, Import der Angaben aus „Bewerbung PDF“ (gleiche Domain, `localStorage['bewerbung-pdf.v1']`), Inserat-Parser (Text-Inserat im Dossier → „Bewerbung daraus erfassen“), Zwischenverdienst-Stunden im ALK-Monat.
 

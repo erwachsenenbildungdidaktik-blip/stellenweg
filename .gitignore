@@ -1,0 +1,11 @@
+# Werkzeuge (portabel, lokal)
+tools/
+# Android-Build
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/app/src/main/assets/web/
+*.keystore
+*.jks
+android/keystore.properties

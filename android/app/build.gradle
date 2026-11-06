@@ -1,0 +1,50 @@
+plugins { id 'com.android.application' }
+
+// Signatur für Updates: Schlüssel und Passwörter liegen ausserhalb von Git (keystore.properties, tools/)
+def ksFile = rootProject.file('keystore.properties')
+def ks = new Properties()
+if (ksFile.exists()) ks.load(new FileInputStream(ksFile))
+
+android {
+    namespace 'ch.stellenweg.app'
+    compileSdk 35
+    defaultConfig {
+        applicationId 'ch.stellenweg.app'
+        minSdk 26
+        targetSdk 34
+        versionCode 1
+        versionName '1.0'
+    }
+    signingConfigs {
+        release {
+            if (ksFile.exists()) {
+                storeFile rootProject.file(ks['storeFile'])
+                storePassword ks['storePassword']
+                keyAlias ks['keyAlias']
+                keyPassword ks['keyPassword']
+            }
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            if (ksFile.exists()) signingConfig signingConfigs.release
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation 'androidx.webkit:webkit:1.12.1'
+    implementation 'androidx.core:core:1.13.1'
+}
+
+// Die Web-App aus ../web wird bei jedem Build in die APK kopiert (offline, keine zweite Kopie im Repo)
+tasks.register('copyWeb', Copy) {
+    from("$rootDir/../web") { exclude 'HANDOFF.md', 'README.md', '.claude/**', 'download/**' }
+    into("$projectDir/src/main/assets/web")
+}
+preBuild.dependsOn copyWeb

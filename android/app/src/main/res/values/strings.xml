@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Stellenweg</string>
+    <string name="channel_name">Erinnerungen</string>
+    <string name="channel_desc">Fristen fürs RAV und die Kasse, Termine und geplante Schritte</string>
+</resources>
