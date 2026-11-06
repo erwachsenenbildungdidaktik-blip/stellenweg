@@ -21,6 +21,13 @@ Die Hülle stellt der Web-App `window.AndroidApp` bereit (`android/app/src/main/
 
 In der Web-App (iPhone) gibt es dafür das **Notizfenster** (Seitenleiste → Notizen): Alles markieren, Kopieren, Einfügen, Teilen, Leeren; Einfügen geht auch durch langes Drücken ins Feld.
 
+## Updates
+
+- **Web-App / iPhone:** Beim Start mit Internet lädt der Service Worker automatisch die neueste Version; danach erscheint kurz „Stellenweg wurde auf Version … aktualisiert“.
+- **Android-App:** Beim Start vergleicht die App ihre `versionCode` mit `web/version.json` auf GitHub Pages. Ist eine neuere APK da, erscheint „Neue Version“ mit „Jetzt aktualisieren“: Die App lädt die APK und startet die Installation. Android verlangt bei Apps ausserhalb des Play Stores immer eine Bestätigung; beim ersten Mal zusätzlich „Apps aus dieser Quelle erlauben“. Daten bleiben erhalten (gleicher Schlüssel). „Später“ fragt einen Tag lang nicht mehr.
+- **Neue Version veröffentlichen:** in `android/app/build.gradle` `versionCode` (+1) und `versionName` erhöhen, „Was ist neu“ in `android/release-notes.txt`, dann `APK-bauen.cmd` (schreibt auch `web/version.json`), committen und pushen.
+- Version 1.0 hatte noch kein Auto-Update: Wer sie installiert hat, muss 1.1 einmal von Hand installieren.
+
 ## APK bauen
 
 Doppelklick auf `APK-bauen.cmd`. Ergebnis: `web/download/Stellenweg.apk`.

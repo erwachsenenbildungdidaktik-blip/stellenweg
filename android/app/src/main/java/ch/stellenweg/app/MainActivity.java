@@ -252,6 +252,10 @@ public class MainActivity extends Activity {
         return t;
     }
 
+    private void jsUpdate(String arg) {
+        runOnUiThread(() -> web.evaluateJavascript("window.stellenwegUpdate&&window.stellenwegUpdate(" + arg + ")", null));
+    }
+
     private File writeCache(String b64, String name) throws Exception {
         File dir = new File(getCacheDir(), "share");
         dir.mkdirs();
@@ -439,6 +443,67 @@ public class MainActivity extends Activity {
         @JavascriptInterface
         public void scheduleReminders(String json) {
             Reminders.schedule(MainActivity.this, json);
+        }
+
+        /** Installierte Versionsnummer (versionCode) für den Vergleich mit version.json */
+        @JavascriptInterface
+        public int appVersion() {
+            try {
+                android.content.pm.PackageInfo pi = getPackageManager().getPackageInfo(getPackageName(), 0);
+                return Build.VERSION.SDK_INT >= 28 ? (int) pi.getLongVersionCode() : pi.versionCode;
+            } catch (Exception e) {
+                return 0;
+            }
+        }
+
+        /**
+         * Neue APK von GitHub Pages laden und die Installation starten. Android fragt immer selbst nach;
+         * beim ersten Mal muss die Person „Apps aus dieser Quelle installieren“ erlauben.
+         * Fortschritt geht an window.stellenwegUpdate(prozent | 'fertig' | 'fehler').
+         */
+        @JavascriptInterface
+        public boolean installUpdate(String url) {
+            Uri u = Uri.parse(url);
+            if (!"https".equals(u.getScheme()) || !"erwachsenenbildungdidaktik-blip.github.io".equals(u.getHost())) return false;
+            if (Build.VERSION.SDK_INT >= 26 && !getPackageManager().canRequestPackageInstalls()) {
+                runOnUiThread(() -> {
+                    Toast.makeText(MainActivity.this, "Bitte „Apps aus dieser Quelle erlauben“ einschalten und dann nochmals auf Aktualisieren tippen.", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(android.provider.Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:" + getPackageName())));
+                });
+                return false;
+            }
+            new Thread(() -> {
+                java.net.HttpURLConnection c = null;
+                try {
+                    File dir = new File(getCacheDir(), "update");
+                    dir.mkdirs();
+                    File f = new File(dir, "Stellenweg.apk");
+                    c = (java.net.HttpURLConnection) new java.net.URL(url + (url.contains("?") ? "&" : "?") + "v=" + System.currentTimeMillis()).openConnection();
+                    c.setConnectTimeout(15000);
+                    c.setReadTimeout(30000);
+                    int len = c.getContentLength(), done = 0, last = -1;
+                    try (java.io.InputStream in = c.getInputStream(); FileOutputStream o = new FileOutputStream(f)) {
+                        byte[] buf = new byte[65536];
+                        int n;
+                        while ((n = in.read(buf)) > 0) {
+                            o.write(buf, 0, n);
+                            done += n;
+                            int pct = len > 0 ? done * 100 / len : -1;
+                            if (pct >= 0 && pct / 10 != last / 10) { last = pct; jsUpdate(String.valueOf(pct)); }
+                        }
+                    }
+                    Uri apk = FileProvider.getUriForFile(MainActivity.this, getPackageName() + ".files", f);
+                    Intent i = new Intent(Intent.ACTION_VIEW).setDataAndType(apk, "application/vnd.android.package-archive")
+                            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    jsUpdate("'fertig'");
+                    runOnUiThread(() -> startActivity(i));
+                } catch (Exception e) {
+                    jsUpdate("'fehler'");
+                } finally {
+                    if (c != null) c.disconnect();
+                }
+            }).start();
+            return true;
         }
 
         /** Beim Kaltstart geteilter Text (danach leer) */

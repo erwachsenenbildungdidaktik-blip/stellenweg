@@ -974,6 +974,9 @@ html.kurs-sub .scroll{padding-bottom:200px}
 html.editing .kursbar{display:none}
 html.selbst .eyebrow.kurs{display:none}
 .ospick button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.upd{display:flex;flex-direction:column;gap:12px;align-items:stretch}
+.upd-ic{width:56px;height:56px;border-radius:18px;display:grid;place-items:center;background:var(--accent);color:var(--accent-ink);box-shadow:0 12px 26px -10px var(--accent)}
+.upd-ic svg{width:28px;height:28px}
 /* App weitergeben */
 .sa{display:flex;flex-direction:column;gap:14px}
 .ospick{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -5669,6 +5672,32 @@ setInterval(()=>{if(document.hidden)pingSW()},10*60e3);
 if(navigator.serviceWorker)navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.type==='go'&&e.data.go)goTo(e.data.go)});
 {const q=new URLSearchParams(location.search).get('go');if(q){history.replaceState(null,'',location.pathname+'#'+q.split(':')[0]);setTimeout(()=>goTo(q),700)}}
 
+/* ================= Updates beim Start ================= */
+/* Web und iPhone: Der Service Worker lädt beim Start mit Internet die neueste Version (Netz zuerst); hier nur Bescheid geben.
+   Android: Liegt auf GitHub Pages eine neuere APK (version.json), wird sie angeboten und mit einem Tipp installiert.
+   Die Daten bleiben erhalten, weil die neue APK mit demselben Schlüssel signiert ist. */
+async function checkUpdate(){if(!navigator.onLine)return;
+  try{const r=navigator.serviceWorker&&await navigator.serviceWorker.getRegistration();if(r)r.update()}catch(e){}
+  let v;try{const res=await fetch(APP_URL+'version.json?v='+Date.now(),{cache:'no-store'});if(!res.ok)return;v=await res.json()}catch(e){return}
+  if(NATIVE){const cur=+native('appVersion')||0,sk=S.meta.skipUpdate||{};
+    if(+v.versionCode>cur&&!(sk.vc===v.versionCode&&sk.until>Date.now()))showUpdate(v);return}
+  if(S.meta.webVer&&S.meta.webVer!==v.versionName)toast(`Stellenweg wurde auf Version ${v.versionName} aktualisiert`);
+  if(S.meta.webVer!==v.versionName){S.meta.webVer=v.versionName;save()}}
+function showUpdate(v){if(!$('#sheet').hidden||tour||onb||editing){setTimeout(()=>showUpdate(v),4000);return}
+  openSheet('Neue Version',`<div class="upd"><div class="upd-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V6M6 11l6-6 6 6"/></svg></div>
+    <p class="lead" style="color:var(--fg)">Stellenweg ${esc(v.versionName)} ist da.</p>${v.notes?`<p>${esc(v.notes)}</p>`:''}
+    <p class="muted">Ihre Daten bleiben erhalten. Android fragt zur Sicherheit noch einmal, ob Sie installieren möchten.</p>
+    <div class="meter" id="upd-bar" hidden style="height:8px"><div style="width:0%"></div></div>
+    <div class="sheet-actions"><button class="btn btn-glass" id="upd-later">Später</button><button class="btn btn-primary" id="upd-now">Jetzt aktualisieren</button></div></div>`,null);
+  /* „Später“: einen Tag lang nicht mehr fragen */
+  $('#upd-later').onclick=()=>{S.meta.skipUpdate={vc:v.versionCode,until:Date.now()+864e5};save();closeSheet()};
+  $('#upd-now').onclick=()=>{if(native('installUpdate',APP_URL+(v.apk||'download/Stellenweg.apk'))){const b=$('#upd-now');b.disabled=true;b.textContent='Wird geladen …';$('#upd-bar').hidden=false}}}
+/* Fortschritt aus der Android-Hülle: Prozent, 'fertig' oder 'fehler' */
+window.stellenwegUpdate=a=>{const bar=$('#upd-bar div'),b=$('#upd-now');
+  if(a==='fertig'){if(bar)bar.style.width='100%';setTimeout(()=>{if(!$('#sheet').hidden&&$('#upd-bar'))closeSheet()},600)}
+  else if(a==='fehler'){toast('Das Update liess sich nicht laden. Später nochmals versuchen.');if(b){b.disabled=false;b.textContent='Nochmals versuchen'}}
+  else if(bar)bar.style.width=Math.max(4,+a||0)+'%'};
+
 /* ================= Dossier: Unterlagen oder Initiativbewerbung ================= */
 let dsub='unterlagen';
 $$('#dos-seg button').forEach(b=>b.onclick=()=>{dsub=b.dataset.d;$$('#dos-seg button').forEach(x=>x.setAttribute('aria-selected',x===b));
@@ -5689,6 +5718,7 @@ S.meta.docsSeeded=true;save();
 if(!S.meta.onboarded)setTimeout(openIntro,500);
 else if(!S.meta.toured)setTimeout(startTour,500);
 else maybeWarnPop();
+setTimeout(checkUpdate,3000);
 })();
 </script>
 
