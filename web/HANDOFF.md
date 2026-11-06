@@ -85,9 +85,14 @@ Wenn Hugo die Originalwerkzeuge weiterentwickelt, müssen die Änderungen hier n
 
 ## Fachliche Regeln (mit Quelle)
 
+- **Wochenziel (intern):** `wochenZiel()` = RAV-Monatsvorgabe × 1,2 ÷ 4,33, gerundet. Rund 20 % Reserve über der Vorgabe; wegen ganzer Zahlen je nach Vorgabe etwa +8 % bis +30 %. **Wird in der App bewusst nirgends erklärt** (Entscheid Kursleitung). Teilnehmende sehen nur „Ihr Wochenziel: 3 Bewerbungen“ und tragen nur die RAV-Vorgabe ein.
+- **RAV-Monat:** Vom 1. bis 5. zählen Anzeige, Widget und Warnung den Vormonat (`ravMonth()`), weil dann dessen Formular fällig ist.
+- **Grundunterlagen:** Lebenslauf, Arbeitszeugnisse, Diplome. Das Bewerbungsschreiben zählt nicht dazu (entsteht pro Bewerbung). Rote Punkte auf den Tabs nur bei Fristen und Fälligem.
+- **Aufbewahrung:** Alles bleibt nur auf dem Gerät. Deinstallieren löscht alle Daten (APK mit `allowBackup="false"`, keine Google-Sicherung). Hinweis in den Einstellungen unter „Daten“. Keine automatische Löschung innerhalb der App.
+
 - Arbeitsbemühungen: Abgabe ab dem 22., spätestens 5. des Folgemonats (Kanton Bern, Angabe Hugo; Formular 716.007 bestätigt den 5.).
 - Krankheit (Merkblatt Krankheit, AVA Kanton Bern): sofort beim RAV melden, Arztzeugnis ab dem 4. Tag an die Kasse, Krankentage in die AvP, höchstens 30 Kalendertage am Stück, höchstens 44 Taggelder pro Rahmenfrist. Der Zähler in der App ist eine Schätzung (Werktage Mo–Fr, ohne Feiertage).
-- Dossier-Check: Checkliste für Bewerbungsdossiers, beco Berner Wirtschaft. In der App zugeklappt als eine Zeile mit Fortschritt; die Dokumentvorschau darüber ist dafür grösser.
+- Dossier-Check: Kurzfassung (9 Punkte, 4 davon prüft die App) der Checkliste für Bewerbungsdossiers, beco Berner Wirtschaft. In der App zugeklappt als eine Zeile mit Fortschritt; die Dokumentvorschau darüber ist dafür grösser.
 - AHV-Nummer wird nie gespeichert, nur beim Erstellen des Formulars abgefragt.
 
 ## Konventionen

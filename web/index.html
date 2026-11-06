@@ -1234,11 +1234,9 @@ html.editing .tab:nth-child(2n){animation-delay:-.17s}
       </div>
 
       <div class="card glass" data-panel="plan" hidden>
-        <div class="card-head"><h2>Meine Wochenziele</h2></div>
-        <div class="grid2">
-          <div class="field"><label for="ziel-woche">Bewerbungen pro Woche</label><input class="input" type="number" min="0" max="50" id="ziel-woche"></div>
-          <div class="field"><label for="ziel-monat">RAV-Vorgabe pro Monat</label><input class="input" type="number" min="0" max="50" id="ziel-monat"></div>
-        </div>
+        <div class="card-head"><h2>Meine Ziele</h2></div>
+        <div class="field"><label for="ziel-monat">Bewerbungen pro Monat (RAV-Vorgabe)</label><input class="input" type="number" min="0" max="50" id="ziel-monat"></div>
+        <p class="muted" id="ziel-woche-info"></p>
       </div>
 
       <!-- Strategie -->
@@ -1935,7 +1933,7 @@ const STATUS=[
   {id:'absage',label:'Absage'},{id:'zusage',label:'Zusage'}];
 const KANAL=['Inserat','Initiativ','Netzwerk','Telefonisch','Persönlich vorbeigegangen'];
 const KAT=[
-  {id:'brief',l:'Bewerbungsschreiben',core:true},{id:'cv',l:'Lebenslauf',core:true},
+  {id:'brief',l:'Bewerbungsschreiben'},{id:'cv',l:'Lebenslauf',core:true},
   {id:'zeugnis',l:'Arbeitszeugnisse',core:true},{id:'diplom',l:'Diplome & Zertifikate',core:true},
   {id:'referenz',l:'Referenzen'},{id:'foto',l:'Bewerbungsfoto'},{id:'inserat',l:'Inserate'},{id:'andere',l:'Weitere'}];
 const VERSIONED=['brief','cv'];
@@ -2167,15 +2165,21 @@ $$('#v-strategie > .seg button').forEach(b=>b.onclick=()=>{sub=b.dataset.sub;
   $$('[data-panel]').forEach(p=>p.hidden=p.dataset.panel!==sub)});
 $$('#filter button').forEach(b=>b.onclick=()=>{filter=b.dataset.f;$$('#filter button').forEach(x=>x.setAttribute('aria-selected',x===b));renderTracker()});
 
+/* Wochenziel: intern RAV-Monatsvorgabe plus rund 20 % Reserve, auf Wochen verteilt (4,33 Wochen pro Monat).
+   Die Reserve wird in der App bewusst nirgends erwähnt (Entscheid Kursleitung). */
+function wochenZiel(){return Math.max(1,Math.round((S.ziele.monat||0)*1.2/4.33))}
+/* Der Monat, für den gerade Arbeitsbemühungen zählen: vom 1. bis 5. noch der Vormonat (Abgabe bis am 5.) */
+function ravMonth(){const d=today.getDate(),k=d<=5?shiftM(ym(today),-1):ym(today),[y,m]=k.split('-').map(Number);
+  return{key:k,name:MONATE[m-1],count:S.bewerbungen.filter(b=>b.datum&&b.datum.slice(0,7)===k&&b.status!=='arbeit').length,prev:d<=5}}
 function monthCount(){const m=iso(today).slice(0,7);return S.bewerbungen.filter(b=>b.datum&&b.datum.slice(0,7)===m&&b.status!=='arbeit').length}
 function weekCount(){const d=new Date(today);d.setDate(d.getDate()-((d.getDay()+6)%7));const start=iso(d);
   return S.bewerbungen.filter(b=>b.datum>=start&&b.status!=='arbeit').length}
 
 function renderStats(){
   const w=weekCount(), m=monthCount(), g=S.bewerbungen.filter(b=>b.status==='gespraech').length;
-  const pw=Math.min(100,Math.round(w/Math.max(1,S.ziele.woche)*100)), pm=Math.min(100,Math.round(m/Math.max(1,S.ziele.monat)*100));
+  const wz=wochenZiel(),pw=Math.min(100,Math.round(w/Math.max(1,wz)*100)), pm=Math.min(100,Math.round(m/Math.max(1,S.ziele.monat)*100));
   $('#stats').innerHTML=`
-    <div class="stat glass"><b>${w}<span style="font-size:15px;color:var(--fg3)"> / ${S.ziele.woche}</span></b><span>diese Woche</span><div class="meter"><div style="width:${pw}%"></div></div></div>
+    <div class="stat glass"><b>${w}<span style="font-size:15px;color:var(--fg3)"> / ${wz}</span></b><span>diese Woche</span><div class="meter"><div style="width:${pw}%"></div></div></div>
     <div class="stat glass"><b>${m}<span style="font-size:15px;color:var(--fg3)"> / ${S.ziele.monat}</span></b><span>diesen Monat fürs RAV</span><div class="meter"><div style="width:${pm}%"></div></div></div>
     <div class="stat glass"><b>${g}</b><span>Gespräche offen</span></div>`;
 }
@@ -2276,12 +2280,11 @@ function renderPlan(){
   $('#plan-count').textContent=`${S.aufgaben.filter(a=>!a.done).length} offen`;
   $$('#task-list .check').forEach(c=>c.onchange=()=>{S.aufgaben.find(a=>a.id===c.dataset.id).done=c.checked;save();renderPlan()});
   $$('#task-list [data-del]').forEach(b=>b.onclick=()=>{S.aufgaben=S.aufgaben.filter(a=>a.id!==b.dataset.del);save();renderPlan()});
-  $('#ziel-woche').value=S.ziele.woche;$('#ziel-monat').value=S.ziele.monat;
+  $('#ziel-monat').value=S.ziele.monat;$('#ziel-woche-info').textContent=`Ihr Wochenziel: ${wochenZiel()} Bewerbungen.`;
 }
 $('#task-form').onsubmit=e=>{e.preventDefault();const t=$('#task-text').value.trim();if(!t)return;
   S.aufgaben.push({id:uid(),text:t,due:$('#task-due').value,done:false});$('#task-text').value='';$('#task-due').value='';save();renderPlan()};
-$('#ziel-woche').oninput=e=>{S.ziele.woche=+e.target.value||0;save();renderStats()};
-$('#ziel-monat').oninput=e=>{S.ziele.monat=+e.target.value||0;save();renderStats()};
+$('#ziel-monat').oninput=e=>{S.ziele.monat=+e.target.value||0;save();renderStats();$('#ziel-woche-info').textContent=`Ihr Wochenziel: ${wochenZiel()} Bewerbungen.`};
 
 /* ================= Strategie ================= */
 function renderStrategie(){
@@ -2434,8 +2437,8 @@ function renderRav(){
   else if(d<=5){title='Abgabefenster ist offen';txt=`Arbeitsbemühungen ${MONATE[(m+11)%12]} abgeben bis 5. ${MONATE[m]}, 00:00 Uhr`}
   else{title=`Abgabe ab 22. ${MONATE[m]}`;txt=`Noch ${22-d} Tage, bis das Abgabefenster öffnet`}
   $('#rav-window').innerHTML=`<div class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div class="txt"><b>${title}</b><span>${txt}</span></div>`;
-  const c=monthCount(), z=S.ziele.monat, p=Math.min(100,Math.round(c/Math.max(1,z)*100));
-  $('#rav-month').textContent=MONATE[m];
+  const R=ravMonth(),c=R.count, z=S.ziele.monat, p=Math.min(100,Math.round(c/Math.max(1,z)*100));
+  $('#rav-month').textContent=R.name;
   $('#rav-meter').innerHTML=`<div style="display:flex;align-items:baseline;gap:8px"><b style="font-family:var(--f-display);font-size:40px;letter-spacing:-.02em;font-variant-numeric:tabular-nums">${c}</b><span class="muted">von ${z} gemäss Vorgabe</span></div><div class="meter" style="height:9px"><div style="width:${p}%;background:${c>=z?'var(--ok)':'var(--accent)'}"></div></div>`;
   $$('[data-rav]').forEach(el=>{el.value=S.rav[el.dataset.rav]||''});
 }
@@ -2486,7 +2489,7 @@ function renderAlk(){
   if(m.zv)slots.push({key:'zv',title:'Bescheinigung über Zwischenverdienst',sub:'Füllt Ihr Arbeitgeber aus (Formular 716.105). Mit Arbeitsvertrag, falls vorhanden.',
     docs:alkDocs(d=>d.slot==='zv'&&d.monat===curM),done:!!m.eingereicht.zv,meta:{slot:'zv',monat:curM,name:'Zwischenverdienst '+mLabel(curM)}});
   S.alk.faelle.filter(f=>fallImMonat(f,curM)&&fallTage(f)>=4).forEach(f=>slots.push({key:'arzt:'+f.id,
-    title:`Arztzeugnis ${fmt(f.von)} bis ${f.bis?fmt(f.bis):'heute'}`,sub:`${fallTage(f)} Krankheitstage. Nötig ab dem 4. Tag.`,
+    title:`Arztzeugnis ${fmt(f.von)} bis ${f.bis?fmt(f.bis):'heute'}`,sub:`${fallTage(f)} Kalendertage krank. Nötig ab dem 4. Kalendertag.`,
     docs:zeugnisDocs(f),done:!!f.zeugnisEingereicht,meta:{slot:'arzt',fallId:f.id,monat:curM,name:'Arztzeugnis '+fmt(f.von)},
     extra:f.beispiel?'<span class="tag example">Beispiel</span>':''}));
   $('#m-slots').innerHTML=slots.map(slotRow).join('');
@@ -2944,21 +2947,15 @@ async function bindPdf(){
   $('#bp-new').onclick=()=>{Object.assign(S.brief,{bewerbungId:undefined,fiName:'',fiKontakt:'',fiStrasse:'',fiPlzOrt:'',ort:'',betreff:'',text:'',datum:iso(today)});lastBrief=null;save();goStep(1)}}
 
 /* ================= Dossier-Check (beco Berner Wirtschaft) ================= */
+/* Kurzfassung der Checkliste für Bewerbungsdossiers von beco Berner Wirtschaft: was die App prüfen kann, prüft sie selbst */
+const hasDoc=k=>S.docs.some(d=>!d.bereich&&d.kat===k);
 const CHECK=[
-  {t:'Allgemein',i:[['g1','Auf das jeweilige Stellenprofil ausgerichtet'],['g2','Vollständig',()=>KAT.filter(k=>k.core).every(k=>S.docs.some(d=>!d.bereich&&d.kat===k.id))],
-    ['g3','Brief und Lebenslauf ergänzen sich, ohne sich zu wiederholen'],['g4','Stärken und Kompetenzen sind hervorgehoben'],['g5','Motivation und Ziel sind klar ersichtlich'],
-    ['g6','Brief und Lebenslauf sind optisch aufeinander abgestimmt'],['g7','Lässt sich gut kopieren und einscannen, wirkt auch schwarz-weiss professionell'],
-    ['g8','Kurze, verständliche Sätze mit den Schlüsselbegriffen aus dem Inserat'],['g9','Fachvokabular des Berufsfelds verwendet'],
-    ['g10','Keine Negativformulierungen, Floskeln, autoritären oder jovialen Formulierungen'],['g11','Grammatik und Rechtschreibung korrekt']]},
-  {t:'Lebenslauf',i:[['c1','Name, Adresse, Telefon und angemessene E-Mail-Adresse vollständig'],['c2','Nationalität, wo nötig Arbeits- oder Aufenthaltsbewilligung'],
-    ['c3','Bei minderjährigen Kindern: Anzahl, bei kleinen Kindern Hinweis auf organisierte Betreuung'],['c4','Stationen nach klaren Prinzipien und aktuellen Marktanforderungen gegliedert'],
-    ['c5','Längere Lücken sind erklärt'],['c6','Foto aktuell und passend zur Funktion oder Branche'],['c7','Hobbys nur, wenn sie zur Stelle passen'],
-    ['c8','Keine Referenzen, ausser das Inserat verlangt sie'],['c9','Layout passt zur Stelle und zum Brief']]},
-  {t:'Motivationsschreiben',i:[['m1','Der Mehrwert für das Unternehmen ist erkennbar'],['m2','Bezug zur Stelle oder zum Unternehmen und seinen Herausforderungen hergestellt'],
-    ['m3','Die Motivation ist spürbar'],['m4','Adressat und Anschrift korrekt'],['m5','Aufbau nach aktuellen Standards der Geschäftskorrespondenz'],
-    ['m6','Höchstens eine Seite']]},
-  {t:'Online-Bewerbung',i:[['o1','Dokumente als PDF',()=>{const D=S.docs.filter(d=>!d.bereich&&['brief','cv','zeugnis','diplom'].includes(d.kat)&&d.typ!=='text');return D.length>0&&D.every(d=>d.typ==='application/pdf')}],
-    ['o2','Dateien eindeutig benannt (Person und Inhalt)'],['o3','Jede Datei höchstens 5 MB',()=>{const D=S.docs.filter(d=>!d.bereich&&d.size);return D.length>0&&D.every(d=>d.size<=5*1048576)}]]}];
+  {t:'Prüft die App',i:[['a1','Lebenslauf abgelegt',()=>hasDoc('cv')],['a2','Arbeitszeugnisse abgelegt',()=>hasDoc('zeugnis')],
+    ['a3','Diplome und Zertifikate abgelegt',()=>hasDoc('diplom')],
+    ['a4','Name, Adresse, Telefon und E-Mail vollständig',()=>['meName','meStrasse','mePlzOrt','meTel','meMail'].every(k=>(S.profil[k]||'').trim())]]},
+  {t:'Vor dem Senden',i:[['m1','Der Brief ist auf diese Stelle und diese Firma zugeschnitten'],['m2','Der Lebenslauf ist aktuell, Lücken sind erklärt'],
+    ['m3','Das Foto ist aktuell und passt zur Branche'],['m4','Jemand hat Rechtschreibung und Grammatik gegengelesen'],
+    ['m5','Seriöse E-Mail-Adresse, alles als PDF mit klarem Dateinamen']]}];
 let chkOpen=false;
 function renderCheck(){S.check=S.check||{};let done=0,all=0;
   const secs=
@@ -2970,7 +2967,7 @@ function renderCheck(){S.check=S.check||{};let done=0,all=0;
   $('#dos-check').innerHTML=`<details class="chk" ${chkOpen?'open':''}><summary>
       <span class="chk-ic" aria-hidden="true">✓</span><span class="chk-t"><b>Dossier-Check</b><small>${done} von ${all} Punkten erfüllt</small></span>
       <span class="chk-meter" aria-hidden="true"><i style="width:${pct}%"></i></span><span class="chk-chev" aria-hidden="true">›</span></summary>
-    <p class="muted">Nach der Checkliste für Bewerbungsdossiers von beco Berner Wirtschaft. Grün markierte Punkte prüft die App selbst.</p>${secs}</details>`;
+    <p class="muted">Kurzfassung der Checkliste für Bewerbungsdossiers von beco Berner Wirtschaft. Die ersten Punkte prüft die App selbst.</p>${secs}</details>`;
   const top=$('#dos-check > details');top.ontoggle=()=>{chkOpen=top.open};
   $$('#dos-check [data-ck]').forEach(c=>c.onchange=()=>{S.check[c.dataset.ck]=c.checked;save();const op=[...$$('#dos-check .chk-sec')].map(d=>d.open);renderCheck();$$('#dos-check .chk-sec').forEach((d,i)=>d.open=op[i])})}
 
@@ -4595,7 +4592,7 @@ function nextSteps(){const t=iso(today),L=[];
   S.netz.contacts.filter(c=>c.act&&c.step&&!S.aufgaben.some(a=>a.kontaktId===c.id)).forEach(c=>L.push({txt:c.step,ctx:c.name,src:'Netzwerk',go:'netzwerk:aktiv',ex:c.beispiel}));
   return L.sort((a,b)=>(a.due||'9999').localeCompare(b.due||'9999'))}
 function warnings(){const W=[],d=today.getDate(),m=today.getMonth(),t=iso(today);
-  const c=monthCount(),z=S.ziele.monat;
+  const c=ravMonth().count,z=S.ziele.monat;
   if((d>=22||d<=5)&&c<z){const mon=d<=5?MONATE[(m+11)%12]:MONATE[m];W.push({lvl:'warn',t:`Arbeitsbemühungen ${mon}: ${d<=5?'Abgabe bis am 5.':'Abgabefenster ist offen'}`,s:d<=5?'Prüfen Sie, ob alles erfasst ist.':`${c} von ${z} erfasst.`,go:'rav:rav'})}
   const prev=shiftM(ym(today),-1),pm=S.alk.monate[prev];
   if(d<=10&&!(pm&&pm.eingereicht&&pm.eingereicht.avp))W.push({lvl:'warn',t:`Monatsformular für ${mLabel(prev)}`,s:'Die Angaben der versicherten Person an die Kasse senden.',go:'rav:alk'});
@@ -4699,9 +4696,9 @@ const WIDGETS={
   zahlen:{t:'Bewerbungen',d:'Diese Woche, diesen Monat, Gespräche',sizes:[[2,2],[4,2]],def:[2,2],go:'strategie:tracker',fn:wZahlen},
   fokus:{t:'Mein Fokus',d:'Was in Ihrer Kurswoche wichtig ist',sizes:[[4,3],[4,4]],def:[4,4],fn:wFokus},
   termin:{t:'Personalberatung',d:'Nächstes Gespräch beim RAV',sizes:[[2,2],[4,2]],def:[2,2],go:'rav:rav',fn:wTermin},
-  firmen:{t:'Zielfirmen',d:'Wie weit Ihre Firmen sind',sizes:[[2,2],[4,2],[4,3]],def:[2,2],go:'netzwerk:firmen',fn:wFirmen},
+  firmen:{t:'Zielfirmen',d:'Recherchiert und kontaktiert',sizes:[[2,2],[4,2],[4,3]],def:[2,2],go:'netzwerk:firmen',fn:wFirmen},
   top3:{t:'Meine Argumente',d:'Ihre drei stärksten Kompetenzen',sizes:[[4,2],[4,3],[4,4]],def:[4,3],go:'kompetenzen',fn:wTop3},
-  netz:{t:'Netzwerk',d:'Aktivierte Kontakte und nächster Schritt',sizes:[[2,2],[4,2]],def:[2,2],go:'netzwerk:aktiv',fn:wNetz},
+  netz:{t:'Netzwerk',d:'Ihr nächster Kontakt',sizes:[[2,2],[4,2]],def:[2,2],go:'netzwerk:aktiv',fn:wNetz},
   dossier:{t:'Dossier',d:'Welche Unterlagen noch fehlen',sizes:[[2,2],[4,2]],def:[2,2],go:'dossier:unterlagen',fn:wDossier},
   alk:{t:'Arbeitslosenkasse',d:'Monatsformular für die Kasse',sizes:[[2,2],[4,2]],def:[2,2],go:'rav:alk',fn:wAlk},
   krank:{t:'Krankheit',d:'Tage und Fristen bei Krankheit',sizes:[[2,2],[4,2]],def:[2,2],go:'rav:krank',fn:wKrank},
@@ -4718,13 +4715,13 @@ function wNext(x){const N=nextSteps(),t=iso(today);
     ${s.task?`<input type="checkbox" class="check" data-ht="${s.task}" aria-label="Erledigt: ${esc(s.txt)}">`:''}
     <div data-go="${s.go}" role="button" tabindex="0"><div class="t">${esc(s.txt)}</div><div class="m" style="${late?'color:var(--bad)':''}">${s.src}${s.ctx?' · '+esc(s.ctx):''}${s.due?' · '+(late?'überfällig ':'')+fmt(s.due):''}${s.ex?' · Beispiel':''}</div></div></div>`}).join('')
     :'<div class="w-sub">Keine offenen Schritte. Planen Sie im Aktionsplan, was als Nächstes kommt.</div>'}`}
-function wRav(x){const c=monthCount(),z=S.ziele.monat,p=Math.min(100,Math.round(c/Math.max(1,z)*100)),d=today.getDate();
-  const when=d>=22?'Abgabe bis am 5.':d<=5?'Vormonat bis am 5.':`Abgabe ab dem 22.`;
-  return `${wHead('RAV '+MONATE[today.getMonth()],1)}<div class="w-big">${c}<small> / ${z}</small></div>
+function wRav(x){const R=ravMonth(),c=R.count,z=S.ziele.monat,p=Math.min(100,Math.round(c/Math.max(1,z)*100)),d=today.getDate();
+  const when=d>=22||R.prev?'Abgabe bis am 5.':`Abgabe ab dem 22.`;
+  return `${wHead('RAV '+R.name,1)}<div class="w-big">${c}<small> / ${z}</small></div>
     <div class="meter" style="height:8px"><div style="width:${p}%;background:${c>=z?'var(--ok)':'var(--accent)'}"></div></div>
     <div class="w-sub">${x.w<4?when:`${c>=z?'Vorgabe erreicht. ':''}Arbeitsbemühungen. ${when}`}</div>`}
 function wZahlen(x){const w=weekCount(),m=monthCount(),g=S.bewerbungen.filter(b=>b.status==='gespraech').length;
-  if(x.w<4)return `${wHead('Bewerbungen',1)}<div class="w-big">${w}<small> / ${S.ziele.woche}</small></div><div class="w-sub">diese Woche · ${m} im Monat${g?` · ${g} Gespräch${g>1?'e':''}`:''}</div>`;
+  if(x.w<4)return `${wHead('Bewerbungen',1)}<div class="w-big">${w}<small> / ${wochenZiel()}</small></div><div class="w-sub">diese Woche · ${m} im Monat${g?` · ${g} Gespräch${g>1?'e':''}`:''}</div>`;
   return `${wHead('Bewerbungen',1)}<div class="w-cols"><div><b>${w}</b><span>diese Woche</span></div><div><b>${m}</b><span>diesen Monat</span></div><div><b>${g}</b><span>Gespräche</span></div></div>`}
 function wFokus(x){const wk=S.meta.woche??1,W2=WOCHEN.find(o=>o.id===wk)||WOCHEN[0],sel=isSelbst();
   return `${wHead(sel?'Meine Stellensuche':'Mein Fokus')}${sel?'':`<div class="seg" style="background:var(--hair)" role="tablist" aria-label="Kurswoche">${WOCHEN.filter(o=>o.id).map(o=>`<button data-wk="${o.id}" aria-selected="${o.id===wk}">W${o.id}</button>`).join('')}</div>`}
@@ -4734,15 +4731,17 @@ function wFokus(x){const wk=S.meta.woche??1,W2=WOCHEN.find(o=>o.id===wk)||WOCHEN
 function wTermin(x){const t=S.rav.termin,d=t?new Date(t):null;
   return `${wHead('Personalberatung',1)}${d&&!isNaN(d)?`<div class="w-big" style="font-size:${x.w<4?24:30}px">${d.toLocaleDateString('de-CH',{weekday:'short',day:'numeric',month:'short'})}</div><div class="w-sub">${t.length>10?d.toLocaleTimeString('de-CH',{hour:'2-digit',minute:'2-digit'})+' Uhr':''}${S.rav.name?' · '+esc(S.rav.name):''}</div>`
     :'<div class="w-sub">Noch kein Termin eingetragen. Tippen, um ihn festzuhalten.</div>'}`}
-function wFirmen(x){const F=S.fr.firmen||[],cnt=FR_ST.map((_,i)=>F.filter(f=>(f.status||0)===i).length),weiter=cnt.slice(2).reduce((a,b)=>a+b,0);
-  if(x.w<4)return `${wHead('Zielfirmen',1)}<div class="w-big">${F.length}</div><div class="w-sub">${F.length?`${weiter} kontaktiert oder weiter`:'Noch keine Firmen recherchiert'}</div>`;
-  const rows=FR_ST.map((l,i)=>[l,cnt[i]]).filter(r=>x.h>2||r[1]);
-  return `${wHead('Zielfirmen · '+F.length,1)}<div class="w-chips">${rows.length?rows.map(([l,n])=>`<span class="tag" style="${n?'':'opacity:.5'}">${l} <b>${n}</b></span>`).join(''):'<span class="w-sub">Noch keine Firmen recherchiert.</span>'}</div>`}
+function wFirmen(x){const F=S.fr.firmen||[],kont=F.filter(f=>(f.status||0)>=2).length,rech=F.length-kont;
+  if(!F.length)return `${wHead('Zielfirmen',1)}<div class="w-sub">Noch keine Firmen recherchiert. Tippen, um anzufangen.</div>`;
+  if(x.w<4)return `${wHead('Zielfirmen',1)}<div class="w-big">${kont}<small> / ${F.length}</small></div><div class="w-sub">kontaktiert</div>`;
+  return `${wHead('Zielfirmen',1)}<div class="w-cols" style="grid-template-columns:1fr 1fr"><div><b>${rech}</b><span>recherchiert</span></div><div><b>${kont}</b><span>kontaktiert</span></div></div>`}
 function wTop3(x){const L=S.komp.items.filter(i=>i.star);
   return `${wHead('Meine Argumente',1)}${L.length?L.slice(0,x.h>2?3:2).map(i=>`<div class="w-row"><div><div class="t">★ ${esc(i.name)}</div>${x.h>2?`<div class="m">${i.beleg?esc(i.beleg):'Beleg fehlt'}</div>`:''}</div></div>`).join('')
     :'<div class="w-sub">Markieren Sie bis zu drei Kompetenzen mit dem Stern.</div>'}`}
-function wNetz(x){const C=S.netz.contacts,A=C.filter(c=>c.act),n=A.find(c=>c.step);
-  return `${wHead('Netzwerk',1)}<div class="w-big">${A.length}<small> / ${C.length}</small></div><div class="w-sub">${x.w<4?'aktiviert':n?`Nächster Schritt: ${esc(n.step)} (${esc(n.name)})`:'Kontakte aktiviert. Wen fragen Sie als Nächstes?'}</div>`}
+function wNetz(x){const C=S.netz.contacts,n=C.find(c=>c.act&&c.step)||C.find(c=>c.step);
+  if(!C.length)return `${wHead('Netzwerk',1)}<div class="w-sub">Noch keine Kontakte. Wer könnte von einer Stelle wissen?</div>`;
+  return `${wHead('Netzwerk',1)}${n?`<div class="w-sub">Nächster Kontakt</div><div class="w-row"><div><div class="t">${esc(n.step)}</div><div class="m">${esc(n.name)}</div></div></div>`
+    :`<div class="w-big">${C.length}<small> Kontakte</small></div><div class="w-sub">Wen fragen Sie als Nächstes?</div>`}`}
 function wDossier(x){const core=KAT.filter(k=>k.core),miss=core.filter(k=>!S.docs.some(d=>!d.bereich&&d.kat===k.id));
   return `${wHead('Dossier',1)}<div class="w-big">${core.length-miss.length}<small> / ${core.length}</small></div>
     ${miss.length?(x.w<4?`<div class="w-sub">Fehlt: ${esc(miss[0].l)}${miss.length>1?' …':''}</div>`:`<div class="w-chips">${miss.map(k=>`<span class="tag">${esc(k.l)}</span>`).join('')}</div>`):'<div class="w-sub">Grundunterlagen vollständig</div>'}`}
@@ -4753,7 +4752,7 @@ function wAlk(x){const k=ym(today),m=S.alk.monate[k]||{eingereicht:{}},p=S.alk.m
 function wKrank(x){const f=S.alk.faelle.find(f=>!f.bis);
   if(!f)return `${wHead('Krankheit')}<div class="w-sub">Kein offener Krankheitsfall.</div><div class="w-chips" style="margin-top:auto"><button class="tag" data-link="krank" style="cursor:pointer;background:var(--glass)">Krank melden ›</button></div>`;
   const n=fallTage(f),z=zeugnisDocs(f).length;
-  return `${wHead('Krankheit',1)}<div class="w-big">${n}<small> Tag${n>1?'e':''}</small></div><div class="w-sub">${n>=4&&!z?'<b style="color:var(--bad)">Arztzeugnis fehlt</b>':n<4?`Zeugnis ab Tag 4`:'Zeugnis abgelegt'}${x.w>=4?` · seit ${fmt(f.von)}, höchstens 30 Tage am Stück`:''}</div>`}
+  return `${wHead('Krankheit',1)}<div class="w-big">${n}<small> Kalendertag${n>1?'e':''}</small></div><div class="w-sub">${n>=4&&!z?'<b style="color:var(--bad)">Arztzeugnis fehlt</b>':n<4?`Zeugnis ab Tag 4`:'Zeugnis abgelegt'}${x.w>=4?` · seit ${fmt(f.von)}, höchstens 30 Tage am Stück`:''}</div>`}
 function wLink(x){const L=LINKS.find(l=>l[0]===x.cfg)||LINKS[0];
   return x.w<2?`<b>${L[2]}</b>`:`<b>${L[1]}</b>${x.h>1?'<span>Tippen zum Öffnen</span>':''}`}
 
@@ -4920,7 +4919,6 @@ tabbar.addEventListener('pointerdown',e=>{if(!editing||e.button>0)return;const e
 function renderBadges(){const t=iso(today),d=today.getDate();
   const dot={
     strategie:S.aufgaben.some(a=>!a.done&&a.due&&a.due<t),
-    dossier:!KAT.filter(k=>k.core).every(k=>S.docs.some(x=>!x.bereich&&x.kat===k.id)),
     netzwerk:(S.fr.firmen||[]).some(f=>f.next&&f.next.datum&&f.next.datum<t&&(f.status||0)<5),
     rav:warnings().some(w=>w.go.startsWith('rav'))};
   dot.kurs=dot.strategie;
@@ -5017,6 +5015,7 @@ function openSettings(){
       ${hasExamples()?setRow('set-ex','Beispiele entfernen','Alle mit „Beispiel“ markierten Einträge löschen.'):''}
       <button class="row row-click" id="set-wipe" style="background:none;border:none;border-top:1px solid var(--hair);text-align:left;width:100%;cursor:pointer"><div class="row-main"><div class="row-title" style="color:var(--bad)">Alle Daten auf diesem Gerät löschen</div><div class="row-sub" id="set-wipe-sub">Bewerbungen, Dokumente, Netzwerk, alles. Machen Sie vorher eine Sicherung.</div></div></button>
     </div>
+    <p class="muted">Ihre Daten liegen nur auf diesem Gerät. Wenn Sie die App deinstallieren, werden alle Daten gelöscht. Sichern Sie vorher.</p>
     ${setHead('Hilfe')}
     <div class="list">
       ${setRow('set-share','App weitergeben','QR-Code für iPhone oder Android')}
@@ -5139,8 +5138,7 @@ const ONB=[
     <div class="grid2">${oFld('rav.name','Ihre Personalberatung','Der Name Ihrer Beraterin oder Ihres Beraters beim RAV. Steht in der Einladung zum Erstgespräch.','','z.B. Frau Meier')}
       ${oFld('rav.tel','Telefon RAV','Direktnummer Ihrer Personalberatung, falls Sie sie haben.','type="tel"')}</div>
     ${oFld('rav.termin','Nächstes Beratungsgespräch','Das Datum steht in Ihrer Einladung oder in Job-Room. Die App zeigt es auf der Startseite.','type="datetime-local"')}
-    <div class="grid2">${oFld('ziele.monat','Bewerbungen pro Monat (RAV-Vorgabe)','So viele Arbeitsbemühungen verlangt Ihr RAV pro Monat. Meist sind es 8 bis 12. Fragen Sie im Zweifel Ihre Personalberatung.','type="number" min="0" max="50" inputmode="numeric"')}
-      ${oFld('ziele.woche','Mein Ziel pro Woche','Ihr eigenes Wochenziel. Ein Viertel der Monatsvorgabe ist ein guter Anfang.','type="number" min="0" max="50" inputmode="numeric"')}</div>
+    <div>${oFld('ziele.monat','Bewerbungen pro Monat (RAV-Vorgabe)','So viele Arbeitsbemühungen verlangt Ihr RAV pro Monat. Meist sind es 8 bis 12. Fragen Sie im Zweifel Ihre Personalberatung.','type="number" min="0" max="50" inputmode="numeric"')}</div>
     <div class="grid2">${oFld('alk.kasse','Arbeitslosenkasse','Die Kasse, die Ihr Taggeld auszahlt, zum Beispiel die Arbeitslosenkasse des Kantons Bern, Unia oder Syna.','','z.B. Arbeitslosenkasse Kanton Bern')}
       ${oFld('alk.tel','Telefon Kasse','Steht auf jedem Brief der Kasse.','type="tel"')}</div>
     ${oFld('alk.rahmenfrist','Beginn Ihrer Rahmenfrist','Steht auf der Verfügung der Kasse. Ab diesem Tag zählt die App die Taggelder bei Krankheit.','type="date"')}`,
