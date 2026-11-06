@@ -4841,9 +4841,9 @@ const APP_THEMES=[
   {id:'csp',l:'Orange',d:'Wie der Sonnenuntergang hinter dem Chasseral',
    light:{accent:'#e0821a',bg:'#f3ede6',blobs:['#F79C31','#f5c99a','#9fc9c4','#e8a07a']},
    dark:{accent:'#F79C31',bg:'#15120f',blobs:['#a85d10','#5a3a1c','#1f4d49','#6b3420']}},
-  {id:'see',l:'Seeblau',d:'Ruhig wie der Bielersee',
-   light:{accent:'#1f6fb2',bg:'#eaf0f5',blobs:['#4da3e8','#b9d8f2','#9fd6cf','#8fb3e0']},
-   dark:{accent:'#5aaeef',bg:'#0f1419',blobs:['#164a7a','#1d3a55','#1f4d49','#2a3f6b']}},
+  {id:'jura',l:'Südhang',d:'Sonnig wie die Reben auf dem Jurakalk',
+   light:{accent:'#5f7a1f',bg:'#f3efe4',blobs:['#d8b866','#efe6cf','#a9c06a','#e2cf9e']},
+   dark:{accent:'#b3cc5c',bg:'#14130e',blobs:['#5c4a1c','#3b3622','#3e4f1f','#4f4326']}},
   {id:'joran',l:'Wind',d:'Frisch und kräftig wie der Joran',
    light:{accent:'#0f7f7a',bg:'#e9f1f0',blobs:['#4fc9bd','#c4ece6','#a9bfd9','#8fb3ad']},
    dark:{accent:'#45cfc2',bg:'#0e1515',blobs:['#0f5a55','#1b3b3e','#2b3d57','#24474a']}}];
@@ -4857,7 +4857,7 @@ function customTheme(hex){let L=hex,D=hex;
   while(lum(D)<.28)D=mixHex(D,'#ffffff',.08);
   return{id:'custom',light:{accent:L,bg:mixHex('#f3ede6',hex,.06),blobs:[hex,mixHex(hex,'#ffffff',.6),'#9fc9c4',mixHex(hex,'#e8a07a',.5)]},
     dark:{accent:D,bg:mixHex('#15120f',hex,.06),blobs:[mixHex(hex,'#000000',.45),mixHex(hex,'#000000',.7),'#1f4d49',mixHex(hex,'#000000',.6)]}}}
-function currentTheme(){const c=S.meta.color;if(c&&c.id==='beere')c.id='joran';if(c&&c.id==='custom'&&/^#[0-9a-f]{6}$/i.test(c.hex||''))return customTheme(c.hex);
+function currentTheme(){const c=S.meta.color;if(c&&c.id==='beere')c.id='joran';if(c&&c.id==='see')c.id='jura';if(c&&c.id==='custom'&&/^#[0-9a-f]{6}$/i.test(c.hex||''))return customTheme(c.hex);
   return APP_THEMES.find(t=>t.id===(c&&c.id))||APP_THEMES[0]}
 function themeVars(m,dark){const[r,g,b]=hexRgb3(m.accent);
   return `--accent:${m.accent};--accent-ink:${lum(m.accent)>.45?'#1a1209':'#ffffff'};--accent-soft:rgba(${r},${g},${b},${dark?.22:.16});--bg:${m.bg};--blob1:${m.blobs[0]};--blob2:${m.blobs[1]};--blob3:${m.blobs[2]};--blob4:${m.blobs[3]};`}
