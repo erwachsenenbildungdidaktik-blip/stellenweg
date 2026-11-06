@@ -2308,18 +2308,26 @@ function renderStack(){
   st.innerHTML=html;$('#st-count').textContent=`${stackIdx+1} / ${n}`;
   const top=st.querySelector('[data-i="0"]');bindSwipe(top,L[stackIdx].id);
 }
-function flip(dir){const n=stackDocs().length;if(n<2)return;
+function stackFlip(dir){const n=stackDocs().length;if(n<2)return;
   const top=$('#stack [data-i="0"]');if(top){top.style.transform=`translateX(${dir*-120}%) rotate(${dir*-14}deg)`;top.style.opacity=0}
   setTimeout(()=>{stackIdx+=dir;renderStack()},220)}
-$('#st-prev').onclick=()=>flip(-1);$('#st-next').onclick=()=>flip(1);
+$('#st-prev').onclick=()=>stackFlip(-1);$('#st-next').onclick=()=>stackFlip(1);
+/* Wischen blättert, nur ein ruhiger, kurzer Tipp öffnet die Vorschau.
+   Bricht der Browser die Geste ab (z.B. weil senkrecht gescrollt wird), öffnet sich nichts. */
 function bindSwipe(el,id){
-  let x0=null,dx=0,moved=false;
-  el.onpointerdown=e=>{x0=e.clientX;dx=0;moved=false;el.classList.add('dragging');el.setPointerCapture(e.pointerId)};
-  el.onpointermove=e=>{if(x0===null)return;dx=e.clientX-x0;if(Math.abs(dx)>6)moved=true;el.style.transform=`translateX(${dx}px) rotate(${dx/18}deg)`};
-  const end=()=>{if(x0===null)return;x0=null;el.classList.remove('dragging');
-    if(Math.abs(dx)>80&&stackDocs().length>1){flip(dx<0?1:-1)}else{el.style.transform='';if(!moved)openDoc(id)}};
-  el.onpointerup=end;el.onpointercancel=end;
-  el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openDoc(id)}if(e.key==='ArrowRight')flip(1);if(e.key==='ArrowLeft')flip(-1)};
+  let x0=null,y0=0,t0=0,dx=0,moved=false,lastX=0,lastT=0,v=0;
+  el.onpointerdown=e=>{if(e.button>0)return;x0=lastX=e.clientX;y0=e.clientY;t0=lastT=performance.now();dx=0;v=0;moved=false;el.classList.add('dragging');try{el.setPointerCapture(e.pointerId)}catch(_){}};
+  el.onpointermove=e=>{if(x0===null)return;dx=e.clientX-x0;const dy=e.clientY-y0;
+    if(Math.abs(dx)>8||Math.abs(dy)>8)moved=true;
+    const now=performance.now();v=(e.clientX-lastX)/Math.max(8,now-lastT);lastX=e.clientX;lastT=now;
+    el.style.transform=`translateX(${dx}px) rotate(${dx/18}deg)`};
+  const end=(tap)=>{if(x0===null)return;x0=null;el.classList.remove('dragging');
+    const many=stackDocs().length>1;
+    if(many&&(Math.abs(dx)>60||(Math.abs(dx)>24&&Math.abs(v)>.5))){stackFlip(dx<0?1:-1);return}
+    el.style.transform='';
+    if(tap&&!moved&&performance.now()-t0<450)openDoc(id)};
+  el.onpointerup=()=>end(true);el.onpointercancel=()=>end(false);
+  el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openDoc(id)}if(e.key==='ArrowRight')stackFlip(1);if(e.key==='ArrowLeft')stackFlip(-1)};
 }
 $('#btn-add-doc').onclick=()=>openUpload({kat:katFilter||'cv'});
 
