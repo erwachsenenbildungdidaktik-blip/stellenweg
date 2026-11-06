@@ -995,6 +995,10 @@ html.calm.sheet-open .app{transform:none}
 .chk-sec{border-top:1px solid var(--hair);padding-top:6px}
 .chk-sec>summary{cursor:pointer;font-weight:600;padding:6px 0;display:flex;justify-content:space-between;gap:8px;list-style:none}
 /* Briefkopf-Wahl */
+.sw-custom{position:relative;width:34px;height:34px;border-radius:50%;cursor:pointer;outline-offset:2px;border:1px solid var(--hair);
+  background:conic-gradient(#e0821a,#e5c33b,#3fb37f,#2f8fd1,#8a5bd6,#d9468f,#e0821a)}
+.sw-custom.on{outline:3px solid var(--accent);background:radial-gradient(circle,var(--c) 0 52%,transparent 54%),conic-gradient(#e0821a,#e5c33b,#3fb37f,#2f8fd1,#8a5bd6,#d9468f,#e0821a)}
+.sw-custom input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:none;padding:0}
 .headpick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .headpick button{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:12px;border-radius:18px;border:2px solid var(--hair);background:var(--glass);color:var(--fg);cursor:pointer;text-align:left;transition:scale .5s var(--spring),border-color .2s}
 .headpick button:active{scale:.96;transition:scale .1s ease-out}
@@ -2804,13 +2808,21 @@ function stepAngaben(){return `
   ${nextBtn()}`}
 function headPreview(){const h=$('#bp-head');if(!h)return;const P=S.profil;h.style.background=P.bar?P.barColor:'#fff';h.style.color=P.bar?P.barText:'#000';
   h.querySelector('.hn').textContent=P.meName||'Vorname Name';h.querySelector('.hc').textContent=contactParts(P).join('  ·  ')||'Adresse  ·  Tel.  ·  E-Mail';
-  $$('#bp-sw1 button').forEach(b=>b.style.outline=b.dataset.c===P.barColor?'3px solid var(--accent)':'none');$$('#bp-sw2 button').forEach(b=>b.style.outline=b.dataset.c===P.barText?'3px solid var(--accent)':'none')}
+  $$('#bp-sw1 button').forEach(b=>b.style.outline=b.dataset.c===P.barColor?'3px solid var(--accent)':'none');$$('#bp-sw2 button').forEach(b=>b.style.outline=b.dataset.c===P.barText?'3px solid var(--accent)':'none');
+  /* Farbrad: markiert, wenn die gewählte Farbe keine der Vorlagen ist */
+  [['#bp-sw1','barColor'],['#bp-sw2','barText']].forEach(([box,key])=>{const w=$(box+' .sw-custom');if(!w)return;
+    const own=![...$$(box+' button')].some(b=>b.dataset.c===P[key]);w.classList.toggle('on',own);if(own){w.style.setProperty('--c',P[key]);w.querySelector('input').value=P[key]}})}
 function oldApp(){try{const o=JSON.parse(localStorage.getItem('bewerbung-pdf.v1')||'null');return o&&o.meName?o:null}catch(e){return null}}
 function bindAngaben(){const P=S.profil;
   $('#bp-import')&&($('#bp-import').onclick=()=>{const o=oldApp();['meName','meStrasse','mePlzOrt','meTel','meMail','bar','barColor','barText','sigRaw','sig','sigClean','sigRot'].forEach(k=>{if(o[k]!=null)P[k]=o[k]});save();goStep(0);toast('Übernommen')});
-  const sw=(box,cols,key,pick)=>{$(box).innerHTML=cols.map(c=>`<button type="button" data-c="${c}" aria-label="Farbe ${c}" style="width:34px;height:34px;border-radius:50%;border:1px solid var(--hair);background:${c};cursor:pointer;outline-offset:2px"></button>`).join('');
-    $$(box+' button').forEach(b=>b.onclick=()=>{P[key]=b.dataset.c;pick&&pick(b.dataset.c);save();headPreview()})};
-  sw('#bp-sw1',BAR_COLORS.map(c=>c[0]),'barColor',c=>{P.barText=BAR_COLORS.find(x=>x[0]===c)[1]});sw('#bp-sw2',TEXT_COLORS,'barText');
+  const sw=(box,cols,key,pick,own)=>{$(box).innerHTML=cols.map(c=>`<button type="button" data-c="${c}" aria-label="Farbe ${c}" style="width:34px;height:34px;border-radius:50%;border:1px solid var(--hair);background:${c};cursor:pointer;outline-offset:2px"></button>`).join('')+
+      `<label class="sw-custom" title="Eigene Farbe"><input type="color" value="${/^#[0-9a-f]{6}$/i.test(P[key]||'')?P[key]:'#2f8a5b'}" aria-label="Eigene Farbe wählen"></label>`;
+    $$(box+' button').forEach(b=>b.onclick=()=>{P[key]=b.dataset.c;pick&&pick(b.dataset.c);save();headPreview()});
+    const inp=$(box+' .sw-custom input');inp.oninput=inp.onchange=()=>{P[key]=inp.value;own&&own(inp.value);save();headPreview()}};
+  sw('#bp-sw1',BAR_COLORS.map(c=>c[0]),'barColor',c=>{P.barText=BAR_COLORS.find(x=>x[0]===c)[1]},
+    /* eigene Balkenfarbe: Schrift automatisch hell oder dunkel, damit sie lesbar bleibt */
+    c=>{P.barText=lum(c)>.45?'#1a1a1a':'#ffffff'});
+  sw('#bp-sw2',TEXT_COLORS,'barText');
   $$('.headpick [data-bar]').forEach(b=>b.onclick=()=>{P.bar=b.dataset.bar==='1';$('#bp-baropts').hidden=!P.bar;
     $$('.headpick [data-bar]').forEach(x=>x.setAttribute('aria-checked',x===b));save();headPreview()});headPreview()}
 function stepFirma(){const bw=S.brief.bewerbungId&&S.bewerbungen.find(b=>b.id===S.brief.bewerbungId);return `
@@ -2843,7 +2855,7 @@ function bindText(){const ta=$('#bp-text');phWarn();
   $('#bp-bold').onclick=()=>{const s=ta.selectionStart,e=ta.selectionEnd;if(s===e){toast('Zuerst ein Wort markieren');return}ta.setRangeText('**'+ta.value.slice(s,e)+'**',s,e,'end');S.brief.text=ta.value;save();ta.focus()};
   $('#bp-li').onclick=()=>{const s=ta.selectionStart,ls=ta.value.lastIndexOf('\n',s-1)+1;if(ta.value.startsWith('• ',ls))ta.setRangeText('',ls,ls+2,'end');else ta.setRangeText('• ',ls,ls,'end');S.brief.text=ta.value;save();ta.focus()}}
 function stepSig(){const P=S.profil;return `
-  <p class="muted">Auf weissem Papier mit dunklem Stift unterschreiben und fotografieren, oder direkt mit dem Finger.</p>
+  <p class="muted">Auf weissem Papier mit blauem Stift unterschreiben und fotografieren, oder direkt mit dem Finger.</p>
   <div class="chips"><label class="btn btn-primary file-btn">Foto oder Bild<input type="file" id="bp-sigfile" accept="image/*"></label><button type="button" class="btn btn-glass" id="bp-draw">Mit dem Finger</button></div>
   <div id="bp-drawbox" hidden><canvas id="bp-pad" style="width:100%;height:180px;background:#fff;border-radius:12px;touch-action:none;border:1px solid var(--hair)"></canvas>
     <div class="chips" style="margin-top:8px"><button type="button" class="btn btn-glass" id="bp-padclear">Neu</button><button type="button" class="btn btn-primary" id="bp-padok">Übernehmen</button></div></div>
