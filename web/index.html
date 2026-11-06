@@ -5196,12 +5196,16 @@ function startTour(){
   document.body.append(blk,hole,pop);
   tour={c:-1,s:0,seq:0,blk,hole,pop};
   addEventListener('keydown',tourKey);addEventListener('resize',tourResize);
+  $('#scroll').addEventListener('scroll',tourFollow,{passive:true});window.visualViewport&&visualViewport.addEventListener('resize',tourFollow);
   tourDraw();
   pop.offsetWidth;document.documentElement.classList.add('tour-on')}
 function tourKey(e){if(!tour)return;
   if(e.key==='Escape'){e.preventDefault();endTour(true)}
   else if(e.key==='ArrowRight')tourStep(1);else if(e.key==='ArrowLeft')tourStep(-1)}
 function tourResize(){tourPlace()}
+/* Rahmen folgt dem Scrollen und Grössenänderungen (Adressleiste am Handy); kurz nach dem letzten Ereignis wird alles neu ausgerichtet */
+function tourFollow(){if(!tour||!tour.target)return;cancelAnimationFrame(tour.raf);clearTimeout(tour.fin);
+  tour.raf=requestAnimationFrame(()=>tourPlace(null,true));tour.fin=setTimeout(()=>tourPlace(),180)}
 function tourStep(d){const t=tour;if(t.c<0){if(d>0)tourGo(0,0);return}
   const n=TOUR[t.c].steps.length;
   if(d>0){if(t.s<n-1)tourGo(t.c,t.s+1);else tourGo(t.c+1,0)}
@@ -5244,7 +5248,7 @@ function tourBuild(my){const t=tour,{pop}=t;
     t.target=el&&el.getClientRects().length?el:null;
     const sc=$('#scroll');
     /* Nachkorrektur, falls der Bereich beim Einblenden noch in Bewegung war */
-    setTimeout(()=>{if(tour&&tour.seq===my)tourPlace()},560);
+    [350,700,1100,1600].forEach(ms=>setTimeout(()=>{if(tour&&tour.seq===my)tourPlace()},ms));
     if(!t.target||t.target.closest('.tabbar')||t.target===$('#fab')||t.target===$('#side-handle')){tourPlace();show();return}
     /* Seite und Rahmen gleiten gleichzeitig zum Ziel: Endlage vorausberechnen */
     const r=t.target.getBoundingClientRect(),from=sc.scrollTop,
@@ -5257,9 +5261,10 @@ function tourBuild(my){const t=tour,{pop}=t;
       if(sc.scrollTop===last)still++;else{still=0;last=sc.scrollTop}
       if(still>=3||performance.now()-t0>1200){tourPlace();return}
       requestAnimationFrame(settle)})()},120)}
-function tourPlace(rect){if(!tour)return;const{hole,pop,target}=tour,H=innerHeight,W=innerWidth;
+function tourPlace(rect,holeOnly){if(!tour)return;const{hole,pop,target}=tour,H=innerHeight,W=innerWidth;
   if(!target){hole.classList.add('none');pop.classList.add('mid');pop.style.top=pop.style.bottom='';return}
   const r=rect||target.getBoundingClientRect(),p=6;let top=Math.max(8,r.top-p),bot=Math.min(H-8,r.bottom+p);
+  if(holeOnly){hole.style.top=Math.max(8,r.top-p)+'px';return}
   pop.classList.remove('mid');
   const ph=pop.offsetHeight;
   /* Sprechblase neben das Ziel; passt sie nicht, wird das Ziel auf den sichtbaren Teil gekürzt */
@@ -5271,6 +5276,7 @@ function tourPlace(rect){if(!tour)return;const{hole,pop,target}=tour,H=innerHeig
   Object.assign(hole.style,{left:Math.max(4,r.left-p)+'px',top:top+'px',width:(Math.min(W-4,r.right+p)-Math.max(4,r.left-p))+'px',height:Math.max(0,bot-top)+'px'})}
 function endTour(early){if(!tour)return;const{blk,hole,pop}=tour;tour=null;
   removeEventListener('keydown',tourKey);removeEventListener('resize',tourResize);
+  $('#scroll').removeEventListener('scroll',tourFollow);window.visualViewport&&visualViewport.removeEventListener('resize',tourFollow);
   document.documentElement.classList.remove('tour-on');
   /* Hinter der ausblendenden Abdunkelung zurück auf die Startseite */
   setTimeout(()=>{['#v-strategie > .seg button','#dos-seg button','#netz-seg button','#rav-seg button'].forEach(s=>{const b=$(s);b&&b.click()});
