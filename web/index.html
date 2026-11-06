@@ -938,10 +938,10 @@ html.editing .side-handle,html.sheet-open .side-handle{opacity:0;pointer-events:
 .side-cat b{display:block;font-size:15px}.side-cat small{display:block;font-size:12.5px;color:var(--fg2)}
 .side-cat i{margin-left:auto;font-style:normal;font-size:20px;color:var(--accent);font-weight:700}
 /* Notizfenster */
-.note{position:fixed;z-index:46;display:flex;flex-direction:column;border-radius:24px;overflow:hidden;isolation:isolate;
+#note{position:fixed;z-index:46;display:flex;flex-direction:column;border-radius:24px;overflow:hidden;isolation:isolate;
   background:var(--lg-fill-strong,var(--glass-strong));-webkit-backdrop-filter:var(--lg-blur,blur(24px));backdrop-filter:var(--lg-blur,blur(24px));
   box-shadow:var(--lg-inner,none),0 24px 56px -18px rgba(0,0,0,.5)}
-.note.moving{opacity:.92}
+#note.moving{opacity:.92}
 .note-head{display:flex;align-items:center;gap:8px;padding:8px 8px 6px 14px;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
 .note-head b{flex:1;font-size:14.5px}
 .note-grip{width:28px;height:5px;border-radius:3px;background:var(--fg3);opacity:.5}
@@ -5304,7 +5304,7 @@ if(NATIVE)document.documentElement.classList.add('native');
 let noteEl=null,lastField=null;
 document.addEventListener('focusin',e=>{const t=e.target;if(t.matches('textarea,input.input')&&!t.closest('#note'))lastField=t});
 function noteBuild(){if(noteEl)return noteEl;
-  noteEl=document.createElement('div');noteEl.id='note';noteEl.className='note';noteEl.hidden=true;noteEl.setAttribute('role','dialog');noteEl.setAttribute('aria-label','Notizen');
+  noteEl=document.createElement('div');noteEl.id='note';noteEl.className='notewin';noteEl.hidden=true;noteEl.setAttribute('role','dialog');noteEl.setAttribute('aria-label','Notizen');
   noteEl.innerHTML=`<div class="note-head" id="note-head"><span class="note-grip" aria-hidden="true"></span><b>Notizen</b>
       <button class="note-x" data-n="min" aria-label="Verkleinern">–</button><button class="note-x" data-n="close" aria-label="Schliessen">×</button></div>
     <textarea class="note-ta" id="note-ta" placeholder="Lange drücken, dann „Einfügen“" spellcheck="true" lang="de-CH"></textarea>
