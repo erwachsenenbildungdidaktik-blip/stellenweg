@@ -17,7 +17,8 @@ Die Hülle stellt der Web-App `window.AndroidApp` bereit (`android/app/src/main/
 - **Seitenleiste:** Das Plus listet die installierten Apps mit echten Symbolen. Ein Tipp öffnet die App als schwebendes Fenster, im geteilten Bildschirm oder ganz (Einstellung im Plus-Blatt). Schwebend braucht ein Handy mit Freiform-Fenstern (ColorOS ja); sonst fällt es auf geteilt bzw. ganz zurück.
 - **Mitteilungen** exakt zur Uhrzeit über den AlarmManager, auch nach einem Neustart.
 - **Teilen-Ziel:** Text aus jeder App (Teilen → Stellenweg) landet im Notizfenster.
-- **PDF senden und speichern**, Kamera beim Hochladen, Zwischenablage, Vibration.
+- **PDF senden und speichern**, Dokumente mit der passenden App **öffnen** (`openFile`), Kamera beim Hochladen, Zwischenablage, Vibration.
+- **Griff der Seitenleiste** ist von der Zurück-Geste am rechten Rand ausgenommen (`setGestureExclusion`, Android 10+), damit ein Wisch die Leiste öffnet statt die App zu verlassen.
 
 In der Web-App (iPhone) gibt es dafür das **Notizfenster** (Seitenleiste → Notizen): Alles markieren, Kopieren, Einfügen, Teilen, Leeren; Einfügen geht auch durch langes Drücken ins Feld.
 

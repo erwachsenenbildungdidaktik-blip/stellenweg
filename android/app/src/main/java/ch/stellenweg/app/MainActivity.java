@@ -397,6 +397,42 @@ public class MainActivity extends Activity {
             }
         }
 
+        /** Dokument mit der passenden App öffnen (PDF-Leser, Galerie …) */
+        @JavascriptInterface
+        public boolean openFile(String b64, String name, String mime) {
+            try {
+                File f = writeCache(b64, name);
+                Uri u = FileProvider.getUriForFile(MainActivity.this, getPackageName() + ".files", f);
+                Intent i = new Intent(Intent.ACTION_VIEW).setDataAndType(u, mime == null || mime.isEmpty() ? "application/pdf" : mime)
+                        .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                // Ohne resolveActivity: ab Android 11 sähe die App fremde Apps nur mit <queries>; startActivity geht trotzdem
+                runOnUiThread(() -> {
+                    try { startActivity(i); } catch (ActivityNotFoundException e) {
+                        Toast.makeText(MainActivity.this, "Keine App zum Öffnen gefunden", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        }
+
+        /** Griff der Seitenleiste von der Zurück-Geste am rechten Rand ausnehmen (Android 10+).
+         *  top und height in CSS-Pixeln der Seite; height 0 hebt die Ausnahme auf. */
+        @JavascriptInterface
+        public void setGestureExclusion(int top, int height, int cssWidth) {
+            if (Build.VERSION.SDK_INT < 29) return;
+            runOnUiThread(() -> {
+                List<Rect> rects = new ArrayList<>();
+                if (height > 0 && cssWidth > 0) {
+                    float k = web.getWidth() / (float) cssWidth;
+                    int w = web.getWidth(), band = Math.round(48 * k);
+                    rects.add(new Rect(w - band, Math.round(top * k), w, Math.round((top + height) * k)));
+                }
+                web.setSystemGestureExclusionRects(rects);
+            });
+        }
+
         /** In „Downloads“ speichern */
         @JavascriptInterface
         public boolean savePdf(String b64, String name, String mime) {

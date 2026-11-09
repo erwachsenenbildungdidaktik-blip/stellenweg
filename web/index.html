@@ -829,7 +829,9 @@ textarea.input{resize:vertical;min-height:84px;line-height:1.4}
 #zr-root h2,.frs h2,#zr-root h3,.frs h3{font-family:var(--f-display);letter-spacing:-.01em}
 #zr-root .x-card,.frs .x-card{border-radius:20px;border-color:var(--glass-edge);background:var(--glass-strong)}
 #zr-root .disclaimer>summary{cursor:pointer;list-style-position:outside}
-.frs .tabs{display:none}
+/* Initiativbewerbung im Dossier: Schritte 1 (Firma) und 2 (Brief) sichtbar, Datei-Werkzeuge des Kurswerkzeugs ausgeblendet */
+.frs .tabs{margin-top:0}
+.frs .toolbar{display:none}
 .frs .tabpanel{padding-top:4px}
 /* Bewegung im Stil von ColorOS: Federn, Tiefe, Antippen */
 @supports (transition-timing-function:linear(0,1)){:root{
@@ -914,9 +916,10 @@ h1 .tip{width:26px;height:26px;font-size:15px}
 .tp-custom[aria-checked="true"] .tp-sw{background:conic-gradient(var(--a) 0 50%,var(--c) 50% 75%,var(--b) 75% 100%)}
 .toast{z-index:90}
 /* Seitenleiste */
-.side-handle{position:fixed;z-index:30;right:0;top:42%;width:26px;height:84px;translate:0 -50%;border:none;background:transparent;padding:0;cursor:grab;touch-action:none;display:flex;align-items:center;justify-content:flex-end;transition:opacity .25s}
-.side-handle i{display:block;width:11px;height:76px;border-radius:6px 0 0 6px;background:color-mix(in srgb,var(--accent) 70%,var(--glass-strong));box-shadow:-2px 4px 14px -4px rgba(0,0,0,.35),inset 1px 0 0 rgba(255,255,255,.35);transition:width .3s var(--spring)}
-.side-handle:hover i,.side-handle:focus-visible i{width:14px}
+.doc-acts{display:flex;gap:10px}.doc-acts .btn{flex:1;gap:8px}.doc-acts svg{width:18px;height:18px}
+.side-handle{position:fixed;z-index:30;right:0;top:42%;width:48px;height:120px;translate:0 -50%;border:none;background:transparent;padding:0;cursor:grab;touch-action:none;display:flex;align-items:center;justify-content:flex-end;transition:opacity .25s}
+.side-handle i{display:block;width:20px;height:104px;border-radius:10px 0 0 10px;background:color-mix(in srgb,var(--accent) 70%,var(--glass-strong));box-shadow:-2px 4px 14px -4px rgba(0,0,0,.35),inset 1px 0 0 rgba(255,255,255,.35);transition:width .3s var(--spring)}
+.side-handle:hover i,.side-handle:focus-visible i{width:24px}
 html.editing .side-handle,html.sheet-open .side-handle{opacity:0;pointer-events:none}
 .side-scrim{position:fixed;inset:0;z-index:44;background:rgba(15,10,5,.25);opacity:0}
 .side{position:fixed;z-index:45;right:0;top:50%;translate:120% -50%;max-height:78%;display:flex;flex-direction:column;gap:6px;padding:12px 10px;border-radius:26px 0 0 26px;
@@ -1185,46 +1188,14 @@ html.editing .tab:nth-child(2n){animation-delay:-.17s}
     <section class="view" id="v-heute" hidden>
       <div class="top">
         <div><div class="eyebrow" id="h-date"></div><h1 id="h-hello">Guten Tag</h1></div>
-        <div style="display:flex;gap:8px"><button class="icon-btn btn-glass bell" id="h-bell" aria-label="Hinweise" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg><i class="bell-n" id="h-belln"></i></button><button class="icon-btn btn-glass" id="h-settings" aria-label="Einstellungen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></div>
+        <div style="display:flex;gap:8px"><button class="icon-btn btn-glass" id="btn-backup" aria-label="Daten sichern oder laden"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3M12 4v11m0 0-4-4m4 4 4-4"/></svg></button><button class="icon-btn btn-glass bell" id="h-bell" aria-label="Hinweise" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg><i class="bell-n" id="h-belln"></i></button><button class="icon-btn btn-glass" id="h-settings" aria-label="Einstellungen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></div>
       </div>
       <div class="backup-remind"></div>
       <div class="wgrid" id="h-grid" aria-label="Widgets"></div>
       <div class="h-editrow"><button class="btn btn-glass" id="h-edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><path d="M17.5 14v7M14 17.5h7"/></svg>Startseite anpassen</button></div>
-    </section>
-
-    <section class="view" id="v-kompetenzen" hidden>
-      <div class="top"><div><div class="eyebrow kurs">A1.II · A1.III</div><h1>Kompetenzen &amp; Ressourcen</h1></div></div>
-      <p class="lead">Was Sie können und wie Sie es im Vorstellungsgespräch belegen. Zu jeder Kompetenz gehört ein Beispiel aus Ihrem Berufsalltag.</p>
-      <div class="card glass">
-        <div class="card-head"><h2>Meine drei stärksten Argumente</h2></div>
-        <div class="list" id="komp-top"></div>
-      </div>
-      <div id="komp-areas" style="display:flex;flex-direction:column;gap:18px"></div>
-      <div class="card glass">
-        <div class="card-head"><h2>Mein Ressourcen-Koffer</h2></div>
-        <p class="muted">Was trägt Sie durch die Stellensuche, und wo braucht es noch etwas?</p>
-        <div class="list" id="komp-res"></div>
-      </div>
-    </section>
-
-    <!-- ============ STRATEGIE ============ -->
-    <section class="view" id="v-strategie" hidden>
-      <div class="top">
-        <div><div class="eyebrow kurs">A1.IV · A1.V</div><h1>Strategie &amp; Aktionsplan</h1></div>
-        <button class="icon-btn btn-glass" id="btn-backup" aria-label="Daten sichern oder laden"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3M12 4v11m0 0-4-4m4 4 4-4"/></svg></button>
-      </div>
-
-      <div class="backup-remind"></div>
       <div class="stats" id="stats"></div>
-
-      <div class="seg glass" role="tablist" aria-label="Bereich">
-        <button role="tab" data-sub="tracker" aria-selected="true">Bewerbungen</button>
-        <button role="tab" data-sub="plan" aria-selected="false">Aktionsplan</button>
-        <button role="tab" data-sub="strategie" aria-selected="false">Zielrichtungen</button>
-      </div>
-
-      <!-- Tracker -->
-      <div class="card glass" data-panel="tracker">
+      <!-- Bewerbungen -->
+      <div class="card glass" id="h-bew">
         <div class="card-head">
           <h2>Meine Bewerbungen</h2>
           <button class="btn btn-primary" id="btn-add-bew"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Neu</button>
@@ -1239,294 +1210,16 @@ html.editing .tab:nth-child(2n){animation-delay:-.17s}
         <div id="example-note"></div>
       </div>
 
-      <!-- Aktionsplan -->
-      <div class="card glass" data-panel="plan" hidden>
-        <div class="card-head"><h2>Nächste Schritte</h2><span class="muted" id="plan-count"></span></div>
-        <form class="inline-add" id="task-form">
-          <input class="input" id="task-text" placeholder="z.B. 3 Firmen in Lyss recherchieren" aria-label="Neuer Schritt">
-          <input class="input" type="date" id="task-due" aria-label="Fällig am" style="flex:0 0 150px">
-          <button class="icon-btn btn-primary" aria-label="Schritt hinzufügen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
-        </form>
-        <div class="list" id="task-list"></div>
-      </div>
-
-      <div class="card glass" data-panel="plan" hidden>
-        <div class="card-head"><h2>Meine Ziele</h2></div>
-        <div class="field"><label for="ziel-monat">Bewerbungen pro Monat (RAV-Vorgabe)</label><input class="input" type="number" min="0" max="50" id="ziel-monat"></div>
-        <p class="muted" id="ziel-woche-info"></p>
-      </div>
-
-      <!-- Strategie -->
-<div class="card glass ext-card" data-panel="strategie" hidden><div id="zr-root">
-<div class="wrap">
-<header class="x-top">
-  <p class="lede">Sie können sich in mehrere Richtungen bewerben. Dieses Werkzeug hilft Ihnen einzuschätzen, welche sich lohnt, wo Sie zuerst etwas aufbauen müssen und welche Sie besser zurückstellen. Bewerten Sie jede Richtung einzeln und vergleichen Sie danach.</p>
-  <details class="disclaimer">
-    <summary><b>Bitte zuerst lesen: Das Werkzeug ordnet ein, es entscheidet nicht.</b></summary>
-    <ul>
-      <li>Die Einstufung beruht auf einfachen Punkten, 0 bis 2 je Frage. Die Grenzen haben wir festgelegt. Sie sind nicht wissenschaftlich geprüft.</li>
-      <li>Die Marktzahlen sind unvollständig. Der Job-Room zeigt nur einen Teil der Stellen und nur die beim RAV gemeldeten Personen. jobs.ch zählt nach Stichworten.</li>
-      <li>Das Ergebnis ist nur so gut wie Ihre Eingaben.</li>
-      <li>Was Ihnen wichtig ist, etwa Gesundheit, Familie oder Lohn, steckt nicht in der Punktzahl. Dafür gibt es die Fragen zur Passung, die Kurz-SWOT und das Einzelgespräch.</li>
-      <li>Ob eine Einstufung stimmt, zeigt erst die Praxis. Tragen Sie deshalb später unter «Nachfassen» ein, was Ihre Bewerbungen gebracht haben.</li>
-    </ul>
-    <details><summary>So wird gerechnet</summary>
-      <p>Hochachse: Markt plus Verankerung, je 0 bis 2 Punkte. Querachse: Können plus Aufwand, je 0 bis 2 Punkte. Pro Achse gelten 0 bis 1 Punkte als tief, 2 als Mitte, 3 bis 4 als hoch. Aus den beiden Achsen ergibt sich der Quadrant. Liegt eine Achse in der Mitte, steht «Knapper Fall».</p>
-      <p>Markt: Kandidaten geteilt durch Stellen im Job-Room. Unter 0,7 gilt als «viele Stellen», bis 2,5 als «ausgeglichen», darüber als «wenige Stellen». Unter 3 Stellen gilt der Markt als eng, ausser jobs.ch zeigt 10 oder mehr Inserate. Fehlende Nachweise (Abschluss, Ausweis, Sprache) setzen «Können» auf «wenig», egal wie viel Sie sonst belegen.</p>
-      <p>Die Fragen zur Passung zählen nicht als Punkte. Ein klares Nein bei Rahmenbedingungen oder Gesundheit stellt die Richtung aber auf «Passt nicht», unabhängig von der Matrix.</p>
-    </details>
-  </details>
-</header>
-
-<div class="cols">
-<div>
-<form id="zr-form" novalidate>
-  <div class="step">
-    <label class="x-field" for="zr-name">Welche Zielrichtung bewerten Sie?</label>
-    <input type="text" id="zr-name" placeholder="zum Beispiel Mitarbeiter/in Produktion" autocomplete="off">
-    <p class="field-hint">Schreiben Sie die Bezeichnung so, wie sie in Inseraten steht.</p>
-  </div>
-
-  <div class="step">
-    <div class="step-head"><span class="step-num">0</span><h3>Vorweg: Passt diese Richtung zu Ihnen?</h3></div>
-    <ul class="hints">
-      <li>Diese Fragen zählen nicht als Punkte. Ein klares Nein bei Rahmen oder Gesundheit schliesst die Richtung aber aus.</li>
-    </ul>
-    <p class="mot-q">Würden Sie diese Arbeit zwei Jahre lang gerne machen?</p>
-    <div class="choices" data-group="mInt"><label class="choice"><input type="radio" name="mInt" value="2"><span>Ja, gerne</span></label><label class="choice"><input type="radio" name="mInt" value="1"><span>Es geht<small>als Zwischenlösung</small></span></label><label class="choice"><input type="radio" name="mInt" value="0"><span>Eher nicht</span></label></div>
-    <p class="mot-q">Passen Arbeitszeiten, Pensum und üblicher Lohn zu Ihrer Situation?</p>
-    <div class="choices" data-group="mRahmen"><label class="choice"><input type="radio" name="mRahmen" value="2"><span>Ja</span></label><label class="choice"><input type="radio" name="mRahmen" value="1"><span>Teilweise<small>mit Abstrichen</small></span></label><label class="choice"><input type="radio" name="mRahmen" value="0"><span>Nein<small>schliesst es aus</small></span></label></div>
-    <p class="mot-q">Ist die Tätigkeit für Sie gesundheitlich machbar?</p>
-    <div class="choices" data-group="mGes"><label class="choice"><input type="radio" name="mGes" value="2"><span>Ja</span></label><label class="choice"><input type="radio" name="mGes" value="1"><span>Mit Einschränkungen</span></label><label class="choice"><input type="radio" name="mGes" value="0"><span>Nein<small>schliesst es aus</small></span></label></div>
-    <p class="mot-q">Wissen Sie, wie der Arbeitsalltag konkret aussieht?</p>
-    <div class="choices" data-group="mWissen"><label class="choice"><input type="radio" name="mWissen" value="2"><span>Ja, gut<small>erlebt oder erkundet</small></span></label><label class="choice"><input type="radio" name="mWissen" value="1"><span>Ungefähr<small>vom Hörensagen</small></span></label><label class="choice"><input type="radio" name="mWissen" value="0"><span>Kaum</span></label></div>
-    <div class="jobroom mot-info" id="zr-motInfo" hidden>
-      <p class="jr-gap" id="zr-motInfoText"></p>
-      <div class="jr-links" style="margin-bottom:0">
-        <a href="https://www.berufsberatung.ch/de/suche" target="_blank" rel="noopener" id="zr-lnkBBMot">Berufsbild auf berufsberatung.ch nachlesen</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="step">
-    <div class="step-head"><span class="step-num">1</span><h3>Wie sieht der Markt in dieser Richtung aus?</h3></div>
-    <ul class="hints">
-      <li>Suchen Sie im Job-Room Ihre Stellenbezeichnung an Ihrem Wohnort und notieren Sie beide Zahlen.</li>
-      <li><b>Suchradius bei beiden Suchen auf 10 km stellen.</b> Bei der Kandidatensuche steht er von sich aus auf 150 km. Dann zählen Sie die halbe Schweiz als Konkurrenz.</li>
-      <li>Die Kandidatenzahl zeigt nur die beim RAV gemeldeten Personen. Die tatsächliche Konkurrenz ist grösser.</li>
-      <li>Im Job-Room stehen nicht alle Stellen. Zählen Sie deshalb zusätzlich die Inserate auf jobs.ch in derselben Gegend.</li>
-    </ul>
-    <div class="jobroom">
-      <div class="jr-links">
-        <a href="https://www.job-room.ch/home/job-seeker" target="_blank" rel="noopener">Stellen suchen im Job-Room</a>
-        <a href="https://www.job-room.ch/home/company" target="_blank" rel="noopener">Kandidaten suchen im Job-Room</a>
-        <a href="https://www.jobs.ch/de/stellenangebote/" target="_blank" rel="noopener" id="zr-lnkJobsMarkt">Inserate auf jobs.ch zählen</a>
-      </div>
-      <div class="jr-nums">
-        <label>Suchradius in km<input type="number" id="zr-jrRadius" min="0" step="1" inputmode="numeric" value="10"></label>
-        <label>Offene Stellen (Job-Room)<input type="number" id="zr-jrStellen" min="0" step="1" inputmode="numeric" placeholder="z.B. 80"></label>
-        <label>Gemeldete Kandidaten (Job-Room)<input type="number" id="zr-jrKand" min="0" step="1" inputmode="numeric" placeholder="z.B. 300"></label>
-        <label>Inserate auf jobs.ch<input type="number" id="zr-jrJobsch" min="0" step="1" inputmode="numeric" placeholder="freiwillig"></label>
-        <label class="jr-check"><input type="checkbox" id="zr-jrMeld"> Berufsart ist meldepflichtig</label>
-      </div>
-      <p class="jr-gap" style="margin:12px 0 0">Bei jobs.ch: Überfliegen Sie die ersten 20 Treffer. Wenn viele nicht passen, schätzen Sie den passenden Anteil und tragen Sie diesen ein.</p>
-      <p class="jr-out" id="zr-jrOut">Tragen Sie beide Zahlen ein, dann wird die Lage automatisch eingestuft.</p>
-    </div>
-    <p class="jr-manual">Ergebnis, bei Bedarf korrigierbar:</p>
-    <div class="choices" data-group="markt">
-      <label class="choice"><input type="radio" name="markt" value="2"><span>Viele Stellen<small>wenig Konkurrenz</small></span></label>
-      <label class="choice"><input type="radio" name="markt" value="1"><span>Ausgeglichen<small>weder noch</small></span></label>
-      <label class="choice"><input type="radio" name="markt" value="0"><span>Wenige Stellen<small>viel Konkurrenz</small></span></label>
-    </div>
-  </div>
-
-  <div class="step">
-    <div class="step-head"><span class="step-num">2</span><h3>Wie gut sind Sie in diesem Bereich bereits verankert?</h3></div>
-    <ul class="hints">
-      <li>Nehmen Sie Ihre Firmenliste und Ihr Netzwerk zur Hand.</li>
-    </ul>
-    <div class="jobroom">
-      <div class="jr-nums">
-        <label>Betriebe, die ich namentlich kenne<input type="number" id="zr-evBetriebe" min="0" step="1" inputmode="numeric" placeholder="Anzahl"></label>
-        <label>Personen, die ich fragen kann<input type="number" id="zr-evKontakte" min="0" step="1" inputmode="numeric" placeholder="Anzahl"></label>
-        <label>Jahre Erfahrung in dieser Richtung<input type="number" id="zr-evJahre" min="0" step="0.5" inputmode="decimal" placeholder="Jahre"></label>
-      </div>
-      <p class="jr-gap" id="zr-evHint"></p>
-      <p class="jr-out" id="zr-evPosOut">Tragen Sie die drei Zahlen ein. Null ist eine gültige Antwort.</p>
-    </div>
-    <p class="jr-manual">Ergebnis, bei Bedarf korrigierbar:</p>
-    <div class="choices" data-group="position">
-      <label class="choice"><input type="radio" name="position" value="2"><span>Gut verankert<small>Kontakte und Erfahrung</small></span></label>
-      <label class="choice"><input type="radio" name="position" value="1"><span>Teilweise<small>einzelne Berührungspunkte</small></span></label>
-      <label class="choice"><input type="radio" name="position" value="0"><span>Noch nicht<small>neu für mich</small></span></label>
-    </div>
-  </div>
-
-  <div class="step">
-    <div class="step-head"><span class="step-num">3</span><h3>Was können Sie heute schon für diese Richtung?</h3></div>
-    <ul class="hints">
-      <li>Nehmen Sie ein echtes Inserat aus dieser Richtung und zählen Sie die Anforderungen.</li>
-      <li>Belegen heisst: Sie können eine Situation und ein Ergebnis dazu nennen. Nicht: Sie trauen es sich zu.</li>
-    </ul>
-    <div class="jobroom">
-      <div class="jr-links">
-        <a href="https://www.jobs.ch/de/stellenangebote/" target="_blank" rel="noopener" id="zr-lnkJobs">Auf jobs.ch suchen</a>
-        <a href="https://www.berufsberatung.ch/de/suche" target="_blank" rel="noopener" id="zr-lnkBBBeruf">Anforderungen des Berufs nachschlagen</a>
-      </div>
-      <div class="jr-nums">
-        <label>Anforderungen im Inserat<input type="number" id="zr-evAnf" min="0" step="1" inputmode="numeric" placeholder="Anzahl"></label>
-        <label>davon kann ich belegen<input type="number" id="zr-evBelegt" min="0" step="1" inputmode="numeric" placeholder="Anzahl"></label>
-        <label>Verlangte Abschlüsse, Ausweise, Sprachniveau
-          <select id="zr-evObjektiv">
-            <option value="">bitte wählen</option>
-            <option value="2">habe ich alle</option>
-            <option value="1">teilweise</option>
-            <option value="0">habe ich nicht</option>
-          </select>
-        </label>
-      </div>
-      <p class="jr-out" id="zr-evKompOut">Tragen Sie beide Zahlen ein und wählen Sie, wie es um die verlangten Nachweise steht.</p>
-    </div>
-    <p class="jr-manual">Ergebnis, bei Bedarf korrigierbar:</p>
-    <div class="choices" data-group="kompetenz">
-      <label class="choice"><input type="radio" name="kompetenz" value="2"><span>Das meiste<small>belegbar</small></span></label>
-      <label class="choice"><input type="radio" name="kompetenz" value="1"><span>Einen Teil<small>teilweise belegbar</small></span></label>
-      <label class="choice"><input type="radio" name="kompetenz" value="0"><span>Wenig<small>kaum belegbar</small></span></label>
-    </div>
-  </div>
-
-  <div class="step">
-    <div class="step-head"><span class="step-num">4</span><h3>Wie gross wäre der Aufwand, die Lücke zu schliessen?</h3></div>
-    <ul class="hints">
-      <li>Mögliche Wege: individueller Kurs über das RAV, berufliche Grundbildung ab 35 Jahren, Zulassung zum Qualifikationsverfahren für Erwachsene, Anerkennung eines ausländischen Abschlusses, Einstieg über Probearbeit oder Zwischenverdienst.</li>
-    </ul>
-    <div class="jobroom">
-      <p class="jr-gap" id="zr-evGap">Ihre Lücke ergibt sich aus Frage 3.</p>
-      <div class="jr-links">
-        <a href="https://www.berufsberatung.ch/de/lehre-und-schule/bildungsschemata-nach-branchen" target="_blank" rel="noopener">Bildungsschemata nach Branchen</a>
-        <a href="https://laufbahn.berufsberatung.ch/informationsquellen/aus-weiterbildung/berufsabschluss-fuer-erwachsene" target="_blank" rel="noopener">Berufsabschluss für Erwachsene</a>
-        <a href="https://www.berufsberatung.ch/de/suche" target="_blank" rel="noopener" id="zr-lnkBBWeiter">Auf berufsberatung.ch suchen</a>
-      </div>
-      <p class="jr-gap" style="margin-top:-4px">Die Bildungsschemata zeigen, welche Wege von Ihrem heutigen Stand aus offenstehen und was die Voraussetzung dafür ist. Die Suche zeigt konkrete Angebote mit Dauer. Schätzen Sie nicht, schauen Sie nach.</p>
-      <div class="jr-nums">
-        <label>Wie lange würde es dauern
-          <select id="zr-evDauer">
-            <option value="">bitte wählen</option>
-            <option value="2">bis 3 Monate</option>
-            <option value="1">3 bis 12 Monate</option>
-            <option value="0">über ein Jahr</option>
-            <option value="-1">noch unklar</option>
-          </select>
-        </label>
-        <label>Gibt es einen Weg dorthin
-          <select id="zr-evWeg">
-            <option value="">bitte wählen</option>
-            <option value="2">ja, konkret geklärt</option>
-            <option value="1">wahrscheinlich, noch offen</option>
-            <option value="0">keiner bekannt</option>
-          </select>
-        </label>
-      </div>
-      <p class="jr-out" id="zr-evAufOut">Wählen Sie beides aus.</p>
-    </div>
-    <p class="jr-manual">Ergebnis, bei Bedarf korrigierbar:</p>
-    <div class="choices" data-group="aufwand">
-      <label class="choice"><input type="radio" name="aufwand" value="2"><span>Klein<small>Wochen bis Monate</small></span></label>
-      <label class="choice"><input type="radio" name="aufwand" value="1"><span>Mittel<small>überschaubar</small></span></label>
-      <label class="choice"><input type="radio" name="aufwand" value="0"><span>Gross<small>Jahre oder unklar</small></span></label>
-    </div>
-  </div>
-
-
-  <div class="step">
-    <div class="step-head"><span class="step-num">5</span><h3>Zum Schluss: Ihre Kurz-SWOT <small class="opt">freiwillig</small></h3></div>
-    <ul class="hints">
-      <li>Je ein Stichwort oder ein Satz genügt. Stoff liefern die Antworten oben: Können und Verankerung für Stärken und Schwächen, Markt und Aufwand für Chancen und Risiken.</li>
-      <li>Fragen Sie bei den Risiken auch: Was könnte diese Richtung in ein paar Jahren unsicher machen?</li>
-    </ul>
-    <div class="swot-in">
-      <label><span class="sw-s">Stärken</span>Was spricht bei mir dafür?<input type="text" id="zr-swS" placeholder="z.B. 4 Jahre Kundenkontakt, Kassensystem"></label>
-      <label><span class="sw-w">Schwächen</span>Was fehlt mir noch?<input type="text" id="zr-swW" placeholder="z.B. kein Französisch"></label>
-      <label><span class="sw-o">Chancen</span>Was spielt mir in die Hände?<input type="text" id="zr-swO" placeholder="z.B. Filiale in der Nähe sucht"></label>
-      <label><span class="sw-t">Risiken</span>Was könnte dagegen laufen?<input type="text" id="zr-swT" placeholder="z.B. viele Temporärstellen, Schichtarbeit"></label>
-    </div>
-  </div>
-  <div class="actions">
-    <button type="submit" class="btn-main" id="zr-submitBtn">Richtung eintragen</button>
-    <button type="button" class="x-btn-ghost" id="zr-cancelBtn" hidden>Änderung verwerfen</button>
-  </div>
-</form>
-</div>
-
-<aside class="panel">
-  <h2>Ihre Richtungen im Vergleich</h2>
-  <div class="matrix-shell">
-    <div class="y-axis"><span>Wie der Markt steht</span></div>
-    <div class="matrix" id="zr-matrix">
-      <div class="quad q-aufbauen"><b>Aufbauen</b><em>Markt gut, Ihnen fehlt noch etwas</em></div>
-      <div class="quad q-nutzen"><b>Jetzt verfolgen</b><em>Markt gut, Sie bringen es mit</em></div>
-      <div class="quad bottom q-zurueck"><b>Zurückstellen</b><em>Markt eng, Lücke gross</em></div>
-      <div class="quad bottom q-uebertragen"><b>Übertragen</b><em>Sie können viel, der Markt ist eng</em></div>
-      <div class="cross h"></div><div class="cross v"></div>
-    </div>
-    <div class="x-axis">Was Sie mitbringen</div>
-  </div>
-  <div class="axis-ends"><span>wenig</span><span>viel</span></div>
-  <p class="matrix-empty" id="zr-matrixEmpty">Noch keine Richtung eingetragen.</p>
-  <ol class="legend" id="zr-legend"></ol>
-</aside>
-</div>
-
-<section class="results">
-  <h2>Bewertete Richtungen</h2>
-  <p class="sub">Vergleichen Sie, statt sich früh festzulegen. Besprechen Sie das Ergebnis im Einzelgespräch.</p>
-  <div id="zr-list"><div class="x-empty">Tragen Sie oben Ihre erste Zielrichtung ein.</div></div>
-
-  <div class="bar">
-    
-    <button class="x-btn-ghost" id="zr-exportBtn">Sichern als Datei</button>
-    <button class="x-btn-ghost" id="zr-importBtn">Datei einlesen</button>
-    <input type="file" id="zr-importFile" accept="application/json" hidden>
-    <button class="x-btn-ghost" id="zr-clearBtn">Alles löschen</button>
-  </div>
-  <div class="quer">
-    <b>Wenn eine Richtung nicht aufgeht: Quereinstieg</b>
-    <p>Viele Betriebe schreiben Stellen aus, für die keine formale Ausbildung in diesem Beruf verlangt wird. Wer übertragbare Ressourcen mitbringt, kommt dort hinein und lernt den Rest im Betrieb. Das ist oft der schnellere Weg als eine Ausbildung nachzuholen.</p>
-    <div class="jr-links">
-      <a href="https://quereinsteiger-stellen.ch/jobs" target="_blank" rel="noopener">Quereinsteiger-Stellen in der Schweiz</a>
-      <a href="https://www.jobs.ch/de/stellenangebote/?term=quereinsteiger" target="_blank" rel="noopener">Quereinstieg auf jobs.ch</a>
-    </div>
-  </div>
-  <p class="note">Ihre Eingaben bleiben auf diesem Gerät und sind in der Sicherung der App enthalten. «Sichern als Datei» brauchen Sie nur für den Austausch mit dem Kurswerkzeug.</p>
-</section>
-</div>
-
-
-
-
-</div></div>
-      <div class="card glass" data-panel="strategie" hidden>
-        <div class="card-head"><h2>Rahmen</h2></div>
-        <div class="grid2">
-          <div class="field"><label for="s-region">Suchregion</label><input class="input" id="s-region" data-bind="region"></div>
-          <div class="field"><label for="s-pensum">Pensum</label><input class="input" id="s-pensum" data-bind="pensum"></div>
-        </div>
-        <div class="field"><label for="s-verteilung">Verteilung offener und verdeckter Arbeitsmarkt</label>
-          <input type="range" id="s-verteilung" min="0" max="100" step="10" data-bind="verdeckt" style="accent-color:var(--accent)">
-          <div class="muted" id="verteilung-txt"></div></div>
-        <div class="field"><label for="s-botschaft">Meine Kernbotschaft</label><textarea class="input" id="s-botschaft" data-bind="botschaft" placeholder="Was soll eine Arbeitgeberin nach dem ersten Satz von Ihnen wissen?"></textarea></div>
-        <p class="muted">Die Kernbotschaft wird später im Dossier-Tab für Brief und Lebenslauf übernommen.</p>
-      </div>
     </section>
 
     <!-- ============ DOSSIER ============ -->
     <section class="view" id="v-dossier" hidden>
       <div class="top">
-        <div><div class="eyebrow kurs">A2</div><h1>Dossier &amp; Portfolio</h1></div>
+        <div><h1>Dossier</h1></div>
         <button class="btn btn-primary" id="btn-add-doc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Hinzufügen</button>
       </div>
       <div class="backup-remind"></div>
-      <p class="lead">Ihr Dossier ist die sichtbare Form Ihrer Strategie. Wischen Sie durch den Stapel, tippen Sie auf ein Dokument, um es gross zu sehen.</p>
+      <p class="lead">Alle Unterlagen für Ihre Bewerbungen. Wischen Sie durch den Stapel und tippen Sie auf ein Dokument, um es zu öffnen oder zu senden.</p>
       <div class="seg glass" role="tablist" aria-label="Bereich" id="dos-seg">
         <button role="tab" data-d="unterlagen" aria-selected="true">Unterlagen</button>
         <button role="tab" data-d="init" aria-selected="false">Initiativbewerbung</button>
@@ -1557,41 +1250,7 @@ html.editing .tab:nth-child(2n){animation-delay:-.17s}
         <div class="chips" style="flex:none"><button class="btn btn-primary" id="btn-cv">Starten</button></div>
       </div>
       <div class="card glass" id="dos-check" data-dp="unterlagen"></div>
-      <div class="card glass ext-card frs" data-dp="init" hidden id="dos-init"></div>
-    </section>
-    <section class="view" id="v-netzwerk" hidden>
-      <div class="top"><div><div class="eyebrow kurs">A3 · A4 · A5</div><h1>Mein Netzwerk</h1></div></div>
-      <p class="lead">Viele Stellen werden über Menschen vergeben, bevor sie ausgeschrieben sind. Hier sehen Sie, wer Ihnen wobei helfen kann.</p>
-      <div class="seg glass" role="tablist" aria-label="Bereich" id="netz-seg">
-        <button role="tab" data-n="kontakte" aria-selected="true">Kontakte</button>
-        <button role="tab" data-n="karte" aria-selected="false">Karte</button>
-        <button role="tab" data-n="aktiv" aria-selected="false">Aktivieren</button>
-        <button role="tab" data-n="firmen" aria-selected="false">Zielfirmen</button>
-      </div>
-
-      <div class="card glass" data-np="kontakte">
-        <div class="card-head"><div><h2>Meine Kontakte</h2><span class="muted" id="netz-count"></span></div><button class="btn btn-primary" id="netz-add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Neu</button></div>
-        <div class="list" id="netz-list"></div>
-        <label class="btn btn-ghost file-btn" style="align-self:flex-start">Datei aus „Mein Netzwerk“ laden<input type="file" id="netz-import" accept=".json,application/json"></label>
-      </div>
-
-      <div class="card glass" data-np="karte" hidden>
-        <div class="seg" id="netz-lay" style="background:var(--hair)">
-          <button data-l="near" aria-selected="true">Nach Nähe</button>
-          <button data-l="sup" aria-selected="false">Nach Unterstützung</button>
-        </div>
-        <div style="overflow:hidden;border-radius:18px;background:var(--glass)"><svg id="netz-map" viewBox="0 0 720 720" role="img" aria-label="Netzwerkkarte" style="width:100%;height:auto;display:block"></svg></div>
-        <div class="kats" id="netz-legend"></div>
-        <div class="banner" id="netz-insight" style="background:var(--accent-soft)" hidden></div>
-      </div>
-      <div class="card glass" data-np="karte" hidden id="netz-sheet"></div>
-
-      <div class="card glass" data-np="aktiv" hidden>
-        <div class="card-head"><h2>Meine nächsten Schritte</h2></div>
-        <div class="list" id="netz-aktiv"></div>
-      </div>
-
-<div class="card glass ext-card frs" data-np="firmen" hidden><div id="fr-root">
+      <div class="card glass ext-card frs" data-dp="init" hidden id="dos-init"><div id="fr-root">
 <div class="wrap">
 <header class="x-top">
   
@@ -1734,7 +1393,7 @@ html.editing .tab:nth-child(2n){animation-delay:-.17s}
   <div class="callout">«Bei einer Initiativbewerbung gibt es keine Stelle. Es gibt nur einen Bedarf, den Sie erkennen und benennen müssen, bevor die Firma ihn selbst ausschreibt.»</div>
   <label class="x-field" for="fr-bFirma">Für welchen Betrieb schreiben Sie?</label>
   <select id="fr-bFirma" class="wide-sel"></select>
-  <div class="x-empty" id="fr-bEmpty" style="margin-top:14px">Erfassen Sie zuerst unter Netzwerk › Zielfirmen einen Betrieb.</div>
+  <div class="x-empty" id="fr-bEmpty" style="margin-top:14px">Erfassen Sie zuerst unter „1 Firmen recherchieren“ einen Betrieb.</div>
   <div id="fr-bBody" hidden>
     <div class="bsum" id="fr-bSum"></div>
 
@@ -1835,7 +1494,6 @@ html.editing .tab:nth-child(2n){animation-delay:-.17s}
 
 </div></div>
     </section>
-
     <!-- ============ RAV ============ -->
     <section class="view" id="v-rav" hidden>
       <div class="top"><div><div class="eyebrow">RAV · ALK</div><h1>RAV &amp; Arbeitslosenkasse</h1></div></div>
@@ -1913,14 +1571,9 @@ html.editing .tab:nth-child(2n){animation-delay:-.17s}
 
   <nav class="tabbar glass" role="tablist" aria-label="Hauptnavigation">
     <button class="tab" role="tab" data-tab="heute"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.5 12 5l8 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-4V15h-5v5.5h-4A1.5 1.5 0 0 1 4 19z"/></svg><span>Heute</span></button>
-    <button class="tab" role="tab" data-tab="kurs" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m2.5 9 9.5-4.5L21.5 9 12 13.5z"/><path d="M6.5 11v4.5c0 1.4 2.5 2.8 5.5 2.8s5.5-1.4 5.5-2.8V11M21.5 9v5"/></svg><span>Kurs</span></button>
-    <button class="tab" role="tab" data-tab="kompetenzen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z"/></svg><span>Kompetenzen</span></button>
-    <button class="tab" role="tab" data-tab="strategie"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></svg><span>Strategie</span></button>
     <button class="tab" role="tab" data-tab="dossier"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Dossier</span></button>
-    <button class="tab" role="tab" data-tab="netzwerk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="7" r="2.5"/><circle cx="18" cy="7" r="2.5"/><circle cx="12" cy="17" r="2.5"/><path d="M8 8.5 10.5 15M16 8.5 13.5 15M8.5 7h7"/></svg><span>Netzwerk</span></button>
     <button class="tab" role="tab" data-tab="rav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="16" rx="2.5"/><path d="M4 10h16M9 3v4M15 3v4"/></svg><span>RAV &amp; ALK</span></button>
   </nav>
-  <nav class="kursbar" id="kursbar" role="tablist" aria-label="Kurs"><button role="tab" data-k="kompetenzen">Kompetenzen</button><button role="tab" data-k="strategie">Strategie</button></nav>
   <div class="editbar glass" id="editbar" role="toolbar" aria-label="Startseite anpassen">
     <button class="btn btn-glass" id="eb-add">+ Widget</button>
     <button class="btn btn-ghost" id="eb-reset">Zurücksetzen</button>
@@ -2185,26 +1838,19 @@ async function openPdf(blob){
   return pdfjsLib.getDocument({data:new Uint8Array(await blob.arrayBuffer())}).promise}
 
 /* ================= Routing ================= */
-const TABS=['heute','kompetenzen','strategie','dossier','netzwerk','rav'];
+const TABS=['heute','dossier','rav'];
 function route(){
   let h=(location.hash||'').slice(1);
-  /* „Kurs“ öffnet die zuletzt benutzte Kursseite; selbständig gibt es keine Kompetenzen */
-  if(h==='kurs'){h=S.meta.kursTab||'kompetenzen';history.replaceState(null,'','#'+h)}
-  if(isSelbst()&&h==='kompetenzen'){h='heute';history.replaceState(null,'','#heute')}
   const t=TABS.includes(h)?h:'heute';
   TABS.forEach(x=>{$('#v-'+x).hidden=x!==t});
   $$('.tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===t));
-  applyRouteMode(t);
   $('#scroll').scrollTop=0; render();
 }
 $$('.tab').forEach(b=>b.onclick=()=>{if(editing)return;location.hash=b.dataset.tab});
 window.addEventListener('hashchange',route);
 
-/* ================= Strategie: Unterbereiche ================= */
-let sub='tracker', filter='alle';
-$$('#v-strategie > .seg button').forEach(b=>b.onclick=()=>{sub=b.dataset.sub;
-  $$('#v-strategie > .seg button').forEach(x=>x.setAttribute('aria-selected',x===b));
-  $$('[data-panel]').forEach(p=>p.hidden=p.dataset.panel!==sub)});
+/* ================= Bewerbungen: Filter ================= */
+let filter='alle';
 $$('#filter button').forEach(b=>b.onclick=()=>{filter=b.dataset.f;$$('#filter button').forEach(x=>x.setAttribute('aria-selected',x===b));renderTracker()});
 
 /* Wochenziel: intern RAV-Monatsvorgabe plus rund 20 % Reserve, auf Wochen verteilt (4,33 Wochen pro Monat).
@@ -2308,35 +1954,6 @@ function openBew(id,pre){
 }
 $('#btn-add-bew').onclick=()=>openBew(null);
 
-/* ================= Aktionsplan ================= */
-function renderPlan(){
-  const L=[...S.aufgaben].sort((a,b)=>(a.done-b.done)||(a.due||'9').localeCompare(b.due||'9'));
-  const t=iso(today);
-  $('#task-list').innerHTML=L.length?L.map(a=>{const late=!a.done&&a.due&&a.due<t;return`
-    <div class="row ${a.done?'done':''}">
-      <input type="checkbox" class="check" data-id="${a.id}" ${a.done?'checked':''} aria-label="Erledigt: ${esc(a.text)}">
-      <div class="row-main"><div class="row-title">${esc(a.text)}</div>
-        <div class="row-meta">${a.due?`<span class="tag" style="${late?'color:var(--bad);border-color:var(--bad-soft)':''}">${late?'überfällig · ':''}${fmt(a.due)}</span>`:''}${a.beispiel?'<span class="tag example">Beispiel</span>':''}</div></div>
-      <button class="icon-btn" data-del="${a.id}" aria-label="Schritt entfernen" style="background:transparent;color:var(--fg3)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
-    </div>`}).join(''):'<div class="empty">Noch keine Schritte geplant.</div>';
-  $('#plan-count').textContent=`${S.aufgaben.filter(a=>!a.done).length} offen`;
-  $$('#task-list .check').forEach(c=>c.onchange=()=>{S.aufgaben.find(a=>a.id===c.dataset.id).done=c.checked;save();renderPlan()});
-  $$('#task-list [data-del]').forEach(b=>b.onclick=()=>{S.aufgaben=S.aufgaben.filter(a=>a.id!==b.dataset.del);save();renderPlan()});
-  $('#ziel-monat').value=S.ziele.monat;$('#ziel-woche-info').textContent=`Ihr Wochenziel: ${wochenZiel()} Bewerbungen.`;
-}
-$('#task-form').onsubmit=e=>{e.preventDefault();const t=$('#task-text').value.trim();if(!t)return;
-  S.aufgaben.push({id:uid(),text:t,due:$('#task-due').value,done:false});$('#task-text').value='';$('#task-due').value='';save();renderPlan()};
-$('#ziel-monat').oninput=e=>{S.ziele.monat=+e.target.value||0;save();renderStats();$('#ziel-woche-info').textContent=`Ihr Wochenziel: ${wochenZiel()} Bewerbungen.`};
-
-/* ================= Strategie ================= */
-function renderStrategie(){
-  $$('[data-bind]').forEach(el=>{el.value=S.strategie[el.dataset.bind]??''});
-  verteilTxt();
-}
-function verteilTxt(){const v=+S.strategie.verdeckt||0;$('#verteilung-txt').textContent=`${100-v} % offener Markt (Inserate) · ${v} % verdeckter Markt (Initiativ, Netzwerk)`}
-$$('[data-bind]').forEach(el=>el.oninput=()=>{S.strategie[el.dataset.bind]=el.type==='range'?+el.value:el.value;save();if(el.type==='range')verteilTxt()});
-
-
 /* ================= Dossier: Stapel ================= */
 let katFilter=null, stackIdx=0;
 function stackDocs(){
@@ -2436,12 +2053,28 @@ function openUpload(pre={}){
 }
 
 /* ================= Dossier: Ansehen ================= */
+/* Dokument als Datei: Text wird zu .txt, sonst die gespeicherte Datei mit passender Endung */
+const EXT={'application/pdf':'pdf','image/jpeg':'jpg','image/png':'png','image/webp':'webp','image/heic':'heic','text/plain':'txt'};
+async function docFile(d){
+  if(d.typ==='text'){const t=($('#d-text')&&$('#d-text').value)||d.text||'';return{blob:new Blob([t],{type:'text/plain'}),name:(cleanName(d.name)||'Dokument')+'.txt'}}
+  const blob=await blobGet(d.id);if(!blob)return null;const typ=blob.type||d.typ||'application/octet-stream';
+  const base=cleanName(d.name)||'Dokument',ext=EXT[typ];return{blob,name:ext&&!base.toLowerCase().endsWith('.'+ext)?base+'.'+ext:base}}
+/* Öffnen: in der Android-App mit der passenden App (z.B. PDF-Leser), sonst in einem neuen Browser-Tab */
+async function docOpen(d){const f=await docFile(d);if(!f){toast('Datei nicht gefunden');return}
+  const typ=f.blob.type||'application/octet-stream';
+  if(NATIVE&&typeof NATIVE.openFile==='function'){if(!native('openFile',await blobB64(f.blob),f.name,typ))toast('Keine App zum Öffnen gefunden');return}
+  if(NATIVE){shareBlob(f.blob,f.name);return}
+  const u=URL.createObjectURL(f.blob),w=window.open(u,'_blank');setTimeout(()=>URL.revokeObjectURL(u),60000);
+  if(!w)saveBlob(f.blob,f.name)}
+/* Senden: Teilen-Dialog des Handys (Mail, WhatsApp …), sonst herunterladen */
+async function docShare(d){const f=await docFile(d);if(!f){toast('Datei nicht gefunden');return}shareBlob(f.blob,f.name)}
 let viewerURLs=[];
 function revokeViewer(){viewerURLs.forEach(u=>URL.revokeObjectURL(u));viewerURLs=[]}
 async function openDoc(id){
   const d=S.docs.find(x=>x.id===id);if(!d)return;
   openSheet(d.name,`
     <div class="viewer" id="viewer"><div class="muted">Wird geladen …</div></div>
+    <div class="doc-acts"><button type="button" class="btn btn-glass" id="d-open"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg>Öffnen</button><button type="button" class="btn btn-primary" id="d-share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3m0 0-4 4m4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>Senden</button></div>
     <div class="field"><label for="d-name">Bezeichnung</label><input class="input" id="d-name" value="${esc(d.name)}"></div>
     ${d.bereich?'':`<div class="grid2">
       <div class="field"><label for="d-kat">Art</label><select class="input" id="d-kat">${KAT.map(k=>`<option value="${k.id}" ${k.id===d.kat?'selected':''}>${k.l}</option>`).join('')}</select></div>
@@ -2455,6 +2088,7 @@ async function openDoc(id){
     const tx=$('#d-text');if(tx)d.text=tx.value;
     save();closeSheet();render();toast('Gesichert')});
   armDelete($('#d-del'),async()=>{await blobDel(d.id).catch(()=>{});S.docs=S.docs.filter(x=>x.id!==id);save();closeSheet();render();toast('Dokument gelöscht')});
+  $('#d-open').onclick=()=>docOpen(d);$('#d-share').onclick=()=>docShare(d);
   const v=$('#viewer');
   try{
     if(d.typ==='text'){v.innerHTML=`<textarea class="text-doc input" id="d-text" aria-label="Text" style="min-height:260px">${esc(d.text)}</textarea>${d.kat==='inserat'&&!d.bewerbungId?'<button type="button" class="btn btn-primary" id="d-tobew" style="align-self:flex-start">Bewerbung daraus erfassen</button>':''}`;
@@ -2618,7 +2252,7 @@ function saveBlob(blob,name){if(NATIVE&&typeof NATIVE.savePdf==='function'){blob
 async function shareBlob(blob,name){if(NATIVE&&typeof NATIVE.sharePdf==='function'){native('sharePdf',await blobB64(blob),name,blob.type||'application/pdf');return}
   const file=new File([blob],name,{type:blob.type||'application/pdf'});
   try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:name});return}}catch(e){if(e&&e.name==='AbortError')return}
-  saveBlob(blob,name);toast('Teilen geht hier nicht. Das PDF wurde gespeichert.')}
+  saveBlob(blob,name);toast('Teilen geht hier nicht. Die Datei wurde gespeichert.')}
 const cleanName=s=>(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^\w-]+/g,'_').replace(/^_+|_+$/g,'');
 function b64ToBytes(b64){const s=atob(b64),a=new Uint8Array(s.length);for(let i=0;i<s.length;i++)a[i]=s.charCodeAt(i);return a}
 async function storePdf(blob,meta,replaceWhere){
@@ -3267,152 +2901,6 @@ function renderCheck(){S.check=S.check||{};let done=0,all=0;
   const top=$('#dos-check > details');top.ontoggle=()=>{chkOpen=top.open};
   $$('#dos-check [data-ck]').forEach(c=>c.onchange=()=>{S.check[c.dataset.ck]=c.checked;save();const op=[...$$('#dos-check .chk-sec')].map(d=>d.open);renderCheck();$$('#dos-check .chk-sec').forEach((d,i)=>d.open=op[i])})}
 
-/* ================= Netzwerk (aus dem A5-Tool „Mein Netzwerk“) ================= */
-const SECT=[{id:'fam',n:'Familie'},{id:'fre',n:'Freunde & Bekannte'},{id:'arb',n:'Arbeit & Ausbildung'},{id:'fach',n:'Fachpersonen & Institutionen'}];
-const NEAR=[{id:1,n:'eng'},{id:2,n:'mittel'},{id:3,n:'locker'}];
-const SUP=[{id:'emo',n:'Mut machen, zuhören',short:'Emotional',v:'--s-emo'},{id:'info',n:'Hinweise auf offene Stellen',short:'Stelleninfos',v:'--s-info'},
-  {id:'door',n:'Türöffner, Empfehlung',short:'Türöffner',v:'--s-door'},{id:'fach',n:'Wissen über Beruf oder Branche',short:'Branchenwissen',v:'--s-fach'},
-  {id:'bew',n:'Dossier gegenlesen, Gespräch üben',short:'Bewerbungshilfe',v:'--s-bew'},{id:'prak',n:'Praktische Hilfe (Betreuung, Fahrt, PC)',short:'Praktisch',v:'--s-prak'}];
-const supById=Object.fromEntries(SUP.map(s=>[s.id,s]));
-const N=()=>S.netz;
-const cById=id=>N().contacts.find(c=>c.id===id);
-let nsub='kontakte', nlayout='near', hiSup=null, selC=null;
-$$('#netz-seg button').forEach(b=>b.onclick=()=>{nsub=b.dataset.n;$$('#netz-seg button').forEach(x=>x.setAttribute('aria-selected',x===b));$$('[data-np]').forEach(p=>p.hidden=p.dataset.np!==nsub);renderNetz()});
-function setKnows(id,list){N().contacts.forEach(o=>{if(o.id===id)return;o.knows=o.knows.filter(k=>k!==id);if(list.includes(o.id))o.knows.push(id)});cById(id).knows=list.slice()}
-const swatch=c=>`<span style="display:inline-flex;gap:3px">${c.sup.map(s=>`<i style="width:10px;height:10px;border-radius:50%;background:var(${supById[s].v})"></i>`).join('')||'<i style="width:10px;height:10px;border-radius:50%;background:var(--hair)"></i>'}</span>`;
-function renderNetz(){
-  const C=N().contacts, tot=C.reduce((a,c)=>a+c.sup.length,0);
-  $('#netz-count').textContent=C.length?`${C.length} Kontakte · ${tot} Unterstützungen`:'';
-  $('#netz-list').innerHTML=C.length?C.map(c=>`<div class="row row-click" data-c="${c.id}" tabindex="0" role="button"><div style="padding-top:5px">${swatch(c)}</div><div class="row-main">
-      <div class="row-title">${esc(c.name)}</div><div class="row-sub">${SECT.find(s=>s.id===c.sec).n} · ${NEAR[c.near-1].n}${c.knows.length?` · kennt ${c.knows.length}`:''}</div>
-      ${c.act?`<div class="row-meta"><span class="pill s-gespraech">aktiviert</span>${c.step?`<span class="tag">→ ${esc(c.step)}</span>`:''}</div>`:''}</div></div>`).join('')
-    :`<div class="empty">Noch keine Kontakte. Denken Sie an Familie, Freundeskreis, ehemalige Teams, Verein und Nachbarschaft.<br><button class="btn btn-glass" id="netz-ex" style="margin-top:10px">Beispiel ansehen</button></div>`;
-  $$('#netz-list [data-c]').forEach(r=>r.onclick=()=>openKontakt(+r.dataset.c));
-  $('#netz-ex')&&($('#netz-ex').onclick=()=>{loadNetzExample();renderNetz()});
-  if(nsub==='karte')buildMap();
-  if(nsub==='aktiv')renderAktiv();
-}
-function loadNetzExample(){const ex=[['Schwester','fam',1,['emo','prak']],['Ex-Chefin','arb',2,['door','fach','info']],['Trainer FC','fre',3,['info','door']],['Nachbar M.','fre',3,['prak']],['Kollegin Lehre','arb',3,['fach','info']],['RAV-Beraterin','fach',2,['info','bew']],['Freundin S.','fre',1,['emo','bew']],['Onkel','fam',2,[]]];
-  N().contacts=ex.map((e,i)=>({id:i+1,name:e[0]+' (Beispiel)',sec:e[1],near:e[2],sup:e[3],knows:[],step:'',act:false,beispiel:true}));N().nextId=ex.length+1;
-  setKnows(2,[5]);setKnows(3,[4]);setKnows(1,[7]);save()}
-function openKontakt(id){
-  const c=id?cById(id):{name:'',sec:'fre',near:2,sup:[],knows:[],step:'',act:false};
-  const others=N().contacts.filter(o=>o.id!==id);
-  openSheet(id?'Kontakt':'Kontakt hinzufügen',`
-    <div class="field"><label for="k-nm">Kürzel oder Rolle</label><input class="input" id="k-nm" value="${esc(c.name)}" placeholder="z.B. Ex-Chefin, Nachbar M."><span class="muted">Ein Kürzel genügt. Volle Namen braucht es nicht.</span></div>
-    <div class="field"><label>Woher kennen Sie die Person?</label><div class="chips" id="k-sec">${SECT.map(s=>`<button type="button" class="kat" data-v="${s.id}" aria-pressed="${s.id===c.sec}">${s.n}</button>`).join('')}</div></div>
-    <div class="field"><label>Wie nah stehen Sie sich?</label><div class="chips" id="k-near">${NEAR.map(s=>`<button type="button" class="kat" data-v="${s.id}" aria-pressed="${s.id===c.near}">${s.n}</button>`).join('')}</div></div>
-    <div class="field"><label>Was kann diese Person beitragen?</label><div class="chips" id="k-sup">${SUP.map(s=>`<button type="button" class="kat" data-v="${s.id}" aria-pressed="${c.sup.includes(s.id)}" style="border-color:var(${s.v})"><i style="width:9px;height:9px;border-radius:50%;background:var(${s.v})"></i>${s.n}</button>`).join('')}</div></div>
-    ${others.length?`<div class="field"><label>Kennt auch</label><div class="chips" id="k-knows">${others.map(o=>`<button type="button" class="kat" data-v="${o.id}" aria-pressed="${c.knows.includes(o.id)}">${esc(o.name)}</button>`).join('')}</div></div>`:''}
-    <div class="field"><label for="k-step">Nächster Schritt mit dieser Person</label><textarea class="input" id="k-step" placeholder="z.B. anrufen und fragen, ob in ihrer Firma jemand gesucht wird">${esc(c.step)}</textarea></div>
-    <label class="row" style="cursor:pointer;border:none"><input type="checkbox" class="check" id="k-act" ${c.act?'checked':''}><div class="row-main"><div class="row-title">Diesen Kontakt aktivieren</div><div class="row-sub">Erscheint dann unter „Aktivieren“ und kann in den Aktionsplan.</div></div></label>
-    ${id?`<div class="sheet-actions"><span></span><button class="btn btn-ghost" id="k-del" style="color:var(--bad)">Kontakt löschen</button></div>`:''}`,
-  ()=>{const name=$('#k-nm').value.trim();if(!name){toast('Bitte Kürzel oder Rolle eintragen');return}
-    const pick=sel=>$$(sel+' [aria-pressed="true"]').map(b=>b.dataset.v);
-    const rec={name,sec:pick('#k-sec')[0]||'fre',near:+(pick('#k-near')[0]||2),sup:pick('#k-sup'),step:$('#k-step').value.trim(),act:$('#k-act').checked};
-    const knows=$('#k-knows')?pick('#k-knows').map(Number):[];
-    if(id){Object.assign(cById(id),rec);delete cById(id).beispiel;setKnows(id,knows)}else{const nid=N().nextId++;N().contacts.push({id:nid,...rec,knows:[]});setKnows(nid,knows)}
-    save();closeSheet();renderNetz();toast('Gesichert')});
-  ['#k-sec','#k-near'].forEach(g=>$$(g+' button').forEach(b=>b.onclick=()=>$$(g+' button').forEach(x=>x.setAttribute('aria-pressed',x===b))));
-  ['#k-sup','#k-knows'].forEach(g=>$$(g+' button').forEach(b=>b.onclick=()=>b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')!=='true')));
-  if(id)armDelete($('#k-del'),()=>{N().contacts=N().contacts.filter(x=>x.id!==id);N().contacts.forEach(x=>x.knows=x.knows.filter(k=>k!==id));if(selC===id)selC=null;save();closeSheet();renderNetz()});
-}
-$('#netz-add').onclick=()=>openKontakt(null);
-
-/* Karte */
-const CX=360,CY=360,RAD={1:120,2:215,3:305};
-function posNear(){const P={};SECT.forEach((s,si)=>{const g0=N().contacts.filter(c=>c.sec===s.id);[1,2,3].forEach(r=>{const g=g0.filter(c=>c.near===r);const a0=-Math.PI/2+si*Math.PI/2;
-  g.forEach((c,i)=>{const a=a0+(i+1)*(Math.PI/2)/(g.length+1);P[c.id]=[CX+RAD[r]*Math.cos(a),CY+RAD[r]*Math.sin(a)]})})});return P}
-const CL={};SUP.forEach((s,i)=>{const a=-Math.PI/2+i*2*Math.PI/SUP.length;CL[s.id]=[CX+250*Math.cos(a),CY+250*Math.sin(a)]});
-function posSup(){const C=N().contacts,P={};const noSup=C.filter(c=>!c.sup.length);
-  C.filter(c=>c.sup.length).forEach(c=>{let vx=0,vy=0;c.sup.forEach(s=>{vx+=CL[s][0]-CX;vy+=CL[s][1]-CY});vx/=c.sup.length;vy/=c.sup.length;
-    if(Math.hypot(vx,vy)<60){vx=CL[c.sup[0]][0]-CX;vy=CL[c.sup[0]][1]-CY}const d=Math.hypot(vx,vy),R=c.sup.length===1?255:200;P[c.id]=[CX+vx/d*R,CY+vy/d*R]});
-  noSup.forEach((c,i)=>{const a=Math.PI*.62+i*.3;P[c.id]=[CX+315*Math.cos(a),CY+315*Math.sin(a)]});
-  const ids=Object.keys(P);for(let it=0;it<120;it++){ids.forEach(a=>{ids.forEach(b=>{if(a>=b)return;const p=P[a],q=P[b];const dx=q[0]-p[0],dy=q[1]-p[1];const d=Math.hypot(dx,dy)||.01;if(d<96){const k=(96-d)/2/d;p[0]-=dx*k;p[1]-=dy*k;q[0]+=dx*k;q[1]+=dy*k}});
-    const p=P[a];const dx=p[0]-CX,dy=p[1]-CY,d=Math.hypot(dx,dy)||.01;if(d<120){p[0]=CX+dx/d*120;p[1]=CY+dy/d*120}})}
-  Object.values(P).forEach(p=>{p[0]=Math.max(50,Math.min(670,p[0]));p[1]=Math.max(50,Math.min(670,p[1]))});return P}
-const nodeR=c=>16+c.sup.length*4;
-const arcPath=(r,a0,a1)=>`M ${Math.cos(a0)*r} ${Math.sin(a0)*r} A ${r} ${r} 0 ${a1-a0>Math.PI?1:0} 1 ${Math.cos(a1)*r} ${Math.sin(a1)*r}`;
-function buildMap(){const C=N().contacts,svg=$('#netz-map');if(!svg)return;
-  if(!C.length){svg.innerHTML=`<text x="360" y="360" text-anchor="middle" class="ringlbl">Erfassen Sie zuerst Kontakte.</text>`;$('#netz-legend').innerHTML='';$('#netz-sheet').innerHTML='';$('#netz-insight').hidden=true;return}
-  const P=nlayout==='near'?posNear():posSup();let h='';
-  if(nlayout==='near'){[1,2,3].forEach(r=>h+=`<circle class="ring" cx="${CX}" cy="${CY}" r="${RAD[r]+(r===3?40:45)}"/>`);
-    [['eng',1],['mittel',2],['locker',3]].forEach(([t,r])=>h+=`<text class="ringlbl" x="${CX+6}" y="${CY-RAD[r]-(r===3?40:45)+16}">${t}</text>`);
-    h+=`<line class="sector" x1="${CX}" y1="10" x2="${CX}" y2="710"/><line class="sector" x1="10" y1="${CY}" x2="710" y2="${CY}"/>`;
-    SECT.forEach((s,i)=>{const[x,y,an]=[[700,28,'end'],[700,706,'end'],[20,706,'start'],[20,28,'start']][i];h+=`<text class="sectorlbl" x="${x}" y="${y}" text-anchor="${an}">${s.n}</text>`})}
-  else SUP.forEach(s=>{const[x,y]=CL[s.id];h+=`<text class="clusterlbl" x="${x+(x-CX)*.22}" y="${y+(y-CY)*.22}" text-anchor="middle" fill="var(${s.v})">${s.short}</text>`});
-  C.forEach(c=>{const[x,y]=P[c.id];h+=`<line class="edge" x1="${CX}" y1="${CY}" x2="${x}" y2="${y}"/>`});
-  const done=new Set();C.forEach(c=>c.knows.forEach(k=>{const key=[c.id,k].sort().join('-');if(done.has(key)||!P[k])return;done.add(key);h+=`<line class="kennt" x1="${P[c.id][0]}" y1="${P[c.id][1]}" x2="${P[k][0]}" y2="${P[k][1]}"/>`}));
-  h+=`<g class="me"><circle cx="${CX}" cy="${CY}" r="34"/><text x="${CX}" y="${CY+6}" text-anchor="middle">Ich</text></g>`;
-  C.forEach(c=>{const[x,y]=P[c.id],r=nodeR(c);let arcs='';
-    if(c.sup.length===1)arcs=`<circle r="${r+5}" fill="none" stroke="var(${supById[c.sup[0]].v})" stroke-width="7"/>`;
-    else c.sup.forEach((s,i)=>{const n=c.sup.length,a0=-Math.PI/2+i*2*Math.PI/n+.06,a1=-Math.PI/2+(i+1)*2*Math.PI/n-.06;arcs+=`<path d="${arcPath(r+5,a0,a1)}" fill="none" stroke="var(${supById[s].v})" stroke-width="7" stroke-linecap="round"/>`});
-    const dim=hiSup&&!c.sup.includes(hiSup);
-    h+=`<g class="node${selC===c.id?' sel':''}" data-id="${c.id}" tabindex="0" role="button" aria-label="${esc(c.name)}" transform="translate(${x},${y})" opacity="${dim?.18:1}">${arcs}<circle class="core" r="${r}"/><text y="${r+24}" text-anchor="middle">${esc(c.name)}</text></g>`});
-  svg.innerHTML=h;
-  $$('#netz-map .node').forEach(g=>{g.onclick=()=>{selC=+g.dataset.id;buildMap()};g.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selC=+g.dataset.id;buildMap()}}});
-  $('#netz-legend').innerHTML=SUP.map(s=>`<button type="button" class="kat" data-hi="${s.id}" aria-pressed="${hiSup===s.id}"><i style="width:9px;height:9px;border-radius:50%;background:var(${s.v})"></i>${s.short} (${C.filter(c=>c.sup.includes(s.id)).length})</button>`).join('');
-  $$('#netz-legend [data-hi]').forEach(b=>b.onclick=()=>{hiSup=hiSup===b.dataset.hi?null:b.dataset.hi;buildMap()});
-  const loose=C.filter(c=>c.near===3&&c.sup.some(s=>['info','door','fach'].includes(s)));
-  $('#netz-insight').hidden=nlayout!=='sup';
-  $('#netz-insight').innerHTML=`<div class="txt"><b>${loose.length?`${loose.length} lockere Kontakte können Ihnen Stelleninfos, Branchenwissen oder eine Tür öffnen.`:'Gut zu wissen'}</b><span>Der Soziologe Mark Granovetter hat gezeigt, dass Stellen oft über lockere Bekanntschaften gefunden werden, weil diese andere Informationen haben als der enge Kreis.</span></div>`;
-  const c=selC&&cById(selC);
-  $('#netz-sheet').innerHTML=c?`<div class="card-head"><div><div class="eyebrow">${SECT.find(s=>s.id===c.sec).n} · ${NEAR[c.near-1].n}</div><h2>${esc(c.name)}</h2></div><button class="btn btn-glass" id="ns-edit">Bearbeiten</button></div>
-    <div class="list">${SUP.map(s=>`<div class="row" style="padding:6px 0"><div class="row-main"><div class="row-sub">${s.short}</div></div><div class="meter" style="width:45%;margin:0;align-self:center"><div style="width:${c.sup.includes(s.id)?100:0}%;background:var(${s.v})"></div></div></div>`).join('')}</div>
-    <p class="muted">${c.knows.length?'Kennt auch: '+c.knows.map(k=>esc(cById(k).name)).join(', '):'Noch keine Verbindungen erfasst.'}</p>`:'<p class="muted">Tippen Sie auf einen Kontakt, um sein Kontaktblatt zu sehen.</p>';
-  $('#ns-edit')&&($('#ns-edit').onclick=()=>openKontakt(c.id));
-}
-$$('#netz-lay button').forEach(b=>b.onclick=()=>{nlayout=b.dataset.l;$$('#netz-lay button').forEach(x=>x.setAttribute('aria-selected',x===b));buildMap()});
-
-/* Aktivieren */
-function renderAktiv(){const A=N().contacts.filter(c=>c.act);
-  $('#netz-aktiv').innerHTML=A.length?A.map(c=>{const inPlan=S.aufgaben.some(a=>a.kontaktId===c.id);return `<div class="row"><div style="padding-top:5px">${swatch(c)}</div><div class="row-main"><div class="row-title">${esc(c.name)}</div>
-      <div class="row-sub">${c.sup.map(s=>supById[s].short).join(' · ')||'Noch keine Unterstützung erfasst'}</div>
-      <div class="row-sub" style="color:var(--fg)">${c.step?'→ '+esc(c.step):'<span class="muted">Noch kein nächster Schritt notiert.</span>'}</div>
-      <div class="row-meta">${c.step?(inPlan?'<span class="pill s-zusage">im Aktionsplan</span>':`<button class="tag" data-plan="${c.id}" style="cursor:pointer;color:var(--accent);border-color:var(--accent-soft)">+ In den Aktionsplan</button>`):''}<button class="tag" data-ed="${c.id}" style="cursor:pointer">Bearbeiten</button></div></div></div>`}).join('')
-    :'<div class="empty">Noch keine Kontakte aktiviert. Öffnen Sie einen Kontakt und setzen Sie das Häkchen „Diesen Kontakt aktivieren“.</div>';
-  $$('#netz-aktiv [data-plan]').forEach(b=>b.onclick=()=>{const c=cById(+b.dataset.plan);S.aufgaben.push({id:uid(),text:`${c.name}: ${c.step}`,due:ahead(3),done:false,kontaktId:c.id});save();renderAktiv();renderPlan();toast('Im Aktionsplan')});
-  $$('#netz-aktiv [data-ed]').forEach(b=>b.onclick=()=>openKontakt(+b.dataset.ed))}
-
-$('#netz-import').onchange=e=>{const fl=e.target.files[0];if(!fl)return;const r=new FileReader();
-  r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.contacts))throw 0;N().contacts=d.contacts.map(c=>({knows:[],sup:[],step:'',act:false,...c}));N().nextId=Math.max(0,...N().contacts.map(c=>c.id))+1;save();renderNetz();toast(`${N().contacts.length} Kontakte geladen`)}
-    catch(err){toast('Bitte die Datei „mein-netzwerk.json“ aus dem Werkzeug „Mein Netzwerk“ wählen')}};r.readAsText(fl);e.target.value=''};
-
-/* ================= Kompetenzen & Ressourcen ================= */
-const KB=[{id:'fach',l:'Fachkompetenz',h:'Berufliches Wissen und Können, Ausbildungen, Zertifikate',ph:'z.B. Staplerfahren, Warenkontrolle'},
-  {id:'meth',l:'Methodenkompetenz',h:'Wie Sie arbeiten: planen, organisieren, Probleme lösen',ph:'z.B. Touren planen'},
-  {id:'selbst',l:'Selbstkompetenz',h:'Wie Sie mit sich umgehen: Belastbarkeit, Zuverlässigkeit',ph:'z.B. bleibe ruhig unter Zeitdruck'},
-  {id:'sozial',l:'Sozialkompetenz',h:'Wie Sie mit anderen umgehen: Team, Kundschaft, Konflikte',ph:'z.B. neue Kollegen einarbeiten'}];
-const RES=[{id:'dossier',l:'Dossier'},{id:'unterst',l:'Unterstützung'},{id:'zeit',l:'Zeit'},{id:'mob',l:'Mobilität'},{id:'flex',l:'Flexibilität'}];
-const AMPEL=[{id:'gut',l:'stark',c:'s-zusage'},{id:'teil',l:'teilweise',c:'s-gespraech'},{id:'fehlt',l:'ausbauen',c:'s-absage'}];
-function renderKomp(){const K=S.komp;
-  const stars=K.items.filter(i=>i.star);
-  $('#komp-top').innerHTML=stars.length?stars.map(i=>`<div class="row"><div class="row-main"><div class="row-title">★ ${esc(i.name)}</div><div class="row-sub">${i.beleg?esc(i.beleg):'<span style="color:var(--warn)">Beleg fehlt: Woran sieht man das im Berufsalltag?</span>'}</div><div class="row-meta"><span class="tag">${KB.find(k=>k.id===i.bereich).l}</span></div></div></div>`).join('')
-    :'<div class="empty">Markieren Sie bis zu drei Kompetenzen mit dem Stern. Das sind Ihre Argumente fürs Vorstellungsgespräch.</div>';
-  $('#komp-areas').innerHTML=KB.map(k=>{const L=K.items.filter(i=>i.bereich===k.id);return `<div class="card glass"><div class="card-head"><div><h2>${k.l}</h2><p class="muted">${k.h}</p></div><button class="icon-btn btn-glass" data-addk="${k.id}" aria-label="${k.l} hinzufügen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></div>
-    <div class="list">${L.map(i=>`<div class="row row-click" data-k="${i.id}" tabindex="0" role="button"><button class="icon-btn" data-star="${i.id}" aria-label="Stern" style="background:transparent;color:${i.star?'var(--accent)':'var(--fg3)'};width:30px;height:30px;font-size:20px">${i.star?'★':'☆'}</button>
-      <div class="row-main"><div class="row-title">${esc(i.name)}</div><div class="row-sub">${i.beleg?esc(i.beleg):'<span style="color:var(--fg3)">Noch kein Beleg</span>'}</div>${i.inserat||i.beispiel?`<div class="row-meta">${i.inserat?'<span class="pill s-zusage">in Inseraten gefragt</span>':''}${i.beispiel?'<span class="tag example">Beispiel</span>':''}</div>`:''}</div></div>`).join('')||`<div class="muted">${k.ph}</div>`}</div></div>`}).join('');
-  $$('#komp-areas [data-addk]').forEach(b=>b.onclick=()=>openKomp(null,b.dataset.addk));
-  $$('#komp-areas [data-k]').forEach(r=>r.onclick=e=>{if(e.target.closest('[data-star]'))return;openKomp(r.dataset.k)});
-  $$('#komp-areas [data-star]').forEach(b=>b.onclick=e=>{e.stopPropagation();const i=K.items.find(x=>x.id===b.dataset.star);
-    if(!i.star&&K.items.filter(x=>x.star).length>=3){toast('Höchstens drei Sterne. Entfernen Sie zuerst einen.');return}i.star=!i.star;save();renderKomp()});
-  $('#komp-res').innerHTML=RES.map(r=>{const v=K.res[r.id]||{};return `<div class="row" style="flex-direction:column;align-items:stretch;gap:8px"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><b>${r.l}</b>
-    <div class="chips">${AMPEL.map(a=>`<button type="button" class="pill ${a.c}" data-res="${r.id}" data-a="${a.id}" style="cursor:pointer;border:2px solid ${v.a===a.id?'currentColor':'transparent'}">${a.l}</button>`).join('')}</div></div>
-    <input class="input" data-rtext="${r.id}" value="${esc(v.t||'')}" placeholder="${{dossier:'Stand Ihrer Unterlagen',unterst:'Wer hilft Ihnen?',zeit:'Wie viele Stunden pro Woche für die Suche?',mob:'Arbeitsweg, Führerschein, ÖV',flex:'Pensum, Arbeitszeiten, Branchenwechsel'}[r.id]}"></div>`}).join('');
-  $$('#komp-res [data-res]').forEach(b=>b.onclick=()=>{const r=b.dataset.res;K.res[r]=K.res[r]||{};K.res[r].a=K.res[r].a===b.dataset.a?null:b.dataset.a;save();renderKomp()});
-  $$('#komp-res [data-rtext]').forEach(el=>el.oninput=()=>{const r=el.dataset.rtext;K.res[r]=K.res[r]||{};K.res[r].t=el.value;save()})}
-function openKomp(id,bereich){const K=S.komp;const i=K.items.find(x=>x.id===id)||{name:'',bereich,beleg:'',inserat:false,star:false};
-  openSheet(id?'Kompetenz':'Kompetenz hinzufügen',`
-    <div class="field"><label for="kp-b">Bereich</label><select class="input" id="kp-b">${KB.map(k=>`<option value="${k.id}" ${k.id===i.bereich?'selected':''}>${k.l}</option>`).join('')}</select></div>
-    <div class="field"><label for="kp-n">Kompetenz</label><input class="input" id="kp-n" value="${esc(i.name)}" placeholder="${KB.find(k=>k.id===i.bereich).ph}"></div>
-    <div class="field"><label for="kp-bl">Beleg aus dem Berufsalltag</label><textarea class="input" id="kp-bl" placeholder="Situation, was Sie getan haben, was dabei herauskam. So können Sie es im Gespräch begründen.">${esc(i.beleg)}</textarea></div>
-    <label class="row" style="cursor:pointer;border:none"><input type="checkbox" class="check" id="kp-in" ${i.inserat?'checked':''}><div class="row-main"><div class="row-title">Wird in meinen Zielinseraten verlangt</div><div class="row-sub">Zeigt Ihnen, wie gefragt diese Kompetenz auf dem Arbeitsmarkt ist.</div></div></label>
-    ${id?`<div class="sheet-actions"><span></span><button class="btn btn-ghost" id="kp-del" style="color:var(--bad)">Löschen</button></div>`:''}`,
-  ()=>{const name=$('#kp-n').value.trim();if(!name){toast('Bitte Kompetenz eintragen');return}
-    const rec={...i,id:id||uid(),name,bereich:$('#kp-b').value,beleg:$('#kp-bl').value.trim(),inserat:$('#kp-in').checked};delete rec.beispiel;
-    if(id)K.items[K.items.findIndex(x=>x.id===id)]=rec;else K.items.push(rec);save();closeSheet();renderKomp();toast('Gesichert')});
-  if(id)armDelete($('#kp-del'),()=>{K.items=K.items.filter(x=>x.id!==id);save();closeSheet();renderKomp()})}
-
 /* ================= Zwischenverdienst-Stunden (Abgleich mit 716.105) ================= */
 function zvHTML(k){const m=mon(k);m.zvStd=m.zvStd||[];const tot=m.zvStd.reduce((a,x)=>a+(+x.h||0),0);
   return `<div class="field" style="margin-top:6px"><label>Meine Stunden im Zwischenverdienst</label>
@@ -3506,675 +2994,6 @@ function swInitBrief(f,text,richtung,person){
   const [b]=ensureBewForFirm(f,'arbeit',richtung,person);save();
   openBrief(b.id,{fiName:f.name,fiKontakt:[p.anrede,(p.name||'').trim()].filter(Boolean).join(' '),fiStrasse:'',fiPlzOrt:f.ort||'',
     betreff:'Initiativbewerbung'+(richtung?' als '+richtung.replace(/\s*\(Beispiel\)\s*$/,''):''),text})}
-/* ================= Zielrichtungen (Werkzeug BIN 6) ================= */
-
-(function(){
-
-var KEY="bin.zielrichtungen.v1";
-var options=S.zr, editId=null;
-function Z(id){return document.getElementById("zr-"+id);}
-function armed(b,lab){ if(b.dataset.armed)return true; b.dataset.armed="1"; b.textContent="Wirklich löschen?"; setTimeout(function(){ if(b.isConnected){ delete b.dataset.armed; b.textContent=lab; } },4000); return false; }
-
-var STRAT={
-  nutzen:{label:"Jetzt verfolgen",cls:"v-nutzen",quad:"q-nutzen",
-    why:"Der Markt ist offen und Sie bringen das Nötige mit. Hier lohnt sich Ihre Zeit am meisten.",
-    next:["Dossier auf genau diese Stellenbezeichnung zuschneiden",
-          "Laufend auf ausgeschriebene Stellen bewerben"]},
-  aufbauen:{label:"Aufbauen",cls:"v-aufbauen",quad:"q-aufbauen",
-    why:"Der Markt wäre da, aber Ihnen fehlt noch etwas. Das ist eine Frage der Zeit, nicht der Eignung.",
-    next:["Genau benennen, was fehlt: Abschluss, Ausweis, Sprache oder Erfahrung",
-          "Weg wählen und im Einzelgespräch klären: individueller Kurs über das RAV, Grundbildung ab 35 Jahren, Zulassung zum Qualifikationsverfahren, Anerkennung eines ausländischen Abschlusses",
-          "Einstieg über Probearbeit oder Zwischenverdienst prüfen",
-          "Parallel weiter bewerben, nicht warten, bis alles fertig ist"]},
-  uebertragen:{label:"Übertragen",cls:"v-uebertragen",quad:"q-uebertragen",
-    why:"Sie können viel, aber in dieser Richtung wird wenig ausgeschrieben. Ihre Ressourcen sind nicht das Problem, der offene Markt ist es. Suchen Sie deshalb auch dort, wo Stellen gar nicht erst ausgeschrieben werden.",
-    next:["Aus dem Kompetenzprofil heraussuchen, was nicht an den bisherigen Beruf gebunden ist",
-          "Stellenbezeichnungen anpassen, sonst finden Sie die Inserate nicht",
-          "Dossier auf die neue Richtung umschreiben"]},
-  zurueck:{label:"Zurückstellen",cls:"v-zurueck",quad:"q-zurueck",
-    why:"In dieser Richtung wird wenig gesucht und die Lücke ist gross. Das sagt nichts über Sie aus, sondern über das Verhältnis von Aufwand und Aussicht.",
-    next:["Diese Richtung vorerst nicht weiterverfolgen und die Energie anderswo einsetzen",
-          "Im Einzelgespräch besprechen, ob es einen Umweg gibt",
-          "Später erneut prüfen, wenn sich der Markt oder Ihre Voraussetzungen ändern"]}
-};
-
-function axes(r){
-  return { y:(Number(r.markt)+Number(r.position)), x:(Number(r.kompetenz)+Number(r.aufwand)) };
-}
-function lvl(s){ return s>2?2:(s<2?0:1); }
-var QMAP={ "2,2":"nutzen","2,1":"nutzen","2,0":"aufbauen",
-           "1,2":"nutzen","1,1":"aufbauen","1,0":"aufbauen",
-           "0,2":"uebertragen","0,1":"zurueck","0,0":"zurueck" };
-// Seite des Quadranten je Strategie, damit ein Punkt nie auf der Trennlinie liegt
-var SIDE={ nutzen:{r:1,t:1}, aufbauen:{r:0,t:1}, uebertragen:{r:1,t:0}, zurueck:{r:0,t:0} };
-
-/* Zugang zum verdeckten Arbeitsmarkt: Schritte aus den eigenen Zahlen statt für alle gleich */
-function zugang(o,key){
-  if(key==="zurueck")return [];
-  var e=o.ev||{}, b=e.betriebe, k=e.kontakte, j=e.jahre, out=[];
-  if(b==null||k==null){
-    out.push("Firmenliste und Netzwerk zu dieser Richtung erfassen (Frage 2), dann werden die Schritte hier konkret");
-  } else if(b===0){
-    out.push("Zuerst 10 Betriebe in Ihrer Gegend heraussuchen, die in dieser Richtung einstellen. Ohne Namen bleibt der verdeckte Arbeitsmarkt unerreichbar");
-  } else if(k===0){
-    out.push("Sie kennen "+b+(b===1?" Betrieb":" Betriebe")+", aber niemanden darin. Pro Betrieb eine Ansprechperson finden (Website, LinkedIn, Empfang anrufen) und um ein kurzes Gespräch bitten, nicht um eine Stelle");
-  } else {
-    out.push("Ihre "+k+(k===1?" Kontaktperson":" Kontakte")+" gezielt fragen: Wer stellt ein, wann wird etwas frei, wen könnte ich noch ansprechen? Fragen Sie auch, ob man Sie empfehlen würde");
-  }
-  if(b>0) out.push("Initiativbewerbung mit konkretem Bezug an "+(b===1?"diesen Betrieb":"diese "+b+" Betriebe")+
-    (key==="nutzen"?"":", dazu einen Schnuppertag oder Probearbeit anbieten"));
-  if(key!=="nutzen"&&j===0) out.push("Ohne Erfahrung in dieser Richtung öffnet ein kurzer Einsatz die Tür: Schnuppertag, Probearbeit oder Temporäreinsatz");
-  if(key!=="nutzen") out.push("Temporärbüros für diese Branche anfragen. Ein Einsatz ist oft der schnellste Weg hinein; melden Sie ihn dem RAV als Zwischenverdienst");
-  return out;
-}
-
-/* Hinweise, die nur im Vergleich aller Richtungen sichtbar werden */
-function quer(){
-  var notes=[];
-  // gleiche Kandidatenzahl bei verschiedenen Berufen: Suche war zu breit
-  var mk=options.filter(function(o){return o.markt&&o.markt.kandidaten>=100;})
-                .sort(function(a,b){return a.markt.kandidaten-b.markt.kandidaten;});
-  var grp=[], best=[];
-  mk.forEach(function(o){
-    if(grp.length&&o.markt.kandidaten<=grp[0].markt.kandidaten*1.02)grp.push(o);
-    else{ if(grp.length>best.length)best=grp; grp=[o]; }
-  });
-  if(grp.length>best.length)best=grp;
-  var namen=best.map(function(o){return o.name.toLowerCase();}).filter(function(n,i,a){return a.indexOf(n)===i;});
-  if(best.length>=3&&namen.length>=2){
-    notes.push("Die Kandidatenzahlen von "+liste(best)+" sind fast gleich ("+best[0].markt.kandidaten+" bis "+
-      best[best.length-1].markt.kandidaten+"). Bei verschiedenen Berufen ist das kaum möglich. Wahrscheinlich war die Suche zu breit, zum Beispiel mit 150 km Radius. Prüfen Sie die Zahlen mit "+RADIUS_STD+" km.");
-  }
-  var weit=options.filter(function(o){return o.markt&&o.markt.kandidaten!=null&&(o.markt.radius==null||o.markt.radius>30);});
-  if(weit.length){
-    notes.push("Bei "+(weit.length===options.length&&weit.length>1?"allen Richtungen":liste(weit))+" ist kein Suchradius oder einer über 30 km eingetragen. Die Kandidatenzahl ist dann vermutlich zu hoch und der Markt sieht enger aus, als er ist.");
-  }
-  // Marktvergleich: Verhältnis untereinander, unabhängig von festen Schwellen
-  var vg=options.filter(function(o){return o.markt&&o.markt.stellen>=3&&o.markt.kandidaten!=null;})
-    .map(function(o){return {n:o.name,q:o.markt.kandidaten/o.markt.stellen};})
-    .sort(function(a,b){return a.q-b.q;});
-  if(vg.length>=2){
-    notes.push("Marktvergleich, Kandidaten pro Stelle (tiefer ist besser): "+vg.map(function(v){
-      return esc(v.n)+" <b>"+v.q.toFixed(1).replace(".",",")+"</b>";}).join(" · ")+".");
-  }
-  // mehrere Richtungen mit demselben Ergebnis: oft ein Berufsfeld statt getrennter Optionen
-  var byKey={};
-  options.forEach(function(o){var k=decide(o.ratings).key;(byKey[k]=byKey[k]||[]).push(o);});
-  Object.keys(byKey).forEach(function(k){
-    if(byKey[k].length>=3) notes.push(byKey[k].length+" Richtungen landen bei «"+STRAT[k].label+"»: "+liste(byKey[k])+
-      ". Gehören sie zum selben Berufsfeld, sind das keine getrennten Optionen. Dann breit im ganzen Feld bewerben und dieselben Kontakte für alle nutzen.");
-  });
-  // Praxis: Einladungen pro 10 Bewerbungen, und wo sie der Einstufung widerspricht
-  var pr=options.filter(function(o){return o.nach&&o.nach.bew>=5;});
-  if(pr.length>=2){
-    notes.push("Praxis, Einladungen pro 10 Bewerbungen (höher ist besser): "+pr.map(function(o){
-        return {n:o.name,q:(o.nach.einl||0)/o.nach.bew*10};
-      }).sort(function(a,b){return b.q-a.q;}).map(function(v){
-        return esc(v.n)+" <b>"+v.q.toFixed(1).replace(".",",")+"</b>";
-      }).join(" · ")+".");
-  }
-  pr.forEach(function(o){
-    if(fit(o).aus)return;   // ausgeschlossene Richtungen nicht gegen die Matrix ausspielen
-    var k=decide(o.ratings).key, q=(o.nach.einl||0)/o.nach.bew;
-    if(k==="nutzen"&&o.nach.bew>=10&&!o.nach.einl)
-      notes.push("«"+esc(o.name)+"» ist als «Jetzt verfolgen» eingestuft, hat aber auf "+o.nach.bew+" Bewerbungen keine Einladung gebracht. Prüfen Sie das Dossier und hinterfragen Sie die Einstufung.");
-    if((k==="uebertragen"||k==="zurueck")&&q>=0.2)
-      notes.push("«"+esc(o.name)+"» bringt mehr Einladungen, als die Einstufung «"+STRAT[k].label+"» erwarten lässt. Die Praxis hat Vorrang vor der Matrix.");
-  });
-  // doppelte Namen
-  var seen={}, dup=[];
-  options.forEach(function(o){var n=o.name.trim().toLowerCase(); if(seen[n]&&dup.indexOf(o.name)<0)dup.push(o.name); seen[n]=1;});
-  dup.forEach(function(n){
-    notes.push("«"+esc(n)+"» ist mehrfach eingetragen. Haben Sie verschiedene Regionen verglichen, benennen Sie die Einträge danach, zum Beispiel «"+esc(n)+" Bern».");
-  });
-  return notes;
-}
-function liste(arr){
-  var n=arr.map(function(o){return "«"+esc(o.name)+"»";});
-  return n.length<2?n.join(""):n.slice(0,-1).join(", ")+" und "+n[n.length-1];
-}
-function decide(r){
-  var a=axes(r), ly=lvl(a.y), lx=lvl(a.x);
-  return {key:QMAP[ly+","+lx], x:a.x, y:a.y, close:(ly===1||lx===1)};
-}
-/* Nichts im Browser speichern: auf gemeinsam genutzten Computern sähe sonst die nächste Person die Daten.
-   Gesichert wird nur über «Sichern als Datei». */
-var dirty=false;
-function changed(){ S.zr=options; save(); if(frApi)frApi.refresh(); }
-function wipeOld(){}   // Reste älterer Versionen entfernen
-
-function esc(s){return String(s).replace(/[&<>"']/g,function(c){
-  return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
-function toast(m){APPTOAST(m);}
-
-function drawMatrix(newId){
-  var m=Z("matrix"), leg=Z("legend");
-  Array.prototype.slice.call(m.querySelectorAll(".pt")).forEach(function(n){n.remove();});
-  Z("matrixEmpty").style.display=options.length?"none":"block";
-  var count={}, CL=[[0,0],[7,0],[-7,0],[0,8],[0,-8],[7,8],[-7,8],[7,-8],[-7,-8]];
-  leg.innerHTML=options.map(function(o,n){
-    var d=decide(o.ratings), s=SIDE[d.key];
-    // Koordinate aus den echten Werten: 0..4 -> 17%..83% bzw. 88%..12%
-    var left=17+(d.x/4)*66, top=88-(d.y/4)*76;
-    // in den freien Teil des Quadranten der Strategie: nie auf die Trennlinie, nie über den Titel
-    var lo=s.t?24:56, hi=s.t?44:76;
-    left = s.r ? Math.min(90,Math.max(left,62)) : Math.max(10,Math.min(left,38));
-    top  = Math.min(hi,Math.max(lo,top));
-    // gleiche Koordinaten zu einem kleinen Haufen auffächern statt übereinanderzulegen
-    var pos=Math.round(left)+","+Math.round(top), i=count[pos]||0; count[pos]=i+1;
-    var off=CL[i%CL.length];
-    left+=off[0]; top+=off[1];
-    var el=document.createElement("div");
-    var aus=fit(o).aus;
-    el.className="pt"+(aus?" aus":"")+(o.id===newId?" new":"");
-    el.style.left=left+"%"; el.style.top=top+"%";
-    el.innerHTML='<div class="x-dot">'+(n+1)+'</div>';
-    el.title=o.name+" · "+(aus?"Passt nicht":STRAT[d.key].label);
-    m.appendChild(el);
-    return '<li><span class="ln">'+(n+1)+'</span>'+esc(o.name)+' <span class="lv '+(aus?"v-aus":STRAT[d.key].cls)+'">'+(aus?"Passt nicht":STRAT[d.key].label)+'</span></li>';
-  }).join("");
-}
-
-function render(newId){
-  var list=Z("list");
-  if(!options.length){
-    list.innerHTML='<div class="x-empty">Tragen Sie oben Ihre erste Zielrichtung ein.</div>';
-  } else {
-    list.innerHTML=options.map(function(o,n){
-      var d=decide(o.ratings), s=STRAT[d.key], f=fit(o);
-      return '<article class="x-card">'+
-        '<div class="card-top"><h3><span class="ln">'+(n+1)+'</span>'+esc(o.name)+'</h3>'+
-        (f.aus?'<span class="verdict v-aus" title="Matrix: '+s.label+'">Passt nicht</span>':'<span class="verdict '+s.cls+'">'+s.label+'</span>')+'</div>'+
-        '<div class="readout">'+
-          '<span>Markt <b>'+lbl("markt",o.ratings.markt)+'</b>'+marktZahl(o)+'</span>'+
-          '<span>Verankerung <b>'+lbl("position",o.ratings.position)+'</b>'+evPos(o)+'</span>'+
-          '<span>Können <b>'+lbl("kompetenz",o.ratings.kompetenz)+'</b>'+evKomp(o)+'</span>'+
-          '<span>Aufwand <b>'+lbl("aufwand",o.ratings.aufwand)+'</b></span>'+
-          '<span>Passung <b>'+fitLine(o)+'</b></span>'+
-        '</div>'+
-        (f.aus?'<p class="fit aus"><b>Passt nicht.</b> Sie haben angegeben, dass '+f.gruende.join(" und ")+
-          '. Die Matrix allein ergäbe «'+s.label+'». Verfolgen Sie diese Richtung nur, wenn sich das ändern lässt.</p>':
-          '<p class="why">'+s.why+'</p>')+
-        (f.fehlt?'<p class="fit warn">Die Fragen zur Passung sind noch nicht beantwortet. Klicken Sie auf «Bearbeiten».</p>':'')+
-        (f.warn.length?'<div class="fit warn"><ul class="hints" style="margin:0">'+f.warn.map(function(t){return "<li>"+t+"</li>";}).join("")+'</ul></div>':'')+
-        (d.close&&!f.aus?'<p class="close-call">Knapper Fall. Diese Richtung liegt nahe an der Grenze. Was müsste sich ändern, damit sie eindeutig wird? Nehmen Sie die Frage ins Einzelgespräch mit.</p>':'')+
-        (f.aus?'<div class="next"><b>Nächster Schritt</b><ul><li>Im Einzelgespräch klären, ob sich das Hindernis lösen lässt. Sonst Energie in andere Richtungen stecken.</li></ul></div>':
-          '<div class="next"><b>Nächste Schritte</b><ul>'+
-            s.next.map(function(t){return "<li>"+t+"</li>";}).join("")+
-          '</ul></div>'+
-          zugangHtml(o,d.key))+
-        swotHtml(o)+
-        nachHtml(o)+
-        '<div class="card-actions">'+
-          '<button class="x-btn-ghost" data-edit="'+o.id+'">Bearbeiten</button>'+
-          '<button class="x-btn-ghost" data-del="'+o.id+'">Löschen</button>'+
-        '</div></article>';
-    }).join("");
-    var notes=quer();
-    if(notes.length) list.innerHTML='<div class="quernotes"><b>Im Vergleich fällt auf</b><ul>'+
-      notes.map(function(t){return "<li>"+t+"</li>";}).join("")+'</ul></div>'+list.innerHTML;
-  }
-  drawMatrix(newId);
-}
-function zugangHtml(o,key){
-  var z=zugang(o,key); if(!z.length)return "";
-  return '<div class="next zugang"><b>Zugang zum verdeckten Arbeitsmarkt</b>'+
-    '<p>Viele Stellen werden besetzt, bevor sie ausgeschrieben sind. Hinein kommt, wer vorher schon Kontakt hatte.</p><ul>'+
-    z.map(function(t){return "<li>"+esc(t)+"</li>";}).join("")+'</ul></div>';
-}
-
-var LABELS={
-  markt:{2:"viele Stellen",1:"ausgeglichen",0:"wenige Stellen"},
-  position:{2:"gut",1:"teilweise",0:"noch nicht"},
-  kompetenz:{2:"das meiste",1:"ein Teil",0:"wenig"},
-  aufwand:{2:"klein",1:"mittel",0:"gross"}
-};
-function lbl(g,v){return LABELS[g][String(v)]||"";}
-
-/* ---------- Passung: zählt nicht als Punkte, kann aber ausschliessen ---------- */
-var MOTG=["mInt","mRahmen","mGes","mWissen"];
-var MOTN={mInt:"Interesse",mRahmen:"Rahmen",mGes:"Gesundheit",mWissen:"Alltag"};
-var MOTL={mInt:{2:"gerne",1:"es geht",0:"eher nicht"},
-          mRahmen:{2:"passt",1:"teilweise",0:"passt nicht"},
-          mGes:{2:"machbar",1:"mit Einschränkungen",0:"nicht machbar"},
-          mWissen:{2:"bekannt",1:"ungefähr bekannt",0:"kaum bekannt"}};
-function fit(o){
-  var m=o.mot;
-  if(!m||MOTG.some(function(g){return m[g]==null;})) return {fehlt:true,aus:false,gruende:[],warn:[]};
-  var aus=[], warn=[];
-  if(m.mRahmen===0) aus.push("Arbeitszeiten, Pensum oder Lohn nicht passen");
-  if(m.mGes===0)    aus.push("die Tätigkeit gesundheitlich nicht machbar ist");
-  if(m.mInt===0)    warn.push("Sie würden diese Arbeit eher nicht gerne machen. Prüfen Sie im Einzelgespräch, ob sie als Zwischenlösung trotzdem sinnvoll ist.");
-  if(m.mGes===1)    warn.push("Gesundheitliche Einschränkungen: Klären Sie vor der Bewerbung, welche Aufgaben gehen und welche nicht.");
-  if(m.mRahmen===1) warn.push("Die Rahmenbedingungen passen nur teilweise. Klären Sie, wo Ihre Grenze liegt: Pensum, Arbeitszeiten, Lohn.");
-  if(m.mWissen<2)   warn.push("Den Arbeitsalltag kennen Sie "+(m.mWissen===0?"kaum":"nur ungefähr")+". Lesen Sie das Berufsbild auf berufsberatung.ch und fragen Sie nach einem Schnuppertag, bevor Sie viel investieren.");
-  return {fehlt:false,aus:aus.length>0,gruende:aus,warn:warn};
-}
-function fitLine(o){
-  var m=o.mot; if(!m)return "nicht erfasst";
-  return MOTG.map(function(g){return MOTN[g]+" "+(MOTL[g][m[g]]||"–");}).join(" · ");
-}
-function swotHtml(o,print){
-  var w=o.swot; if(!w||!(w.s||w.w||w.o||w.t))return "";
-  var f=[["s","Stärken","sw-s"],["w","Schwächen","sw-w"],["o","Chancen","sw-o"],["t","Risiken","sw-t"]];
-  if(print) return '<p><strong>Kurz-SWOT</strong></p><ul>'+f.filter(function(x){return w[x[0]];})
-    .map(function(x){return '<li>'+x[1]+': '+esc(w[x[0]])+'</li>';}).join("")+'</ul>';
-  return '<div class="swot">'+f.map(function(x){
-    return '<div><span class="'+x[2]+'">'+x[1]+'</span>'+(w[x[0]]?esc(w[x[0]]):'<span style="color:var(--ink-3);font-weight:400;text-transform:none;letter-spacing:0">–</span>')+'</div>';
-  }).join("")+'</div>';
-}
-
-/* ---------- Nachfassen: was die Bewerbungen gebracht haben ---------- */
-function pct(a,b){ return Math.round(a/b*100)+" %"; }
-function fmtDate(iso){ var p=String(iso).split("-"); return p.length===3?(+p[2])+"."+(+p[1])+"."+p[0]:iso; }
-function nachText(o){
-  var n=o.nach; if(!n||!n.bew)return "Noch nichts eingetragen.";
-  var t;
-  if(n.bew<5){
-    t="Bei "+n.bew+(n.bew===1?" Bewerbung":" Bewerbungen")+" ist es zu früh für eine Aussage. Ab 5 Bewerbungen wird ausgewertet.";
-  } else {
-    var e=n.einl||0, r=Math.max(n.rueck||0,e);   // eine Einladung ist immer auch eine Rückmeldung
-    t="Rückmeldung auf <b>"+r+" von "+n.bew+"</b> ("+pct(r,n.bew)+"), Einladung zum Gespräch bei <b>"+e+"</b> ("+pct(e,n.bew)+").";
-    if(r<n.bew) t+=" "+(n.bew-r)+" Bewerbungen sind noch ohne Antwort. Fassen Sie dort telefonisch nach.";
-  }
-  if(n.stand) t+=' <span style="color:var(--ink-3)">Stand '+fmtDate(n.stand)+'</span>';
-  return t;
-}
-function nachHtml(o){
-  var n=o.nach||{};
-  function inp(k,l){ return '<label>'+l+'<input type="number" min="0" step="1" inputmode="numeric" data-nach="'+k+
-    '" data-id="'+o.id+'" value="'+(n[k]!=null?n[k]:"")+'"></label>'; }
-  return '<div class="nach"><b>Nachfassen</b><p>Tragen Sie nach einigen Wochen ein, was Ihre Bewerbungen in dieser Richtung gebracht haben. So sehen Sie, ob die Einstufung in der Praxis stimmt.</p>'+
-    '<div class="jr-nums">'+inp("bew","Bewerbungen")+inp("rueck","Rückmeldungen (Zu- und Absagen)")+inp("einl","davon Einladungen zum Gespräch")+'</div>'+
-    '<p class="nach-out">'+nachText(o)+'</p></div>';
-}
-function evPos(o){
-  var e=o.ev; if(!e||e.betriebe==null||e.kontakte==null||e.jahre==null)return "";
-  return " ("+e.betriebe+(e.betriebe===1?" Betrieb, ":" Betriebe, ")+e.kontakte+
-    (e.kontakte===1?" Kontakt, ":" Kontakte, ")+String(e.jahre).replace(".",",")+
-    (e.jahre===1?" Jahr)":" Jahre)");
-}
-function evKomp(o){
-  var e=o.ev; if(!e||e.anforderungen==null||e.belegt==null||!e.anforderungen)return "";
-  var t=" ("+e.belegt+" von "+e.anforderungen+" belegt";
-  if(e.objektiv===0)t+=", Nachweise fehlen";
-  else if(e.objektiv===1)t+=", Nachweise teilweise";
-  return t+")";
-}
-function marktZahl(o){
-  var m=o.markt; if(!m||m.stellen==null||m.kandidaten==null)return "";
-  var t=" ("+m.stellen+" Stellen, "+m.kandidaten+" Kandidaten";
-  if(m.jobsch!=null)t+=", "+m.jobsch+" auf jobs.ch";
-  if(m.radius!=null)t+=", "+m.radius+" km";
-  if(m.meldepflicht)t+=", meldepflichtig";
-  return t+")";
-}
-
-/* ---------- Job-Room: Zahlen auswerten ---------- */
-var jrStellen=Z("jrStellen");
-var jrKand=Z("jrKand");
-var jrMeld=Z("jrMeld");
-var jrOut=Z("jrOut");
-var jrRadius=Z("jrRadius");
-var jrJobsch=Z("jrJobsch");
-var RADIUS_STD=10;
-
-function marktLevel(stellen,kand,jobsch){
-  if(stellen===null||kand===null)return null;
-  if(stellen<3){                                 // im Job-Room praktisch kein Markt
-    return (jobsch!=null&&jobsch>=10)?1:0;       // ausser jobs.ch zeigt deutlich mehr
-  }
-  var q=kand/stellen;
-  var lv = q<0.7 ? 2 : (q<=2.5 ? 1 : 0);
-  if(stellen<8 && lv===2) lv=1;                  // kleine Zahlen nicht überbewerten
-  return lv;
-}
-function jrNum(el){
-  var v=el.value.trim();
-  if(v==="")return null;
-  var n=Number(v);
-  return (isFinite(n)&&n>=0)?Math.round(n):null;
-}
-function jrUpdate(){
-  var st=jrNum(jrStellen), ka=jrNum(jrKand);
-  if(st===null||ka===null){
-    jrOut.textContent="Tragen Sie beide Zahlen ein, dann wird die Lage automatisch eingestuft.";
-    return;
-  }
-  var js=jrNum(jrJobsch), rad=jrNum(jrRadius);
-  var lv=marktLevel(st,ka,js);
-  var q=st>0?(ka/st):null;
-  var txt="Auf eine Stelle kommen rechnerisch "+(q===null?"sehr viele":q.toFixed(1).replace(".",","))+
-          " gemeldete Kandidatinnen und Kandidaten. Einstufung: <b>"+lbl("markt",lv)+"</b>.";
-  if(st<3&&lv===1) txt="Im Job-Room nur "+st+" Stellen, auf jobs.ch aber "+js+
-    " Inserate. Der Markt läuft hier an der RAV-Plattform vorbei. Einstufung: <b>"+lbl("markt",1)+"</b>.";
-  else if(st<3) txt="Bei "+st+" Stellen in Ihrer Region gibt es praktisch keinen offenen Markt. Einstufung: <b>"+lbl("markt",0)+"</b>.";
-  else if(st<8) txt+=" Die Zahlen sind klein, das Verhältnis ist deshalb wenig aussagekräftig.";
-  if(st>=3&&js!=null&&js>=st*3) txt+=" Auf jobs.ch stehen deutlich mehr Inserate als im Job-Room. Der Markt ist grösser, als die RAV-Zahlen zeigen.";
-  if(rad!=null&&rad>30) txt+=" <b>Achtung:</b> Bei "+rad+" km Radius zählen Sie Kandidaten weit ausserhalb Ihrer Gegend mit. Stellen Sie beide Suchen auf "+RADIUS_STD+" km.";
-  if(jrMeld.checked) txt+=" Die Meldepflicht verschafft Ihnen einen Vorsprung von fünf Tagen.";
-  jrOut.innerHTML=txt;
-  var el=form.querySelector('input[name="markt"][value="'+lv+'"]');
-  if(el&&!el.checked)el.checked=true;
-}
-[jrStellen,jrKand,jrJobsch,jrRadius].forEach(function(el){ el.addEventListener("input",jrUpdate); });
-jrMeld.addEventListener("change",jrUpdate);
-
-function jrReset(){ jrStellen.value=""; jrKand.value=""; jrJobsch.value=""; jrRadius.value=RADIUS_STD; jrMeld.checked=false; jrUpdate(); }
-function jrFill(o){
-  var m=o.markt||{};
-  jrStellen.value=m.stellen!=null?m.stellen:"";
-  jrKand.value=m.kandidaten!=null?m.kandidaten:"";
-  jrJobsch.value=m.jobsch!=null?m.jobsch:"";
-  // ältere Dateien kennen keinen Radius: leer lassen statt 10 km vorzutäuschen
-  jrRadius.value=m.radius!=null?m.radius:"";
-  jrMeld.checked=!!m.meldepflicht;
-  jrUpdate();
-}
-function jrData(){
-  return { stellen:jrNum(jrStellen), kandidaten:jrNum(jrKand), jobsch:jrNum(jrJobsch),
-           radius:jrNum(jrRadius), meldepflicht:jrMeld.checked };
-}
-
-
-/* ---------- Belege zu Frage 2 bis 4 ---------- */
-var evBetriebe=Z("evBetriebe"), evKontakte=Z("evKontakte"),
-    evJahre=Z("evJahre"), evPosOut=Z("evPosOut"),
-    evAnf=Z("evAnf"), evBelegt=Z("evBelegt"),
-    evObjektiv=Z("evObjektiv"), evKompOut=Z("evKompOut"),
-    evGap=Z("evGap"), evDauer=Z("evDauer"),
-    evWeg=Z("evWeg"), evAufOut=Z("evAufOut");
-
-function setChoice(group,lv){
-  var el=form.querySelector('input[name="'+group+'"][value="'+lv+'"]');
-  if(el&&!el.checked)el.checked=true;
-}
-function n3(x){ return x===0?0:(x<=2?1:2); }
-
-/* Frage 2 */
-function posUpdate(){
-  var b=jrNum(evBetriebe), k=jrNum(evKontakte), j=jrNum(evJahre);
-  if(b===null||k===null||j===null){
-    evPosOut.textContent="Tragen Sie die drei Zahlen ein. Null ist eine gültige Antwort."; return null;
-  }
-  var sj = j>=2?2:(j>0?1:0);
-  var sum=n3(b)+n3(k)+sj;
-  var lv = sum>=4?2:(sum>=2?1:0);
-  evPosOut.innerHTML="Sie kennen <b>"+b+"</b> "+(b===1?"Betrieb":"Betriebe")+" und <b>"+k+"</b> "+
-    (k===1?"Person":"Personen")+" und haben <b>"+String(j).replace(".",",")+"</b> "+
-    (j===1?"Jahr":"Jahre")+" Erfahrung. Einstufung: <b>"+lbl("position",lv)+"</b>.";
-  setChoice("position",lv); return lv;
-}
-[evBetriebe,evKontakte,evJahre].forEach(function(el){el.addEventListener("input",posUpdate);});
-
-/* Frage 3 */
-function kompUpdate(){
-  var a=jrNum(evAnf), bl=jrNum(evBelegt), ob=evObjektiv.value===""?null:Number(evObjektiv.value);
-  if(a===null||bl===null||ob===null||a===0){
-    evKompOut.textContent="Tragen Sie beide Zahlen ein und wählen Sie, wie es um die verlangten Nachweise steht.";
-    gapUpdate(); return null;
-  }
-  if(bl>a){ bl=a; evBelegt.value=a; }
-  var q=bl/a, lv = q>=0.7?2:(q>=0.4?1:0);
-  var hinweis="";
-  if(ob===0){ lv=0; hinweis=" Die verlangten Nachweise fehlen. Das ist ein Ausschlusskriterium, unabhängig von der Quote."; }
-  else if(ob===1&&lv===2){ lv=1; hinweis=" Die Nachweise sind nur teilweise vorhanden, deshalb eine Stufe tiefer."; }
-  evKompOut.innerHTML="Sie belegen <b>"+bl+" von "+a+"</b> Anforderungen, das sind <b>"+
-    Math.round(q*100)+" Prozent</b>. Einstufung: <b>"+lbl("kompetenz",lv)+"</b>."+hinweis;
-  setChoice("kompetenz",lv); gapUpdate(); return lv;
-}
-[evAnf,evBelegt].forEach(function(el){el.addEventListener("input",kompUpdate);});
-evObjektiv.addEventListener("change",kompUpdate);
-
-/* Frage 4 */
-function gapUpdate(){
-  var a=jrNum(evAnf), bl=jrNum(evBelegt), ob=evObjektiv.value===""?null:Number(evObjektiv.value);
-  if(a===null||bl===null){ evGap.textContent="Ihre Lücke ergibt sich aus Frage 3."; return null; }
-  var offen=Math.max(0,a-Math.min(bl,a));
-  var t="Offen "+(offen===1?"ist":"sind")+" <b>"+offen+"</b> von "+a+" Anforderungen.";
-  if(ob===0)t+=" Dazu fehlen die verlangten Nachweise.";
-  else if(ob===1)t+=" Die verlangten Nachweise sind nur teilweise vorhanden.";
-  evGap.innerHTML=t;
-  return offen;
-}
-function aufUpdate(){
-  var d=evDauer.value===""?null:Number(evDauer.value);
-  var w=evWeg.value===""?null:Number(evWeg.value);
-  var offen=gapUpdate();
-  var ob=evObjektiv.value===""?null:Number(evObjektiv.value);
-  if(offen===0&&ob===2){
-    evAufOut.innerHTML="Es fehlt nichts. Einstufung: <b>"+lbl("aufwand",2)+"</b>.";
-    setChoice("aufwand",2); return 2;
-  }
-  if(d===null||w===null){ evAufOut.textContent="Wählen Sie beides aus."; return null; }
-  // "noch unklar" zählt neutral statt als "über ein Jahr": Nichtwissen ist eine offene Frage, kein Urteil
-  var sum=(d<0?1:d)+w, lv = sum>=3?2:(sum===2?1:0);
-  evAufOut.innerHTML="Dauer und Weg zusammen ergeben die Einstufung: <b>"+lbl("aufwand",lv)+"</b>."+
-    (d<0?" Die Dauer ist noch offen und zählt deshalb neutral. Klären Sie sie im Einzelgespräch.":"");
-  setChoice("aufwand",lv); return lv;
-}
-[evDauer,evWeg].forEach(function(el){el.addEventListener("change",aufUpdate);});
-
-function evReset(){
-  [evBetriebe,evKontakte,evJahre,evAnf,evBelegt].forEach(function(el){el.value="";});
-  evObjektiv.value=""; evDauer.value=""; evWeg.value="";
-  posUpdate(); kompUpdate(); aufUpdate();
-}
-function evFill(o){
-  var e=o.ev||{};
-  evBetriebe.value=e.betriebe!=null?e.betriebe:""; evKontakte.value=e.kontakte!=null?e.kontakte:"";
-  evJahre.value=e.jahre!=null?e.jahre:""; evAnf.value=e.anforderungen!=null?e.anforderungen:"";
-  evBelegt.value=e.belegt!=null?e.belegt:""; evObjektiv.value=e.objektiv!=null?String(e.objektiv):"";
-  evDauer.value=e.dauer!=null?String(e.dauer):""; evWeg.value=e.weg!=null?String(e.weg):"";
-  posUpdate(); kompUpdate(); aufUpdate();
-}
-function evData(){
-  return { betriebe:jrNum(evBetriebe), kontakte:jrNum(evKontakte), jahre:jrNum(evJahre),
-           anforderungen:jrNum(evAnf), belegt:jrNum(evBelegt),
-           objektiv:evObjektiv.value===""?null:Number(evObjektiv.value),
-           dauer:evDauer.value===""?null:Number(evDauer.value),
-           weg:evWeg.value===""?null:Number(evWeg.value) };
-}
-
-/* ---------- Formular ---------- */
-var form=Z("form");
-var nameIn=Z("name");
-var submitBtn=Z("submitBtn");
-var cancelBtn=Z("cancelBtn");
-
-function readForm(){
-  var r={};
-  ["markt","position","kompetenz","aufwand"].forEach(function(g){
-    var el=form.querySelector('input[name="'+g+'"]:checked');
-    r[g]=el?el.value:null;
-  });
-  return r;
-}
-function readMot(){
-  var m={};
-  MOTG.forEach(function(g){ var el=form.querySelector('input[name="'+g+'"]:checked'); m[g]=el?Number(el.value):null; });
-  return m;
-}
-function readSwot(){
-  function v(id){ return Z(id).value.trim(); }
-  return { s:v("swS"), w:v("swW"), o:v("swO"), t:v("swT") };
-}
-var motInfo=Z("motInfo"), motInfoText=Z("motInfoText");
-function motUpdate(){
-  var m=readMot(), t=[];
-  if(m.mRahmen===0||m.mGes===0) t.push("Damit passt diese Richtung nicht. Sie können sie trotzdem eintragen, um sie zu vergleichen. Sie erscheint dann als «Passt nicht».");
-  if(m.mWissen!=null&&m.mWissen<2) t.push("Lesen Sie zuerst das Berufsbild: Tätigkeiten, Arbeitszeiten, Anforderungen, Weiterbildung. Den Alltag zeigt ein Schnuppertag am besten.");
-  motInfo.hidden=!t.length; motInfoText.textContent=t.join(" ");
-}
-MOTG.forEach(function(g){
-  Array.prototype.slice.call(form.querySelectorAll('input[name="'+g+'"]')).forEach(function(el){ el.addEventListener("change",motUpdate); });
-});
-function resetForm(){
-  if(zrWiz)zrWiz.reset();
-  form.reset(); jrReset(); evReset(); termUpdate(); motUpdate(); editId=null;
-  submitBtn.textContent="Richtung eintragen";
-  cancelBtn.hidden=true;
-}
-function fillForm(o){
-  nameIn.value=o.name;
-  ["markt","position","kompetenz","aufwand"].forEach(function(g){
-    var el=form.querySelector('input[name="'+g+'"][value="'+o.ratings[g]+'"]');
-    if(el)el.checked=true;
-  });
-  MOTG.forEach(function(g){
-    var el=o.mot&&o.mot[g]!=null?form.querySelector('input[name="'+g+'"][value="'+o.mot[g]+'"]'):null;
-    Array.prototype.slice.call(form.querySelectorAll('input[name="'+g+'"]')).forEach(function(x){x.checked=false;});
-    if(el)el.checked=true;
-  });
-  var w=o.swot||{};
-  Z("swS").value=w.s||""; Z("swW").value=w.w||"";
-  Z("swO").value=w.o||""; Z("swT").value=w.t||"";
-  jrFill(o); evFill(o); termUpdate(); motUpdate();
-  if(zrWiz)zrWiz.reset();
-  editId=o.id;
-  submitBtn.textContent="Änderung speichern";
-  cancelBtn.hidden=false;
-  form.scrollIntoView({behavior:"smooth",block:"start"});
-  nameIn.focus({preventScroll:true});
-}
-
-
-/* ---------- Suchlinks aus der Zielrichtung ---------- */
-var lnkJobs=Z("lnkJobs");
-var lnkJobsMarkt=Z("lnkJobsMarkt");
-var lnkBBBeruf=Z("lnkBBBeruf");
-var lnkBBWeiter=Z("lnkBBWeiter");
-var lnkBBMot=Z("lnkBBMot");
-var BB="https://www.berufsberatung.ch/de/suche";
-
-function termUpdate(){
-  var t=nameIn.value.trim(), q=encodeURIComponent(t);
-  lnkJobs.href = t ? "https://www.jobs.ch/de/stellenangebote/?term="+q
-                   : "https://www.jobs.ch/de/stellenangebote/";
-  lnkJobs.textContent = t ? "Inserat zu \u00bb"+t+"\u00ab auf jobs.ch suchen" : "Inserat auf jobs.ch suchen";
-  lnkJobsMarkt.href = lnkJobs.href;
-  lnkJobsMarkt.textContent = t ? "\u00bb"+t+"\u00ab auf jobs.ch z\u00e4hlen" : "Inserate auf jobs.ch z\u00e4hlen";
-  lnkBBBeruf.href = t ? BB+"?q="+q : BB;
-  lnkBBBeruf.textContent = t ? "\u00bb"+t+"\u00ab auf berufsberatung.ch nachschlagen"
-                             : "Anforderungen des Berufs nachschlagen";
-  lnkBBWeiter.href = t ? BB+"?q="+q : BB;
-  lnkBBMot.href = t ? BB+"?q="+q : BB;
-  lnkBBMot.textContent = t ? "Berufsbild \u00bb"+t+"\u00ab auf berufsberatung.ch nachlesen" : "Berufsbild auf berufsberatung.ch nachlesen";
-  lnkBBWeiter.textContent = t ? "Weiterbildungen zu \u00bb"+t+"\u00ab suchen"
-                              : "Auf berufsberatung.ch suchen";
-}
-nameIn.addEventListener("input",termUpdate);
-function hintUpdate(){ var h=Z("evHint"); if(!h)return; var t=nameIn.value.trim();
-  if(!t){ h.textContent=""; return; }
-  var n=frApi?frApi.count(t):0, k=((S.netz||{}).contacts||[]).length;
-  h.textContent="Zum Nachschauen: In Ihrer Firmenliste stehen "+n+(n===1?" Betrieb":" Betriebe")+" zu «"+t+"». Im Netzwerk haben Sie "+k+(k===1?" Kontakt":" Kontakte")+" erfasst."; }
-nameIn.addEventListener("input",hintUpdate);
-
-termUpdate();
-
-form.addEventListener("submit",function(e){
-  e.preventDefault();
-  var name=nameIn.value.trim(), r=readForm();
-  if(!name){ toast("Bitte tragen Sie zuerst die Zielrichtung ein."); nameIn.focus(); return; }
-  var mot=readMot();
-  var missing=MOTG.filter(function(g){return mot[g]===null;})
-    .concat(["markt","position","kompetenz","aufwand"].filter(function(g){return r[g]===null;}));
-  if(missing.length){
-    toast(MOTG.indexOf(missing[0])>=0?"Bitte beantworten Sie auch die Fragen zur Passung.":"Bitte beantworten Sie alle vier Fragen.");
-    var g=form.querySelector('[data-group="'+missing[0]+'"]');
-    if(g&&zrWiz)zrWiz.show(g);
-    return;
-  }
-  var gleich=options.some(function(o){return o.id!==editId&&o.name.trim().toLowerCase()===name.toLowerCase();});
-  if(gleich){ toast('«'+name+'» gibt es schon. Tipp: Region oder Variante in den Namen schreiben, zum Beispiel «'+name+' Bern».'); }
-  if(editId){
-    // Nachfassen-Zahlen werden auf der Karte gepflegt und bleiben beim Bearbeiten erhalten
-    options=options.map(function(o){return o.id===editId?{id:o.id,name:name,ratings:r,markt:jrData(),ev:evData(),
-      mot:mot,swot:readSwot(),nach:o.nach}:o;});
-    var id=editId; resetForm(); changed(); render(id); toast("Änderung gespeichert.");
-  } else {
-    var nid=Date.now();
-    options.push({id:nid,name:name,ratings:r,markt:jrData(),ev:evData(),mot:mot,swot:readSwot()});
-    resetForm(); changed(); render(nid); toast("Richtung eingetragen."); setTimeout(function(){Z("matrix").scrollIntoView({behavior:"smooth",block:"center"});},80);
-  }
-});
-cancelBtn.addEventListener("click",resetForm);
-
-Z("list").addEventListener("click",function(e){
-  var b=e.target.closest("button"); if(!b)return;
-  if(b.dataset.edit){
-    var o=options.filter(function(x){return String(x.id)===b.dataset.edit;})[0];
-    if(o)fillForm(o);
-  }
-  if(b.dataset.del){
-    var o2=options.filter(function(x){return String(x.id)===b.dataset.del;})[0];
-    if(o2&&armed(b,"Löschen")){
-      options=options.filter(function(x){return String(x.id)!==b.dataset.del;});
-      if(editId&&String(editId)===b.dataset.del)resetForm();
-      changed(); render(); toast("Gelöscht.");
-    }
-  }
-});
-
-Z("list").addEventListener("change",function(e){
-  var t=e.target; if(!t.dataset||!t.dataset.nach)return;
-  var o=options.filter(function(x){return String(x.id)===t.dataset.id;})[0]; if(!o)return;
-  var n=o.nach||{bew:null,rueck:null,einl:null};
-  var v=t.value.trim()===""?null:Math.round(Number(t.value));
-  n[t.dataset.nach]=(v===null||!isFinite(v)||v<0)?null:v;
-  // Einladungen sind auch Rückmeldungen, Rückmeldungen setzen eine Bewerbung voraus
-  var fix=false;
-  if(n.einl!=null&&(n.rueck==null||n.einl>n.rueck)){ if(n.rueck!=null)fix=true; n.rueck=n.einl; }
-  if(n.rueck!=null&&n.bew!=null&&n.rueck>n.bew){n.bew=n.rueck;fix=true;}
-  if(n.einl!=null&&n.bew!=null&&n.einl>n.bew){n.bew=n.einl;fix=true;}
-  n.stand=new Date().toISOString().slice(0,10);
-  o.nach=n; changed(); render();
-  toast(fix?"Angepasst: Einladungen zählen auch als Rückmeldung, Rückmeldungen setzen eine Bewerbung voraus.":"Eingetragen. Am Schluss die Datei sichern.");
-});
-
-/* ---------- Sichern, Einlesen, Löschen ---------- */
-Z("exportBtn").addEventListener("click",function(){
-  if(!options.length){toast("Es gibt noch nichts zu sichern.");return;}
-  var blob=new Blob([JSON.stringify({version:1,gespeichert:new Date().toISOString(),optionen:options},null,2)],
-    {type:"application/json"});
-  var a=document.createElement("a");
-  a.href=URL.createObjectURL(blob);
-  a.download="Meine_Zielrichtungen.json";
-  a.click(); URL.revokeObjectURL(a.href);
-  dirty=false; toast("Datei gesichert.");
-});
-Z("importBtn").addEventListener("click",function(){
-  Z("importFile").click();
-});
-Z("importFile").addEventListener("change",function(e){
-  var f=e.target.files[0]; if(!f)return;
-  var rd=new FileReader();
-  rd.onload=function(){
-    try{
-      var d=JSON.parse(rd.result);
-      var arr=d&&d.optionen?d.optionen:(Array.isArray(d)?d:null);
-      if(!arr)throw new Error("Format");
-      options=arr; changed(); resetForm(); render(); toast("Datei eingelesen.");
-    }catch(err){ toast("Diese Datei lässt sich nicht lesen."); }
-  };
-  rd.readAsText(f); e.target.value="";
-});
-Z("clearBtn").addEventListener("click",function(){
-  if(!options.length){toast("Es ist nichts gespeichert.");return;}
-  if(armed(this,"Alles löschen")){
-    options=[]; changed(); resetForm();
-    render(); toast("Alles gelöscht.");
-  }
-});
-
-zrApi={
-  verfolgt:function(){ return options.filter(function(o){ return !fit(o).aus&&decide(o.ratings).key!=="zurueck"; }).map(function(o){return o.name;}); },
-  sync:function(){ if(options!==S.zr){ options=S.zr; resetForm(); render(); } },
-  rerender:function(){ render(); hintUpdate(); }
-};
-render();
-})();
-
 /* ================= Firmenrecherche und Initiativbewerbung (Werkzeug BIN 1) ================= */
 
 (function(){
@@ -4583,7 +3402,7 @@ function aufhListe(f){
   $("bAufh").innerHTML=g.length?'<p class="tipp" style="margin:0 0 4px">Aus Ihrer Recherche. Markieren Sie mit dem Stern, was Ihnen aufgefallen ist. Mehrere Sterne sind möglich.</p>'+
     g.map(function(k){ return '<div class="aufh-item"><button type="button" class="af-star" data-bstar="'+k+'" aria-pressed="'+(fv.indexOf(k)>=0)+'" aria-label="Als Aufhänger markieren: '+AUFHN[k]+'">★</button><span>'+favText(f,k)+'</span></div>'; }).join("")+
     (f.beob?'<p class="tipp">Ihre Beobachtung: '+esc(f.beob)+'</p>':''):
-    '<p class="tipp warnhint">Zu diesem Betrieb ist noch kein Aufhänger erfasst. Tragen Sie unter Netzwerk › Zielfirmen beim Betrieb unter «C Aufhänger» ein, was Ihnen aufgefallen ist (Bearbeiten).</p>';
+    '<p class="tipp warnhint">Zu diesem Betrieb ist noch kein Aufhänger erfasst. Tragen Sie unter „1 Firmen recherchieren“ beim Betrieb unter «C Aufhänger» ein, was Ihnen aufgefallen ist (Bearbeiten).</p>';
 }
 $("bAufh").addEventListener("click",function(e){
   var b=e.target.closest("[data-bstar]"), f=bFirma(); if(!b||!f)return;
@@ -4842,16 +3661,19 @@ async function clearExamples(){for(const d of S.docs.filter(d=>d.beispiel))await
     S.bewerbungen=S.bewerbungen.filter(b=>!b.beispiel);S.aufgaben=S.aufgaben.filter(a=>!a.beispiel);S.docs=S.docs.filter(d=>!d.beispiel);S.alk.faelle=S.alk.faelle.filter(f=>!f.beispiel);S.zr=S.zr.filter(o=>!o.beispiel);S.fr.firmen=S.fr.firmen.filter(f=>!f.beispiel);S.komp.items=S.komp.items.filter(i=>!i.beispiel);S.netz.contacts=S.netz.contacts.filter(c=>!c.beispiel);S.netz.contacts.forEach(c=>c.knows=c.knows.filter(k=>S.netz.contacts.some(o=>o.id===k)));Object.keys(S.alk.monate).forEach(k=>{if(S.alk.monate[k].beispiel)delete S.alk.monate[k]});stackIdx=0;save();
   render()}
 /* ================= Navigation zwischen Bereichen ================= */
-function goTo(spec){let [tab,sub]=spec.split(':');
-  if(isSelbst()){if(tab==='kompetenzen'){tab='heute';sub=undefined}
-    if(tab==='strategie'&&sub==='strategie')sub='tracker';if(tab==='netzwerk'&&(sub==='karte'||sub==='aktiv'))sub='kontakte'}
+const GO_ALIAS={strategie:'heute:bew','strategie:tracker':'heute:bew','strategie:plan':'heute','strategie:strategie':'heute',
+  kompetenzen:'heute',netzwerk:'dossier:init','netzwerk:kontakte':'heute','netzwerk:karte':'heute','netzwerk:aktiv':'heute','netzwerk:firmen':'dossier:firmen'};
+function goTo(spec){spec=GO_ALIAS[spec]||spec;
+  if(spec==='heute:bew'){goTo('heute');setTimeout(()=>{const e=$('#h-bew');e&&e.scrollIntoView({behavior:calm()?'auto':'smooth',block:'start'})},120);return}
+  if(spec==='dossier:firmen'){goTo('dossier:init');setTimeout(()=>{const b=document.querySelector('#fr-root [data-tab="tab-firmen"]');b&&b.click()},120);return}
+let [tab,sub]=spec.split(':');
   if(tab==='bew'){openBew(sub);return}
   if(location.hash!=='#'+tab)location.hash=tab;else route();
   if(!sub)return;
   setTimeout(()=>{const b=subBtn(tab,sub);b&&b.click()},40)}
-function subBtn(tab,sub){const sel={strategie:`#v-strategie > .seg [data-sub="${sub}"]`,netzwerk:`#netz-seg [data-n="${sub}"]`,rav:`#rav-seg [data-r="${sub}"]`,dossier:`#dos-seg [data-d="${sub}"]`}[tab];
+function subBtn(tab,sub){const sel={rav:`#rav-seg [data-r="${sub}"]`,dossier:`#dos-seg [data-d="${sub}"]`}[tab];
   return sel&&$(sel)}
-function swGoInit(){goTo('dossier:init')}
+function swGoInit(){goTo('dossier:init');setTimeout(()=>{const b=document.querySelector('#fr-root [data-tab="tab-brief"]');b&&b.click()},120)}
 
 /* ================= Schritt-für-Schritt für lange Formulare ================= */
 function wizard(box){if(!box)return null;
@@ -4875,17 +3697,9 @@ function wizard(box){if(!box)return null;
   return{go,reset:()=>go(0),show:el=>{const k=steps.findIndex(s=>s.contains(el));if(k>=0)go(k,true)}}}
 
 /* ================= Heute ================= */
-const WOCHEN=[
-  {id:1,l:'Woche 1',t:'Standort bestimmen: Kompetenzprofil, Zielrichtungen und Aktionsplan.',go:[['kompetenzen','Kompetenzen','Was Sie können, mit Belegen'],['strategie:strategie','Zielrichtungen','Welche Richtung sich lohnt'],['strategie:plan','Aktionsplan','Ihre nächsten drei Wochen']]},
-  {id:2,l:'Woche 2',t:'Ein vollständiges Bewerbungsdossier.',go:[['dossier:unterlagen','Unterlagen','Lebenslauf, Zeugnisse, Diplome'],['dossier-brief','Bewerbungsbrief','Auf ein Inserat schreiben'],['dossier-check','Dossier-Check','Nach der beco-Checkliste']]},
-  {id:3,l:'Woche 3',t:'Arbeitsmarkt und Netzwerk: Firmenliste und Initiativbewerbung.',go:[['netzwerk:kontakte','Netzwerk','Wer Ihnen wobei helfen kann'],['netzwerk:firmen','Firmen recherchieren','Signal, Ansprechperson, Aufhänger'],['dossier:init','Initiativbewerbung','Brief an eine Firma']]},
-  {id:4,l:'Woche 4',t:'Vorstellungsgespräch, Abschluss und Aktionsplan für die Zeit nach dem Kurs.',go:[['strategie:tracker','Meine Bewerbungen','Gespräche vorbereiten'],['dossier:unterlagen','Dossier mit Inserat','Für die Simulation am Montag'],['strategie:plan','Aktionsplan danach','Wie es nach dem Kurs weitergeht']]},
-  {id:0,l:'Selbständig',t:'Dranbleiben: Bewerbungen erfassen, Fristen einhalten, Kontakte pflegen.',go:[['strategie:tracker','Meine Bewerbungen','Erfassen und nachfassen'],['rav:rav','RAV-Formular','Monatlich ausfüllen'],['rav:alk','Arbeitslosenkasse','Monatsformulare ablegen']]}];
 function nextSteps(){const t=iso(today),L=[];
-  S.aufgaben.filter(a=>!a.done).forEach(a=>L.push({txt:a.text,due:a.due,src:'Aktionsplan',go:'strategie:plan',task:a.id,ex:a.beispiel}));
   S.bewerbungen.filter(b=>b.naechster&&['arbeit','versendet','gespraech'].includes(b.status)).forEach(b=>L.push({txt:b.naechster,ctx:b.firma,src:'Bewerbung',go:'bew:'+b.id,ex:b.beispiel}));
-  (S.fr.firmen||[]).filter(f=>f.next&&f.next.was&&(f.status||0)<5).forEach(f=>L.push({txt:f.next.was,ctx:f.name,due:f.next.datum,src:'Firma',go:'netzwerk:firmen',ex:f.beispiel}));
-  S.netz.contacts.filter(c=>c.act&&c.step&&!S.aufgaben.some(a=>a.kontaktId===c.id)).forEach(c=>L.push({txt:c.step,ctx:c.name,src:'Netzwerk',go:'netzwerk:aktiv',ex:c.beispiel}));
+  (S.fr.firmen||[]).filter(f=>f.next&&f.next.was&&(f.status||0)<5).forEach(f=>L.push({txt:f.next.was,ctx:f.name,due:f.next.datum,src:'Firma',go:'dossier:firmen',ex:f.beispiel}));
   return L.sort((a,b)=>(a.due||'9999').localeCompare(b.due||'9999'))}
 function warnings(){const W=[],d=today.getDate(),m=today.getMonth(),t=iso(today);
   const c=ravMonth().count,z=S.ziele.monat;
@@ -4893,8 +3707,6 @@ function warnings(){const W=[],d=today.getDate(),m=today.getMonth(),t=iso(today)
   const prev=shiftM(ym(today),-1),pm=S.alk.monate[prev];
   if(d<=10&&!(pm&&pm.eingereicht&&pm.eingereicht.avp))W.push({lvl:'warn',t:`Monatsformular für ${mLabel(prev)}`,s:'Die Angaben der versicherten Person an die Kasse senden.',go:'rav:alk'});
   S.alk.faelle.filter(f=>fallTage(f)>=4&&!zeugnisDocs(f).length&&!f.beispiel).forEach(f=>W.push({lvl:'bad',t:'Arztzeugnis fehlt',s:`Krank seit ${fmt(f.von)}. Ab dem 4. Tag braucht die Kasse ein Zeugnis.`,go:'rav:krank'}));
-  const late=S.aufgaben.filter(a=>!a.done&&a.due&&a.due<t).length;
-  if(late)W.push({lvl:'warn',t:`${late} Schritt${late===1?'':'e'} überfällig`,s:'Im Aktionsplan neu planen oder abhaken.',go:'strategie:plan'});
   return W}
 function renderHeute(){
   const name=(S.profil.meName||'').trim().split(/\s+/)[0], h=today.getHours();
@@ -4926,49 +3738,10 @@ function maybeWarnPop(){if(warnShown||tour||!$('#sheet').hidden||!S.meta.onboard
 $('#h-bell').onclick=openWarnPop;$('#wp-ok').onclick=closeWarnPop;$('#wp-scrim').onclick=closeWarnPop;
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#wpop').hidden){e.stopPropagation();closeWarnPop()}},true);
 
-/* ================= Kurs oder selbständig ================= */
-/* Im Kurs: Tab „Kurs“ mit eigener Leiste (Kompetenzen, Strategie).
-   Selbständig: nur die Stellensuche; Kompetenzen fällt weg, Strategie wird zu „Bewerbungen“ (ohne Zielrichtungen),
-   im Netzwerk fallen Karte und Aktivieren weg. S.meta.woche: 0 = selbständig, 1–4 = Kurswoche. */
-const isSelbst=()=>(S.meta.woche??1)===0;
-const KURS_VIEWS=['kompetenzen','strategie'];
-const IC_KURS='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m2.5 9 9.5-4.5L21.5 9 12 13.5z"/><path d="M6.5 11v4.5c0 1.4 2.5 2.8 5.5 2.8s5.5-1.4 5.5-2.8V11M21.5 9v5"/></svg>';
-const IC_SUCHE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>';
-function applyMode(){const sel=isSelbst(),r=document.documentElement;r.classList.toggle('selbst',sel);
-  const tb=n=>tabbar.querySelector(`[data-tab="${n}"]`);
-  tb('kompetenzen').hidden=true;tb('kurs').hidden=sel;tb('strategie').hidden=!sel;
-  tb('strategie').querySelector('span').textContent=sel?'Bewerbungen':'Strategie';
-  $('#v-strategie h1').innerHTML=sel?'Bewerbungen &amp; Aktionsplan':'Strategie &amp; Aktionsplan';
-  $('#v-strategie > .seg [data-sub="strategie"]').hidden=sel;
-  if(sel&&sub==='strategie')$('#v-strategie > .seg [data-sub="tracker"]').click();
-  ['karte','aktiv'].forEach(n=>{$(`#netz-seg [data-n="${n}"]`).hidden=sel});
-  if(sel&&(nsub==='karte'||nsub==='aktiv'))$('#netz-seg [data-n="kontakte"]').click();
-  const h=(location.hash||'').slice(1);
-  if(sel&&h==='kompetenzen')location.hash='heute';else applyRouteMode(TABS.includes(h)?h:'heute');
-  renderBadges()}
-/* Kurs-Leiste zeigen, wenn eine Kursseite offen ist */
-function applyRouteMode(t){const kursSub=!isSelbst()&&KURS_VIEWS.includes(t);
-  document.documentElement.classList.toggle('kurs-sub',kursSub);
-  if(kursSub){S.meta.kursTab=t;$$('#kursbar [data-k]').forEach(b=>b.setAttribute('aria-selected',b.dataset.k===t))}
-  const k=tabbar.querySelector('[data-tab="kurs"]');if(k)k.setAttribute('aria-selected',kursSub)}
-$$('#kursbar [data-k]').forEach(b=>b.onclick=()=>{location.hash=b.dataset.k});
-/* Frage „Besuchen Sie einen Kurs?“ samt Kurswoche, in der Einrichtung und in den Einstellungen */
-function kursPicker(help){const sel=isSelbst(),wk=S.meta.woche||S.meta.lastWeek||1;
-  return `<div class="field"><label>Besuchen Sie einen Kurs?${help||''}</label>
-    <div class="ospick" data-kurs-pick>
-      <button type="button" data-kurs="1" aria-pressed="${!sel}"><span class="os-ic">${IC_KURS}</span><b>Ja, im Kurs</b><small>Mit Kompetenzen und Strategie</small></button>
-      <button type="button" data-kurs="0" aria-pressed="${sel}"><span class="os-ic">${IC_SUCHE}</span><b>Nein, selbständig</b><small>Nur die Stellensuche</small></button>
-    </div></div>
-    <div class="field" data-kurs-week ${sel?'hidden':''}><label>In welcher Kurswoche sind Sie?</label>
-      <div class="seg" style="background:var(--hair)" role="radiogroup" aria-label="Kurswoche">${[1,2,3,4].map(n=>`<button type="button" role="radio" data-wk="${n}" aria-selected="${!sel&&wk===n}" aria-checked="${!sel&&wk===n}">Woche ${n}</button>`).join('')}</div></div>`}
-function bindKursPicker(root){if(!root)return;
-  const week=root.querySelector('[data-kurs-week]');
-  const markWeek=()=>root.querySelectorAll('[data-wk]').forEach(x=>{const on=+x.dataset.wk===S.meta.woche;x.setAttribute('aria-selected',on);x.setAttribute('aria-checked',on)});
-  root.querySelectorAll('[data-kurs]').forEach(b=>b.onclick=()=>{
-    if(b.dataset.kurs==='1'){if(!S.meta.woche)S.meta.woche=S.meta.lastWeek||1}else{if(S.meta.woche)S.meta.lastWeek=S.meta.woche;S.meta.woche=0}
-    save();applyMode();renderHeute();
-    root.querySelectorAll('[data-kurs]').forEach(x=>x.setAttribute('aria-pressed',x===b));week.hidden=isSelbst();markWeek()});
-  root.querySelectorAll('[data-wk]').forEach(b=>b.onclick=()=>{S.meta.woche=S.meta.lastWeek=+b.dataset.wk;save();renderHeute();markWeek()})}
+/* ================= Ohne Kursmodus ================= */
+/* Die schlanke App kennt nur noch die Stellensuche (früher „selbständig“). */
+const isSelbst=()=>true;
+function applyMode(){document.documentElement.classList.add('selbst');renderBadges()}
 
 /* ================= Startseite: Widgets ================= */
 /* Raster mit 4 Spalten; jedes Widget hat erlaubte Grössen [Breite, Höhe] in Rasterfeldern */
@@ -4979,29 +3752,48 @@ const LINKS=[
   ['brief','Brief schreiben','Brief',()=>openBrief(null)],
   ['cv','Lebenslauf erstellen','Lebenslauf',()=>openCv()],
   ['doc','Dokument ablegen','Dokument',()=>openUpload({kat:'cv'})],
-  ['schritt','Schritt planen','Schritt',()=>{goTo('strategie:plan');setTimeout(()=>$('#task-text').focus(),150)}],
-  ['kontakt','Kontakt hinzufügen','Kontakt',()=>openKontakt(null)],
-  ['firma','Firma recherchieren','Firma',()=>FAB[4][2]()],
-  ['zr','Zielrichtung bewerten','Richtung',()=>FAB[5][2]()],
+  ['firma','Initiativbewerbung','Initiativ',()=>goTo('dossier:firmen')],
   ['nachweis','RAV-Formular erstellen','RAV-Formular',()=>{goTo('rav:rav');setTimeout(()=>$('#rav-nachweis').scrollIntoView({behavior:'smooth',block:'start'}),150)}],
   ['check','Dossier-Check','Check',()=>homeGo('dossier-check')],
   ['krank','Krank melden','Krank',()=>openFall(null)],
   ['backup','Daten sichern','Sichern',()=>openBackup()]];
 const WIDGETS={
-  next:{t:'Nächste Schritte',d:'Aus Aktionsplan, Bewerbungen, Firmen und Netzwerk',sizes:[[2,2],[4,2],[4,3],[4,4],[4,5]],def:[4,3],go:'strategie:plan',fn:wNext},
+  next:{t:'Nächste Schritte',d:'Was bei Ihren Bewerbungen als Nächstes ansteht',sizes:[[2,2],[4,2],[4,3],[4,4],[4,5]],def:[4,2],go:'heute:bew',fn:wNext},
   rav:{t:'RAV-Stand',d:'Arbeitsbemühungen des Monats',sizes:[[2,2],[4,2]],def:[2,2],go:'rav:rav',fn:wRav},
-  zahlen:{t:'Bewerbungen',d:'Diese Woche, diesen Monat, Gespräche',sizes:[[2,2],[4,2]],def:[2,2],go:'strategie:tracker',fn:wZahlen},
-  fokus:{t:'Mein Fokus',d:'Was in Ihrer Kurswoche wichtig ist',sizes:[[4,3],[4,4]],def:[4,4],fn:wFokus},
   termin:{t:'Personalberatung',d:'Nächstes Gespräch beim RAV',sizes:[[2,2],[4,2]],def:[2,2],go:'rav:rav',fn:wTermin},
-  firmen:{t:'Zielfirmen',d:'Recherchiert und kontaktiert',sizes:[[2,2],[4,2],[4,3]],def:[2,2],go:'netzwerk:firmen',fn:wFirmen},
-  top3:{t:'Meine Argumente',d:'Ihre drei stärksten Kompetenzen',sizes:[[4,2],[4,3],[4,4]],def:[4,3],go:'kompetenzen',fn:wTop3},
-  netz:{t:'Netzwerk',d:'Ihr nächster Kontakt',sizes:[[2,2],[4,2]],def:[2,2],go:'netzwerk:aktiv',fn:wNetz},
   dossier:{t:'Dossier',d:'Welche Unterlagen noch fehlen',sizes:[[2,2],[4,2]],def:[2,2],go:'dossier:unterlagen',fn:wDossier},
   alk:{t:'Arbeitslosenkasse',d:'Monatsformular für die Kasse',sizes:[[2,2],[4,2]],def:[2,2],go:'rav:alk',fn:wAlk},
   krank:{t:'Krankheit',d:'Tage und Fristen bei Krankheit',sizes:[[2,2],[4,2]],def:[2,2],go:'rav:krank',fn:wKrank},
   link:{t:'Schnellzugriff',d:'Eine Abkürzung Ihrer Wahl, auch mehrmals',sizes:[[1,1],[2,1],[2,2]],def:[2,1],fn:wLink,multi:true}};
-const HOME_DEF=()=>[{k:'next',w:4,h:3},{k:'rav',w:2,h:2},{k:'zahlen',w:2,h:2},{k:'link',w:2,h:1,cfg:'bew'},{k:'link',w:2,h:1,cfg:'brief'},{k:'fokus',w:4,h:4}].map(x=>Object.assign({id:uid()},x));
-function home(){if(!Array.isArray(S.meta.home))S.meta.home=HOME_DEF();S.meta.home=S.meta.home.filter(x=>WIDGETS[x.k]);return S.meta.home}
+const HOME_DEF=()=>[{k:'rav',w:2,h:2},{k:'dossier',w:2,h:2},{k:'link',w:2,h:1,cfg:'bew'},{k:'link',w:2,h:1,cfg:'brief'},{k:'next',w:4,h:2}].map(x=>Object.assign({id:uid()},x));
+/* Umstieg auf die schlanke App (einmalig): Startseite und Leiste neu, Rundgang noch einmal zeigen */
+if(S.meta.slim!==1){S.meta.home=HOME_DEF();S.meta.tabs=null;if(S.meta.onboarded)S.meta.toured=false;S.meta.slim=1;save()}
+/* Raster mit festen Zellen: jedes Widget hat x (Spalte 0–3) und y (Zeile).
+   Kollision: Was im Weg ist, rutscht nach unten; danach rückt alles nach oben nach, damit keine Löcher bleiben.
+   Jedes Widget behält dabei seine Spalte. */
+const WCOLS=4;
+/* Einrasten wie auf dem Handy: halbbreite Kacheln nur links oder rechts, schmale überall, breite ganz links */
+const wStep=w=>w>=2?2:1;
+const wSnapX=(x,w)=>Math.max(0,Math.min(WCOLS-w,Math.round(x/wStep(w))*wStep(w)));
+const wHit=(a,b)=>a!==b&&a.x<b.x+b.w&&b.x<a.x+a.w&&a.y<b.y+b.h&&b.y<a.y+a.h;
+/* Widgets ohne Position (frühere Startseiten, neue Standardseite) in Reihenfolge ins erste freie Feld */
+function wPack(L){const P=[];
+  L.forEach(o=>{o.w=Math.min(o.w,WCOLS);if(Number.isInteger(o.x)&&Number.isInteger(o.y)){P.push(o);return}
+    search:for(let y=0;;y++)for(let x=0;x<=WCOLS-o.w;x+=wStep(o.w)){o.x=x;o.y=y;if(!P.some(p=>wHit(o,p)))break search}
+    P.push(o)});
+  return L}
+/* fix bleibt an seiner Zelle, die anderen weichen aus; danach alles nach oben verdichten */
+function wLayout(L,fix){
+  L.forEach(o=>{o.w=Math.min(o.w,WCOLS);o.x=wSnapX(o.x|0,o.w);o.y=Math.max(0,o.y|0)});
+  const fall=(list,first)=>{const placed=first?[first]:[];
+    list.filter(o=>o!==first).sort((a,b)=>a.y-b.y||a.x-b.x).forEach(o=>{o.y=0;while(placed.some(p=>wHit(o,p)))o.y++;placed.push(o)})};
+  if(fix)fall(L,fix);
+  fall(L,null);
+  L.sort((a,b)=>a.y-b.y||a.x-b.x);return L}
+/* Positionen auf die Elemente übertragen, Reihenfolge im DOM = Lesereihenfolge */
+function wApply(){home().forEach(o=>{const e=grid.querySelector(`[data-id="${o.id}"]`);if(!e)return;
+  e.style.gridColumn=`${o.x+1} / span ${o.w}`;e.style.gridRow=`${o.y+1} / span ${o.h}`;grid.appendChild(e)})}
+function home(){if(!Array.isArray(S.meta.home))S.meta.home=HOME_DEF();S.meta.home=S.meta.home.filter(x=>WIDGETS[x.k]);return wPack(S.meta.home)}
 let editing=false, homeBusy=false;
 
 const wHead=(t,more)=>`<div class="w-h"><span>${t}</span>${more?'<span aria-hidden="true">›</span>':''}</div>`;
@@ -5011,34 +3803,15 @@ function wNext(x){const N=nextSteps(),t=iso(today);
   return `${wHead('Nächste Schritte'+(N.length>n?' · '+N.length:''),1)}${N.length?N.slice(0,n).map(s=>{const late=s.due&&s.due<t;return `<div class="w-row">
     ${s.task?`<input type="checkbox" class="check" data-ht="${s.task}" aria-label="Erledigt: ${esc(s.txt)}">`:''}
     <div data-go="${s.go}" role="button" tabindex="0"><div class="t">${esc(s.txt)}</div><div class="m" style="${late?'color:var(--bad)':''}">${s.src}${s.ctx?' · '+esc(s.ctx):''}${s.due?' · '+(late?'überfällig ':'')+fmt(s.due):''}${s.ex?' · Beispiel':''}</div></div></div>`}).join('')
-    :'<div class="w-sub">Keine offenen Schritte. Planen Sie im Aktionsplan, was als Nächstes kommt.</div>'}`}
+    :'<div class="w-sub">Keine offenen Schritte. Tragen Sie bei einer Bewerbung ein, was als Nächstes kommt.</div>'}`}
 function wRav(x){const R=ravMonth(),c=R.count,z=S.ziele.monat,p=Math.min(100,Math.round(c/Math.max(1,z)*100)),d=today.getDate();
   const when=d>=22||R.prev?'Abgabe bis am 5.':`Abgabe ab dem 22.`;
   return `${wHead('RAV '+R.name,1)}<div class="w-big">${c}<small> / ${z}</small></div>
     <div class="meter" style="height:8px"><div style="width:${p}%;background:${c>=z?'var(--ok)':'var(--accent)'}"></div></div>
     <div class="w-sub">${x.w<4?when:`${c>=z?'Vorgabe erreicht. ':''}Arbeitsbemühungen. ${when}`}</div>`}
-function wZahlen(x){const w=weekCount(),m=monthCount(),g=S.bewerbungen.filter(b=>b.status==='gespraech').length;
-  if(x.w<4)return `${wHead('Bewerbungen',1)}<div class="w-big">${w}<small> / ${wochenZiel()}</small></div><div class="w-sub">diese Woche · ${m} im Monat${g?` · ${g} Gespräch${g>1?'e':''}`:''}</div>`;
-  return `${wHead('Bewerbungen',1)}<div class="w-cols"><div><b>${w}</b><span>diese Woche</span></div><div><b>${m}</b><span>diesen Monat</span></div><div><b>${g}</b><span>Gespräche</span></div></div>`}
-function wFokus(x){const wk=S.meta.woche??1,W2=WOCHEN.find(o=>o.id===wk)||WOCHEN[0],sel=isSelbst();
-  return `${wHead(sel?'Meine Stellensuche':'Mein Fokus')}${sel?'':`<div class="seg" style="background:var(--hair)" role="tablist" aria-label="Kurswoche">${WOCHEN.filter(o=>o.id).map(o=>`<button data-wk="${o.id}" aria-selected="${o.id===wk}">W${o.id}</button>`).join('')}</div>`}
-    <div class="w-sub">${esc((W2.id?W2.l+': ':'')+W2.t)}</div>
-    ${x.h>=4?`<div class="w-tiles">${W2.go.map(([g,l,s])=>`<button data-go="${g}"><b>${l}</b><span>${s}</span></button>`).join('')}</div>`
-      :`<div class="w-chips">${W2.go.map(([g,l])=>`<button class="tag" data-go="${g}" style="cursor:pointer;background:var(--glass)">${l} ›</button>`).join('')}</div>`}`}
 function wTermin(x){const t=S.rav.termin,d=t?new Date(t):null;
   return `${wHead('Personalberatung',1)}${d&&!isNaN(d)?`<div class="w-big" style="font-size:${x.w<4?24:30}px">${d.toLocaleDateString('de-CH',{weekday:'short',day:'numeric',month:'short'})}</div><div class="w-sub">${t.length>10?d.toLocaleTimeString('de-CH',{hour:'2-digit',minute:'2-digit'})+' Uhr':''}${S.rav.name?' · '+esc(S.rav.name):''}</div>`
     :'<div class="w-sub">Noch kein Termin eingetragen. Tippen, um ihn festzuhalten.</div>'}`}
-function wFirmen(x){const F=S.fr.firmen||[],kont=F.filter(f=>(f.status||0)>=2).length,rech=F.length-kont;
-  if(!F.length)return `${wHead('Zielfirmen',1)}<div class="w-sub">Noch keine Firmen recherchiert. Tippen, um anzufangen.</div>`;
-  if(x.w<4)return `${wHead('Zielfirmen',1)}<div class="w-big">${kont}<small> / ${F.length}</small></div><div class="w-sub">kontaktiert</div>`;
-  return `${wHead('Zielfirmen',1)}<div class="w-cols" style="grid-template-columns:1fr 1fr"><div><b>${rech}</b><span>recherchiert</span></div><div><b>${kont}</b><span>kontaktiert</span></div></div>`}
-function wTop3(x){const L=S.komp.items.filter(i=>i.star);
-  return `${wHead('Meine Argumente',1)}${L.length?L.slice(0,x.h>2?3:2).map(i=>`<div class="w-row"><div><div class="t">★ ${esc(i.name)}</div>${x.h>2?`<div class="m">${i.beleg?esc(i.beleg):'Beleg fehlt'}</div>`:''}</div></div>`).join('')
-    :'<div class="w-sub">Markieren Sie bis zu drei Kompetenzen mit dem Stern.</div>'}`}
-function wNetz(x){const C=S.netz.contacts,n=C.find(c=>c.act&&c.step)||C.find(c=>c.step);
-  if(!C.length)return `${wHead('Netzwerk',1)}<div class="w-sub">Noch keine Kontakte. Wer könnte von einer Stelle wissen?</div>`;
-  return `${wHead('Netzwerk',1)}${n?`<div class="w-sub">Nächster Kontakt</div><div class="w-row"><div><div class="t">${esc(n.step)}</div><div class="m">${esc(n.name)}</div></div></div>`
-    :`<div class="w-big">${C.length}<small> Kontakte</small></div><div class="w-sub">Wen fragen Sie als Nächstes?</div>`}`}
 function wDossier(x){const core=KAT.filter(k=>k.core),miss=core.filter(k=>!S.docs.some(d=>!d.bereich&&d.kat===k.id));
   return `${wHead('Dossier',1)}<div class="w-big">${core.length-miss.length}<small> / ${core.length}</small></div>
     ${miss.length?(x.w<4?`<div class="w-sub">Fehlt: ${esc(miss[0].l)}${miss.length>1?' …':''}</div>`:`<div class="w-chips">${miss.map(k=>`<span class="tag">${esc(k.l)}</span>`).join('')}</div>`):'<div class="w-sub">Grundunterlagen vollständig</div>'}`}
@@ -5054,11 +3827,10 @@ function wLink(x){const L=LINKS.find(l=>l[0]===x.cfg)||LINKS[0];
   return x.w<2?`<b>${L[2]}</b>`:`<b>${L[1]}</b>${x.h>1?'<span>Tippen zum Öffnen</span>':''}`}
 
 function wHTML(x){const W=WIDGETS[x.k],go=x.k==='link'?'':W.go||'';
-  return `<div class="w${x.k==='link'?' w-link':''}" data-id="${x.id}" data-k="${x.k}" data-sz="${x.w}x${x.h}" ${go?`data-wgo="${go}"`:''} ${x.k==='link'?`data-link="${x.cfg}" role="button"`:''} tabindex="${editing||x.k==='link'?0:-1}" aria-label="${esc(x.k==='link'?(LINKS.find(l=>l[0]===x.cfg)||LINKS[0])[1]:W.t)}" style="grid-column:span ${x.w};grid-row:span ${x.h}">
+  return `<div class="w${x.k==='link'?' w-link':''}" data-id="${x.id}" data-k="${x.k}" data-sz="${x.w}x${x.h}" ${go?`data-wgo="${go}"`:''} ${x.k==='link'?`data-link="${x.cfg}" role="button"`:''} tabindex="${editing||x.k==='link'?0:-1}" aria-label="${esc(x.k==='link'?(LINKS.find(l=>l[0]===x.cfg)||LINKS[0])[1]:W.t)}" style="grid-column:${x.x+1} / span ${x.w};grid-row:${x.y+1} / span ${x.h}">
     <div class="w-body">${W.fn(x)}</div><button class="w-del" data-del aria-label="${esc(W.t)} entfernen" tabindex="-1">−</button><div class="w-grip" data-grip aria-hidden="true"></div></div>`}
-/* selbständig: kein Kompetenz-Widget */
-const homeVisible=()=>home().filter(x=>!(isSelbst()&&x.k==='top3'));
-function renderGrid(){grid.innerHTML=homeVisible().map(wHTML).join('')}
+const homeVisible=()=>home();
+function renderGrid(){if(!homeBusy)wLayout(home(),null);grid.innerHTML=homeVisible().map(wHTML).join('')}
 function homeGo(g){
   if(g==='dossier-brief'){openBrief(null);return}
   if(g==='dossier-check'){goTo('dossier:unterlagen');setTimeout(()=>{chkOpen=true;const d=$('#dos-check > details');if(d)d.open=true;$('#dos-check').scrollIntoView({behavior:'smooth',block:'start'})},120);return}
@@ -5120,8 +3892,13 @@ grid.addEventListener('change',e=>{const c=e.target.closest('[data-ht]');if(!c)r
 grid.addEventListener('keydown',e=>{const el=e.target.closest('.w');if(!el)return;
   if(!editing){if((e.key==='Enter'||e.key===' ')&&e.target.matches('[role=button]')){e.preventDefault();e.target.click()}return}
   const L=home(),i=L.findIndex(x=>x.id===el.dataset.id),x=L[i],Z=WIDGETS[x.k].sizes,si=Z.findIndex(s=>s[0]===x.w&&s[1]===x.h);
-  if(e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='ArrowRight'||e.key==='ArrowDown'){e.preventDefault();const j=i+(e.key==='ArrowLeft'||e.key==='ArrowUp'?-1:1);if(j<0||j>=L.length)return;
-    flip(grid,()=>{L.splice(j,0,L.splice(i,1)[0]);L.forEach(o=>{const e=grid.querySelector(`[data-id="${o.id}"]`);e&&grid.appendChild(e)})});el.focus();save()}
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='ArrowRight'||e.key==='ArrowDown'){e.preventDefault();
+    let nx=x.x,ny=x.y;
+    if(e.key==='ArrowLeft')nx-=wStep(x.w);else if(e.key==='ArrowRight')nx+=wStep(x.w);else if(e.key==='ArrowUp')ny--;
+    else{/* nach unten: am nächsten Widget darunter vorbei, sonst zieht das Verdichten es gleich wieder hoch */
+      const below=L.filter(o=>o!==x&&o.x<x.x+x.w&&x.x<o.x+o.w&&o.y>=x.y+x.h).sort((a,b)=>a.y-b.y)[0];if(!below)return;ny=Math.max(x.y+1,below.y+below.h-x.h)}
+    if(nx<0||nx>WCOLS-x.w||ny<0)return;
+    flip(grid,()=>{x.x=nx;x.y=ny;wLayout(L,x);wApply()});el.focus();save()}
   else if(e.key==='+'||e.key==='-'){e.preventDefault();const n=Z[Math.max(0,Math.min(Z.length-1,si+(e.key==='+'?1:-1)))];resizeTo(el,x,n);save()}
   else if(e.key==='Delete'||e.key==='Backspace'){e.preventDefault();removeWidget(el)}});
 
@@ -5139,12 +3916,15 @@ function startDrag(e,el){e.preventDefault();
     clearTimeout(calmT);calmT=setTimeout(()=>{tilt=0;el.style.rotate='0deg'},90)};
   const follow=()=>{const g=grid.getBoundingClientRect(),k=gridK();
     el.style.translate=`${(last.clientX-gx-g.left-cx-el.offsetLeft*k)/k}px ${(last.clientY-gy-g.top-cy-el.offsetTop*k)/k}px`};
-  const hit=()=>{const now=performance.now();if(now-swapAt<200)return;
-    for(const o of grid.children){if(o===el)continue;const r=o.getBoundingClientRect(),ix=r.width*.22,iy=r.height*.22;
-      if(last.clientX>r.left+ix&&last.clientX<r.right-ix&&last.clientY>r.top+iy&&last.clientY<r.bottom-iy){
-        const L=home(),from=L.findIndex(x=>x.id===el.dataset.id),to=L.findIndex(x=>x.id===o.dataset.id);
-        swapAt=now;flip(grid,()=>{L.splice(to,0,L.splice(from,1)[0]);L.forEach(x=>{const e=grid.querySelector(`[data-id="${x.id}"]`);e&&grid.appendChild(e)})},el);
-        buzz(6);follow();return}}};
+  const hit=()=>{const now=performance.now();if(now-swapAt<90)return;
+    const g=grid.getBoundingClientRect(),k=gridK(),gap=WGAP*k,cw=(g.width-(WCOLS-1)*gap)/WCOLS,rh=WROW*k,
+      x=home().find(o=>o.id===el.dataset.id);if(!x)return;
+    const col=wSnapX((last.clientX-gx-g.left)/(cw+gap),x.w),
+      row=Math.max(0,Math.round((last.clientY-gy-g.top)/(rh+gap)));
+    if(col===x.x&&row===x.y)return;
+    const before=home().map(o=>o.id+':'+o.x+','+o.y).join();
+    swapAt=now;flip(grid,()=>{x.x=col;x.y=row;wLayout(home(),x);wApply()},el);
+    if(home().map(o=>o.id+':'+o.x+','+o.y).join()!==before)buzz(6);follow()};
   const tick=()=>{if(!on)return;const sc=$('#scroll'),top=sc.getBoundingClientRect().top;let d=0;
     if(last.clientY<top+70)d=-12;else if(last.clientY>innerHeight-180)d=12;
     if(d){const b=sc.scrollTop;sc.scrollTop+=d;if(sc.scrollTop!==b){follow();hit()}}
@@ -5171,28 +3951,28 @@ function startResize(e,el){e.preventDefault();e.stopPropagation();
     save()};
   el.addEventListener('pointermove',mv);el.addEventListener('pointerup',up);el.addEventListener('pointercancel',up)}
 function resizeTo(el,x,s,viaGesture){if(!s||(s[0]===x.w&&s[1]===x.h))return;const grow=s[0]*s[1]>x.w*x.h;
-  flip(grid,()=>{x.w=s[0];x.h=s[1];el.style.gridColumn=`span ${x.w}`;el.style.gridRow=`span ${x.h}`;el.dataset.sz=x.w+'x'+x.h;el.querySelector('.w-body').innerHTML=WIDGETS[x.k].fn(x)});
+  flip(grid,()=>{x.w=s[0];x.h=s[1];el.dataset.sz=x.w+'x'+x.h;el.querySelector('.w-body').innerHTML=WIDGETS[x.k].fn(x);wLayout(home(),x);wApply()});
   jelly(el,grow);if(viaGesture)buzz(8)}
 function removeWidget(el){if(!el)return;homeBusy=true;
-  const done=()=>{flip(grid,()=>{S.meta.home=home().filter(x=>x.id!==el.dataset.id);el.remove()});homeBusy=false;save()};
+  const done=()=>{flip(grid,()=>{S.meta.home=home().filter(x=>x.id!==el.dataset.id);el.remove();wLayout(home(),null);wApply()});homeBusy=false;save()};
   if(calm()){done();return}
   el.animate([{scale:'1',opacity:1},{scale:'1.1 .86',opacity:1,offset:.4},{scale:'.2',opacity:0}],{duration:340,easing:'ease-in',fill:'forwards'}).onfinish=done}
 function openAddWidget(){const L=home();
   const row=(attr,t,d,dis)=>`<button class="row row-click" ${attr} ${dis?'disabled':''} style="background:none;border:none;border-top:1px solid var(--hair);text-align:left;width:100%;cursor:${dis?'default':'pointer'};${dis?'opacity:.45':''}"><div class="row-main"><div class="row-title">${t}</div><div class="row-sub">${d}</div></div><span style="color:var(--fg3);font-size:20px">${dis?'✓':'+'}</span></button>`;
-  openSheet('Widget hinzufügen',`<div class="list">${Object.entries(WIDGETS).filter(([k])=>!(isSelbst()&&k==='top3')).map(([k,w])=>{const has=!w.multi&&L.some(x=>x.k===k);return row(`data-addw="${k}"`,w.t,has?'Schon auf der Startseite':w.d,has)}).join('')}</div>`,null);
+  openSheet('Widget hinzufügen',`<div class="list">${Object.entries(WIDGETS).map(([k,w])=>{const has=!w.multi&&L.some(x=>x.k===k);return row(`data-addw="${k}"`,w.t,has?'Schon auf der Startseite':w.d,has)}).join('')}</div>`,null);
   $$('#sheet-body [data-addw]').forEach(b=>b.onclick=()=>{const k=b.dataset.addw;if(k!=='link'){addWidget(k);return}
     $('#sheet-title').textContent='Schnellzugriff wählen';
-    $('#sheet-body').innerHTML=`<div class="list">${LINKS.filter(l=>!(isSelbst()&&l[0]==='zr')).map(l=>row(`data-addl="${l[0]}"`,l[1],'Als Abkürzung auf die Startseite')).join('')}</div>`;
+    $('#sheet-body').innerHTML=`<div class="list">${LINKS.map(l=>row(`data-addl="${l[0]}"`,l[1],'Als Abkürzung auf die Startseite')).join('')}</div>`;
     $$('#sheet-body [data-addl]').forEach(c=>c.onclick=()=>addWidget('link',c.dataset.addl))})}
-function addWidget(k,cfg){closeSheet();const W=WIDGETS[k],x={id:uid(),k,w:W.def[0],h:W.def[1]};if(cfg)x.cfg=cfg;
-  home().push(x);save();
+function addWidget(k,cfg){closeSheet();const W=WIDGETS[k],x={id:uid(),k,w:W.def[0],h:W.def[1],x:0,y:0};if(cfg)x.cfg=cfg;
+  home().push(x);wLayout(home(),x);save();
   setTimeout(()=>{renderGrid();const el=grid.querySelector(`[data-id="${x.id}"]`);if(!el)return;
     el.scrollIntoView({behavior:calm()?'auto':'smooth',block:'center'});
     if(!calm())el.animate([{scale:'.3',opacity:0},{scale:'1.14',opacity:1,offset:.42},{scale:'.94 .98',offset:.65},{scale:'1.02',offset:.84},{scale:'1'}],{duration:760,easing:'ease-out'})},360)}
 
 /* Untere Leiste: im Bearbeitungsmodus Symbole nach vorne oder hinten ziehen */
 /* Gespeicherte Reihenfolge; Tabs, die sie noch nicht kennt (z.B. „Kurs“), kommen an ihren vorgesehenen Platz */
-const TAB_DEF=['heute','kurs','kompetenzen','strategie','dossier','netzwerk','rav'];
+const TAB_DEF=['heute','dossier','rav'];
 function applyTabOrder(){const o=(Array.isArray(S.meta.tabs)?S.meta.tabs:TAB_DEF).filter(t=>TAB_DEF.includes(t));
   TAB_DEF.forEach((t,i)=>{if(o.includes(t))return;const prev=TAB_DEF.slice(0,i).reverse().find(x=>o.includes(x));o.splice(prev?o.indexOf(prev)+1:0,0,t)});
   o.forEach(t=>{const b=tabbar.querySelector(`[data-tab="${t}"]`);b&&tabbar.appendChild(b)})}
@@ -5215,25 +3995,21 @@ tabbar.addEventListener('pointerdown',e=>{if(!editing||e.button>0)return;const e
 /* ================= Punkte auf den Tab-Symbolen ================= */
 function renderBadges(){const t=iso(today),d=today.getDate();
   const dot={
-    strategie:S.aufgaben.some(a=>!a.done&&a.due&&a.due<t),
-    netzwerk:(S.fr.firmen||[]).some(f=>f.next&&f.next.datum&&f.next.datum<t&&(f.status||0)<5),
+    dossier:(S.fr.firmen||[]).some(f=>f.next&&f.next.datum&&f.next.datum<t&&(f.status||0)<5),
     rav:warnings().some(w=>w.go.startsWith('rav'))};
-  dot.kurs=dot.strategie;
   $$('.tab').forEach(b=>{let s=b.querySelector('.tab-dot');const on=!!dot[b.dataset.tab];
     if(on&&!s){s=document.createElement('i');s.className='tab-dot';s.setAttribute('aria-hidden','true');b.appendChild(s)}
     if(s)s.hidden=!on;b.setAttribute('aria-label',b.textContent.trim()+(on?', braucht Aufmerksamkeit':''))})}
 
 /* ================= Plus-Knopf ================= */
 const FAB=[
-  ['Bewerbung erfassen','Für den Tracker und das RAV-Formular',()=>openBew(null)],
+  ['Bewerbung erfassen','Für Ihre Liste und das RAV-Formular',()=>openBew(null)],
+  ['Bewerbungsbrief schreiben','Mit Briefkopf und Unterschrift als PDF',()=>openBrief(null)],
   ['Dokument ablegen','Foto oder PDF ins Dossier',()=>openUpload({kat:'cv'})],
   ['Lebenslauf erstellen','Zweispaltig, als PDF ins Dossier',()=>openCv()],
-  ['Schritt planen','Im Aktionsplan',()=>{goTo('strategie:plan');setTimeout(()=>$('#task-text').focus(),150)}],
-  ['Kontakt hinzufügen','Für Ihr Netzwerk',()=>openKontakt(null)],
-  ['Firma recherchieren','Für eine Initiativbewerbung',()=>{goTo('netzwerk:firmen');setTimeout(()=>{frWiz&&frWiz.reset();const f=document.getElementById('fr-fName');f&&f.focus()},150)}],
-  ['Zielrichtung bewerten','Lohnt sich diese Richtung?',()=>{goTo('strategie:strategie');setTimeout(()=>{zrWiz&&zrWiz.reset();const f=document.getElementById('zr-name');f&&f.focus()},150)}],
+  ['Initiativbewerbung','Firma recherchieren und anschreiben',()=>{goTo('dossier:firmen');setTimeout(()=>{frWiz&&frWiz.reset();const f=document.getElementById('fr-fName');f&&f.focus()},260)}],
   ['Krank melden','Fristen für Zeugnis und Kasse',()=>openFall(null)]];
-$('#fab').onclick=()=>{openSheet('Neu erfassen',`<div class="list">${FAB.map((f,i)=>isSelbst()&&f[0]==='Zielrichtung bewerten'?'':`<button class="row row-click" data-fab="${i}" style="background:none;border:none;border-top:1px solid var(--hair);text-align:left;width:100%;cursor:pointer"><div class="row-main"><div class="row-title">${f[0]}</div><div class="row-sub">${f[1]}</div></div><span style="color:var(--fg3);font-size:20px">›</span></button>`).join('')}</div>`,null);
+$('#fab').onclick=()=>{openSheet('Neu erfassen',`<div class="list">${FAB.map((f,i)=>`<button class="row row-click" data-fab="${i}" style="background:none;border:none;border-top:1px solid var(--hair);text-align:left;width:100%;cursor:pointer"><div class="row-main"><div class="row-title">${f[0]}</div><div class="row-sub">${f[1]}</div></div><span style="color:var(--fg3);font-size:20px">›</span></button>`).join('')}</div>`,null);
   $$('#sheet-body [data-fab]').forEach(b=>b.onclick=()=>{const fn=FAB[+b.dataset.fab][2];closeSheet();setTimeout(fn,340)})};
 
 /* ================= Einstellungen, grosse Schrift ================= */
@@ -5299,8 +4075,6 @@ function openSettings(){
       ${[['auto','Automatisch'],['light','Hell'],['dark','Dunkel']].map(([v,l])=>`<button type="button" role="radio" data-th="${v}" aria-selected="${th===v}" aria-checked="${th===v}">${l}</button>`).join('')}</div>
       <span class="muted">Automatisch folgt der Einstellung Ihres Geräts.</span></div>
     <label class="row" style="cursor:pointer;border:none"><input type="checkbox" class="check" id="set-calm" ${S.meta.calm?'checked':''}><div class="row-main"><div class="row-title">Animationen reduzieren</div><div class="row-sub">${sysCalm?'Ihr Gerät hat Bewegung bereits reduziert. Die App zeigt darum keine Animationen.':'Weniger Bewegung, wenn Ihnen das angenehmer ist.'}</div></div></label>
-    ${setHead('Kurs')}
-    <div id="set-kurs">${kursPicker('')}</div>
     ${setHead('Mitteilungen')}
     <label class="row" style="cursor:pointer;border:none"><input type="checkbox" class="check" id="set-notify" ${S.meta.notify?'checked':''} ${canNotify()?'':'disabled'}><div class="row-main"><div class="row-title">Erinnerungen als Mitteilung</div><div class="row-sub">Fristen fürs RAV und die Kasse, Termine, geplante Schritte und Warnungen erscheinen als Mitteilung auf dem Handy. ${notifyNote()}</div></div></label>
     ${setHead('Schnellauswahl')}
@@ -5311,7 +4085,7 @@ function openSettings(){
     <div class="list">
       ${setRow('set-backup','Sichern und laden','Letzte Sicherung: '+(S.meta.lastBackup?fmt(S.meta.lastBackup):'noch keine'))}
       ${hasExamples()?setRow('set-ex','Beispiele entfernen','Alle mit „Beispiel“ markierten Einträge löschen.'):''}
-      <button class="row row-click" id="set-wipe" style="background:none;border:none;border-top:1px solid var(--hair);text-align:left;width:100%;cursor:pointer"><div class="row-main"><div class="row-title" style="color:var(--bad)">Alle Daten auf diesem Gerät löschen</div><div class="row-sub" id="set-wipe-sub">Bewerbungen, Dokumente, Netzwerk, alles. Machen Sie vorher eine Sicherung.</div></div></button>
+      <button class="row row-click" id="set-wipe" style="background:none;border:none;border-top:1px solid var(--hair);text-align:left;width:100%;cursor:pointer"><div class="row-main"><div class="row-title" style="color:var(--bad)">Alle Daten auf diesem Gerät löschen</div><div class="row-sub" id="set-wipe-sub">Bewerbungen, Dokumente, Lebenslauf, alles. Machen Sie vorher eine Sicherung.</div></div></button>
     </div>
     <p class="muted">Ihre Daten liegen nur auf diesem Gerät. Wenn Sie die App deinstallieren, werden alle Daten gelöscht. Sichern Sie vorher.</p>
     ${setHead('Hilfe')}
@@ -5326,7 +4100,6 @@ function openSettings(){
   $('#set-notify').onchange=async e=>{const want=e.target.checked;const ok=await setNotify(want);e.target.checked=ok};
   $$('#set-theme [data-th]').forEach(b=>b.onclick=()=>{S.meta.theme=b.dataset.th==='auto'?null:b.dataset.th;save();applyLook();
     $$('#set-theme [data-th]').forEach(x=>{x.setAttribute('aria-selected',x===b);x.setAttribute('aria-checked',x===b)})});
-  bindKursPicker($('#set-kurs'));
   $('#set-profil').onclick=()=>{closeSheet();setTimeout(openProfil,340)};
   $('#set-side').onclick=()=>{closeSheet();setTimeout(openSideEdit,340)};
   $('#set-backup').onclick=()=>{closeSheet();setTimeout(openBackup,340)};
@@ -5441,15 +4214,14 @@ const ONB=[
       ${oFld('alk.tel','Telefon Kasse','Steht auf jedem Brief der Kasse.','type="tel"')}</div>
     ${oFld('alk.rahmenfrist','Beginn Ihrer Rahmenfrist','Steht auf der Verfügung der Kasse. Ab diesem Tag zählt die App die Taggelder bei Krankheit.','type="date"')}`,
    bind:()=>{}},
-  {t:'Kurs und Gerät',html:()=>{return `
+  {t:'Gerät',html:()=>{return `
     <h1 id="onb-t">Fast geschafft</h1><p class="lead">Noch ein paar kleine Einstellungen.</p>
-    <div id="onb-kurs">${kursPicker(tip('Im Kurs zeigt die App unter „Kurs“ die Kursmodule Kompetenzen und Strategie. Selbständig konzentriert sie sich ganz auf die Stellensuche: Bewerbungen, Dossier, Netzwerk und RAV. Sie können das jederzeit in den Einstellungen ändern.'))}</div>
     <label class="row" style="cursor:pointer;border:none"><input type="checkbox" class="check" id="onb-notify" ${S.meta.notify?'checked':''} ${canNotify()?'':'disabled'}><div class="row-main"><div class="row-title">Erinnerungen als Mitteilung ${tip('Das Handy erinnert Sie an die Abgabe der Arbeitsbemühungen, das Monatsformular, Ihren RAV-Termin und geplante Schritte. Jederzeit in den Einstellungen ausschaltbar.')}</div><div class="row-sub">${notifyNote()}</div></div></label>
     <label class="row" style="cursor:pointer;border:none"><input type="checkbox" class="check" id="onb-big" ${S.meta.big?'checked':''}><div class="row-main"><div class="row-title">Grosse Schrift ${tip('Alles wird etwas grösser. Sie können das jederzeit in den Einstellungen ändern.')}</div><div class="row-sub">Für bessere Lesbarkeit.</div></div></label>
     ${isIOS&&!standalone?`<div class="banner warn-banner"><div class="txt"><b>Wichtig auf dem iPhone</b><span>Legen Sie die App auf den Home-Bildschirm: unten in Safari auf das Teilen-Symbol tippen, dann „Zum Home-Bildschirm“. Sonst kann Safari Ihre Daten nach einigen Tagen löschen.</span></div></div>`
       :!standalone?`<div class="banner glass"><div class="txt"><b>Tipp</b><span>Legen Sie die App auf den Startbildschirm: im Browser-Menü „Zum Startbildschirm hinzufügen“ oder „App installieren“.</span></div></div>`:''}
     <div class="banner glass"><div class="txt"><b>Einmal pro Woche sichern</b><span>Unter Einstellungen → Sichern und laden. Am besten zusammen mit Ihrer Fachperson im Einzelgespräch.</span></div></div>`},
-   bind:()=>{bindKursPicker($('#onb-kurs'));
+   bind:()=>{
      $('#onb-big').onchange=e=>{S.meta.big=e.target.checked;save();applyBig()};
      $('#onb-notify').onchange=async e=>{e.target.checked=await setNotify(e.target.checked)}}},
   {t:'Startklar',nav:false,html:()=>{const C=onbCheck(),miss=C.filter(c=>!c[1]);return `
@@ -5518,38 +4290,24 @@ function onbClose(tour,done){if(!onb)return;const el=onb.el;onb=null;onbSig=null
 /* ================= Rundgang durch alle Funktionen ================= */
 const tourCard=s=>()=>{const e=$(s);return e&&e.closest('.card,.banner,.stack-wrap')};
 const TOUR=[
-  {l:'Heute',d:'Widgets, Plus-Knopf, Einstellungen',steps:[
+  {l:'Heute',d:'Startseite, Bewerbungen, Plus-Knopf',steps:[
     ['heute','#v-heute .top','Heute ist Ihre Startseite','Hier sehen Sie jeden Tag, was ansteht. Wenn etwas dringend ist, zum Beispiel die RAV-Frist, ein fehlendes Monatsformular oder ein Arztzeugnis, erscheint beim Öffnen ein Hinweis. Später finden Sie ihn über die Glocke oben rechts.'],
-    ['heute','#h-grid','Ihre Widgets','Die Kacheln zeigen das Wichtigste aus allen Bereichen: nächste Schritte, RAV-Stand, Bewerbungen, Ihr Fokus der Woche. Ein Tipp öffnet den passenden Bereich.'],
-    ['heute','#h-edit','Startseite anpassen','Tippen Sie hier oder drücken Sie lange auf ein Widget. Dann können Sie Widgets verschieben, an der Ecke unten rechts diagonal grösser oder kleiner ziehen, mit dem Minus entfernen oder neue hinzufügen.'],
-    ['heute','#h-settings','Einstellungen','App-Farbe, hell oder dunkel, grosse Schrift, Ihre Angaben, Daten sichern. Hier starten Sie auch diesen Rundgang oder die Einrichtung wieder.'],
-    ['heute','#side-handle','Die Schnellauswahl','Ziehen Sie den Balken am rechten Rand nach links. Dort liegen Job-Room, E-Mail und ChatGPT. Mit dem Plus fügen Sie weitere hinzu. Lange drücken: verschieben oder zur Seite wegwischen.'],
-    ['heute','#fab','Der Plus-Knopf','Für alles Neue: Bewerbung, Dokument, Schritt, Kontakt, Firma, Zielrichtung oder Krankmeldung. Er ist in jedem Tab da.'],
-    ['heute','.tabbar','Die sechs Bereiche','Unten wechseln Sie zwischen den Bereichen. Ein roter Punkt zeigt, dass dort etwas fehlt oder fällig ist. Drücken Sie lange auf die Leiste, dann können Sie die Symbole nach vorne oder hinten ziehen.']]},
-  {l:'Kompetenzen',d:'Stärken, Belege, Ressourcen',steps:[
-    ['kompetenzen',tourCard('#komp-top'),'Ihre drei stärksten Argumente','Markieren Sie bei Ihren Kompetenzen bis zu drei mit dem Stern. Sie erscheinen hier, als Vorbereitung fürs Vorstellungsgespräch.'],
-    ['kompetenzen','#komp-areas','Vier Kompetenzbereiche','Fach-, Methoden-, Sozial- und Selbstkompetenz. Zu jeder Kompetenz schreiben Sie ein Beispiel aus Ihrem Berufsalltag und wo sie im Inserat verlangt wird.'],
-    ['kompetenzen',tourCard('#komp-res'),'Ressourcen-Koffer','Was trägt Sie durch die Stellensuche? Mit der Ampel sehen Sie, wo es gut läuft und wo Sie noch Unterstützung brauchen.']]},
-  {l:'Strategie',d:'Bewerbungen, Aktionsplan, Zielrichtungen',steps:[
-    ['strategie:tracker','#stats','Ihre Zahlen','Bewerbungen diese Woche, fürs RAV diesen Monat und offene Gespräche, gemessen an Ihren Zielen.'],
-    ['strategie:tracker',tourCard('#bew-list'),'Meine Bewerbungen','Erfassen Sie jede Bewerbung mit „Neu“ und führen Sie den Status nach. Alles ab „Versendet“ zählt automatisch fürs RAV-Formular.'],
-    ['strategie:plan',tourCard('#task-list'),'Aktionsplan','Planen Sie konkrete Schritte mit Datum. Sie erscheinen auf der Startseite. Darunter legen Sie Ihre Wochenziele fest.'],
-    ['strategie:strategie','#zr-root','Zielrichtungen vergleichen','Lohnt sich eine Richtung? Sie bewerten sie Frage für Frage: Passung, Markt, Können, Aufwand. Die Matrix zeigt am Schluss, welche Richtung Sie verfolgen.'],
-    ['strategie:strategie','#btn-backup','Daten sichern','Ihre Daten liegen nur auf diesem Gerät. Machen Sie hier einmal pro Woche eine Sicherung.']]},
-  {l:'Dossier',d:'Unterlagen, Brief, Initiativbewerbung',steps:[
+    ['heute','#h-grid','Ihre Kacheln','RAV-Stand, Dossier und Abkürzungen auf einen Blick. Ein Tipp öffnet den passenden Bereich. Mit „Startseite anpassen“ verschieben, vergrössern oder ergänzen Sie die Kacheln.'],
+    ['heute','#stats','Ihre Zahlen','Bewerbungen diese Woche und diesen Monat fürs RAV, dazu die offenen Gespräche.'],
+    ['heute:bew',tourCard('#bew-list'),'Meine Bewerbungen','Erfassen Sie jede Bewerbung mit „Neu“ und führen Sie den Status nach. Alles ab „Versendet“ zählt automatisch fürs RAV-Formular.'],
+    ['heute','#fab','Der Plus-Knopf','Für alles Neue: Bewerbung, Brief, Dokument, Lebenslauf, Initiativbewerbung oder Krankmeldung. Er ist in jedem Bereich da.'],
+    ['heute','#side-handle','Die Schnellauswahl','Ziehen Sie den Balken am rechten Rand nach links oder tippen Sie darauf. Dort liegen Job-Room, E-Mail und ChatGPT. Mit dem Plus fügen Sie weitere hinzu.'],
+    ['heute','.tabbar','Die drei Bereiche','Heute, Dossier sowie RAV und Kasse. Ein roter Punkt zeigt, dass dort etwas fehlt oder fällig ist.'],
+    ['heute','#h-settings','Einstellungen','Farbe, grosse Schrift, Ihre Angaben und Daten sichern. Hier starten Sie diesen Rundgang jederzeit wieder.']]},
+  {l:'Dossier',d:'Unterlagen, Brief, Lebenslauf, Initiativbewerbung',steps:[
     ['dossier:unterlagen',tourCard('#kats'),'Vollständigkeit','Welche Unterlagen schon da sind und welche noch fehlen.'],
-    ['dossier:unterlagen','.stack-wrap','Der Dokumentstapel','Wischen Sie durch Ihre Dokumente. Ein Tipp zeigt ein Dokument gross, dort können Sie es auch senden.'],
+    ['dossier:unterlagen','.stack-wrap','Der Dokumentstapel','Wischen Sie durch Ihre Dokumente. Ein Tipp zeigt ein Dokument gross. Dort öffnen Sie es oder senden es per Mail oder WhatsApp.'],
     ['dossier:unterlagen','#btn-add-doc','Dokument hinzufügen','Fotografieren Sie ein Zeugnis oder laden Sie ein PDF hoch.'],
     ['dossier:unterlagen',tourCard('#btn-brief'),'Brief-Assistent','Bewerbungsbrief schreiben oder einfügen, unterschreiben und als PDF senden.'],
-    ['dossier:unterlagen',tourCard('#btn-cv'),'Lebenslauf-Assistent','Schritt für Schritt zum zweispaltigen Lebenslauf mit allen Angaben zur Person. Das PDF ist gut lesbar für Bewerbungssysteme.'],
+    ['dossier:unterlagen',tourCard('#btn-cv'),'Lebenslauf-Assistent','Schritt für Schritt zum zweispaltigen Lebenslauf. Das PDF ist gut lesbar für Bewerbungssysteme.'],
     ['dossier:unterlagen','#dos-check','Dossier-Check','Die Checkliste von beco Berner Wirtschaft. Gehen Sie sie vor jedem Versand durch.'],
-    ['dossier:init','#dos-init','Initiativbewerbung','Schritt für Schritt zum Initiativbrief, mit Satzrahmen, Selbstcheck und Aufträgen für eine KI.']]},
-  {l:'Netzwerk',d:'Kontakte, Karte, Zielfirmen',steps:[
-    ['netzwerk:kontakte',tourCard('#netz-list'),'Meine Kontakte','Wer kennt Sie, wer kann helfen? Sie können auch die Datei aus dem Kurswerkzeug „Mein Netzwerk“ laden.'],
-    ['netzwerk:karte',tourCard('#netz-map'),'Netzwerkkarte','Ihre Kontakte nach Nähe oder nach Art der Unterstützung. So sehen Sie, wo Ihr Netzwerk stark ist.'],
-    ['netzwerk:aktiv',tourCard('#netz-aktiv'),'Aktivieren','Ihre nächsten Schritte mit Kontakten: wen Sie anrufen, wen Sie um was bitten.'],
-    ['netzwerk:firmen','#fr-root','Zielfirmen','Firmen recherchieren, Ansprechperson und Aufhänger notieren. Ab „Kontaktiert“ landet die Firma im Bewerbungs-Tracker.']]},
-  {l:'RAV & ALK',d:'Formular, Kasse, Krankheit',steps:[
+    ['dossier:init','#dos-init','Initiativbewerbung','Zuerst die Firma recherchieren, dann Schritt für Schritt der Brief, mit Satzrahmen, Selbstcheck und Aufträgen für eine KI.']]},
+  {l:'RAV & Kasse',d:'Formular, Kasse, Krankheit',steps:[
     ['rav:rav',tourCard('#rav-meter'),'Arbeitsbemühungen','Zählt Ihre Bewerbungen des Monats und zeigt, wann das Abgabefenster offen ist.'],
     ['rav:rav','#rav-nachweis','Formular 716.007','Die App füllt den Nachweis der Arbeitsbemühungen aus Ihren Bewerbungen aus, mit Unterschrift. Sie müssen es nur noch senden.'],
     ['rav:rav',tourCard('#r-termin'),'Meine Personalberatung','Name, Telefon und nächstes Beratungsgespräch.'],
@@ -5557,13 +4315,7 @@ const TOUR=[
     ['rav:alk',tourCard('#dauer-list'),'Dauerablage','Kündigung, Arbeitsvertrag, Verfügungen und Briefe der Kasse an einem Ort.'],
     ['rav:krank',tourCard('#fall-list'),'Krankheit','Melden Sie hier, wenn Sie krank sind. Die App zeigt die Fristen für Arztzeugnis und Kasse.']]}];
 let tour=null,TR=[];
-/* Kapitel passend zum Modus: im Kurs mit Hinweis auf die Kurs-Leiste, selbständig ohne Kursteile */
-function tourChapters(){const sel=isSelbst(),drop=['strategie:strategie','netzwerk:karte','netzwerk:aktiv'];
-  return TOUR.filter(k=>!(sel&&k.l==='Kompetenzen')).map(k=>{let steps=k.steps,l=k.l,d=k.d;
-    if(sel){steps=steps.map(st=>st[1]==='#btn-backup'?['strategie:tracker',...st.slice(1)]:st).filter(st=>!drop.includes(st[0]));
-      if(l==='Strategie'){l='Bewerbungen';d='Bewerbungen und Aktionsplan'}if(l==='Netzwerk')d='Kontakte und Zielfirmen'}
-    else if(l==='Kompetenzen')steps=[['kompetenzen','#kursbar','Der Kurs','Unter „Kurs“ liegen die Kursmodule. Mit dieser Leiste wechseln Sie zwischen Kompetenzen und Strategie.'],...steps];
-    return{l,d,steps}})}
+function tourChapters(){return TOUR}
 const calm=()=>!!(S.meta.calm||(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches));
 function startTour(){
   if(tour)return;
@@ -5805,7 +4557,7 @@ const sideList=()=>{if(!Array.isArray(S.meta.side))S.meta.side=SIDE_DEF.slice();
 function sideRun(a){
   if(a.pkg){if(!native('openApp',a.pkg,S.meta.sideMode||'float'))toast('Die App liess sich nicht öffnen. Ist sie noch installiert?');return}
   if(a.run){a.run();return}
-  if(a.tel){const n=(a.tel()||'').replace(/[^\d+]/g,'');if(!n){toast('Noch keine Nummer. Tragen Sie sie unter RAV & ALK ein.');goTo(a.id==='ravtel'?'rav:rav':'rav:alk');return}location.href='tel:'+n;return}
+  if(a.tel){const n=(a.tel()||'').replace(/[^\d+]/g,'');if(!n){toast('Noch keine Nummer. Tragen Sie sie unter RAV & Kasse ein.');goTo(a.id==='ravtel'?'rav:rav':'rav:alk');return}location.href='tel:'+n;return}
   const u=a.url||'';if(/^(mailto|tel|sms):/i.test(u)){location.href=u;return}
   window.open(/^[a-z]+:/i.test(u)?u:'https://'+u,'_blank','noopener')}
 let sideOpen=false,sideLift=false;
@@ -5848,9 +4600,14 @@ sideHandle.addEventListener('pointerdown',e=>{if(e.button>0)return;e.preventDefa
     else{const y=Math.max(12,Math.min(80,(ev.clientY/innerHeight)*100));sideHandle.style.top=y+'%'}};
   const up=ev=>{sideHandle.removeEventListener('pointermove',mv);sideHandle.removeEventListener('pointerup',up);sideHandle.removeEventListener('pointercancel',up);
     if(!mode){sideShow();return}
-    if(mode==='y'){S.meta.sideY=parseFloat(sideHandle.style.top);save();return}
+    if(mode==='y'){S.meta.sideY=parseFloat(sideHandle.style.top);save();sideGesture();return}
     const dx=sx-ev.clientX;if(dx>sideW()*.35||v>.4){sideOpen=false;sideShow(true)}else{sideOpen=true;sideHide()}};
   sideHandle.addEventListener('pointermove',mv);sideHandle.addEventListener('pointerup',up);sideHandle.addEventListener('pointercancel',up)});
+/* Android wertet einen Wisch vom Rand als „Zurück“. Die App meldet den Bereich des Griffs als Ausnahme an. */
+function sideGesture(){if(!NATIVE||typeof NATIVE.setGestureExclusion!=='function')return;
+  const r=sideHandle.getBoundingClientRect(),hid=sideHandle.style.opacity==='0'||getComputedStyle(sideHandle).opacity==='0';
+  native('setGestureExclusion',hid?0:Math.round(r.top),hid?0:Math.round(r.height),Math.round(innerWidth))}
+addEventListener('resize',sideGesture);setTimeout(sideGesture,600);
 sideHandle.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();sideShow()}});
 /* Offene Leiste nach rechts wegwischen (nicht, solange ein Eintrag angehoben ist) */
 sideEl.addEventListener('pointerdown',e=>{if(e.button>0)return;const sx=e.clientX;let on=false;
@@ -5934,8 +4691,7 @@ function buildReminders(){const R=[],now=Date.now(),t=iso(today),y=today.getFull
     R.push({key:'avp:'+iso(avp),title:`Monatsformular ${mon}`,body:'Senden Sie die Angaben der versicherten Person (AvP) an die Kasse.',go:'rav:alk',at:atTime(avp,9)})}
   if(S.rav.termin){const d=new Date(S.rav.termin);if(!isNaN(d)){const b=new Date(d);b.setDate(b.getDate()-1);
     R.push({key:'termin:'+S.rav.termin,title:'Morgen: Beratungsgespräch beim RAV',body:d.toLocaleDateString('de-CH',{weekday:'long',day:'numeric',month:'long'})+(S.rav.termin.length>10?', '+d.toLocaleTimeString('de-CH',{hour:'2-digit',minute:'2-digit'})+' Uhr':'')+'. Nehmen Sie Ihre Arbeitsbemühungen mit.',go:'rav:rav',at:atTime(b,18)})}}
-  S.aufgaben.filter(a=>!a.done&&a.due&&!a.beispiel).forEach(a=>R.push({key:'task:'+a.id+':'+a.due,title:'Heute geplant',body:a.text,go:'strategie:plan',at:atTime(a.due+'T12:00',8)}));
-  (S.fr.firmen||[]).filter(f=>f.next&&f.next.datum&&f.next.was&&(f.status||0)<5&&!f.beispiel).forEach(f=>R.push({key:'firma:'+f.id+':'+f.next.datum,title:'Heute: '+f.name,body:f.next.was,go:'netzwerk:firmen',at:atTime(f.next.datum+'T12:00',8)}));
+  (S.fr.firmen||[]).filter(f=>f.next&&f.next.datum&&f.next.was&&(f.status||0)<5&&!f.beispiel).forEach(f=>R.push({key:'firma:'+f.id+':'+f.next.datum,title:'Heute: '+f.name,body:f.next.was,go:'dossier:firmen',at:atTime(f.next.datum+'T12:00',8)}));
   S.alk.faelle.filter(f=>!f.bis&&!f.beispiel).forEach(f=>{const d4=new Date(f.von+'T12:00');d4.setDate(d4.getDate()+3);
     R.push({key:'arzt:'+f.id,title:'Arztzeugnis nötig',body:'Ab dem 4. Krankheitstag braucht die Kasse ein Arztzeugnis.',go:'rav:krank',at:atTime(d4,8)})});
   const lim=now+40*864e5;return R.filter(r=>r.key.startsWith('w:')||(r.at>=start&&r.at<=lim))}
@@ -5999,13 +4755,10 @@ let dsub='unterlagen';
 $$('#dos-seg button').forEach(b=>b.onclick=()=>{dsub=b.dataset.d;$$('#dos-seg button').forEach(x=>x.setAttribute('aria-selected',x===b));
   $$('[data-dp]').forEach(p=>p.hidden=p.dataset.dp!==dsub);if(dsub==='init'&&frApi)frApi.renderBrief()});
 
-document.getElementById('dos-init').appendChild(document.getElementById('fr-tab-brief'));
-document.getElementById('fr-tab-brief').hidden=false;
-zrWiz=wizard(document.getElementById('zr-form'));
 frWiz=wizard(document.getElementById('fr-fForm'));
 briefWiz=wizard(document.getElementById('fr-bBody'));
 applyBig();applyLook();applyMode();
-function render(){syncReminders();zrApi&&zrApi.sync();frApi&&frApi.sync();renderStats();renderTracker();renderPlan();renderStrategie();renderDossier();renderRav();renderNachweis();renderAlk();renderCheck();renderNetz();renderKomp();renderHeute();renderBadges();renderBackupRemind()}
+function render(){syncReminders();frApi&&frApi.sync();renderStats();renderTracker();renderDossier();renderRav();renderNachweis();renderAlk();renderCheck();renderHeute();renderBadges();renderBackupRemind()}
 route();
 if(fresh){await seedDocs();render()}
 else if(!S.docs.length&&!S.meta.docsSeeded&&S.bewerbungen.some(b=>b.beispiel)){await seedDocs();render()}
