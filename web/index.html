@@ -2060,14 +2060,21 @@ async function docFile(d){
   const blob=await blobGet(d.id);if(!blob)return null;const typ=blob.type||d.typ||'application/octet-stream';
   const base=cleanName(d.name)||'Dokument',ext=EXT[typ];return{blob,name:ext&&!base.toLowerCase().endsWith('.'+ext)?base+'.'+ext:base}}
 /* Öffnen: in der Android-App mit der passenden App (z.B. PDF-Leser), sonst in einem neuen Browser-Tab */
-async function docOpen(d){const f=await docFile(d);if(!f){toast('Datei nicht gefunden');return}
+/* Die Datei wird schon beim Öffnen der Vorschau geladen (docPre). Safari erlaubt Teilen und neue Tabs nur
+   unmittelbar nach dem Tipp; ein Lesen aus dem Speicher dazwischen kann das verhindern. */
+let docPre=null;
+function docPrep(d){docPre={id:d.id,f:null};const mine=docPre;docFile(d).then(f=>{mine.f=f}).catch(()=>{})}
+async function docGet(d){if(d.typ==='text')return docFile(d);if(docPre&&docPre.id===d.id&&docPre.f)return docPre.f;return docFile(d)}
+async function docOpen(d){const f=d.typ!=='text'&&docPre&&docPre.id===d.id&&docPre.f||await docGet(d);if(!f){toast('Datei nicht gefunden');return}
   const typ=f.blob.type||'application/octet-stream';
   if(NATIVE&&typeof NATIVE.openFile==='function'){if(!native('openFile',await blobB64(f.blob),f.name,typ))toast('Keine App zum Öffnen gefunden');return}
   if(NATIVE){shareBlob(f.blob,f.name);return}
   const u=URL.createObjectURL(f.blob),w=window.open(u,'_blank');setTimeout(()=>URL.revokeObjectURL(u),60000);
   if(!w)saveBlob(f.blob,f.name)}
 /* Senden: Teilen-Dialog des Handys (Mail, WhatsApp …), sonst herunterladen */
-async function docShare(d){const f=await docFile(d);if(!f){toast('Datei nicht gefunden');return}shareBlob(f.blob,f.name)}
+function docShare(d){const f=d.typ!=='text'&&docPre&&docPre.id===d.id&&docPre.f;
+  if(f){shareBlob(f.blob,f.name);return}
+  docGet(d).then(f=>f?shareBlob(f.blob,f.name):toast('Datei nicht gefunden'))}
 let viewerURLs=[];
 function revokeViewer(){viewerURLs.forEach(u=>URL.revokeObjectURL(u));viewerURLs=[]}
 async function openDoc(id){
@@ -2088,7 +2095,7 @@ async function openDoc(id){
     const tx=$('#d-text');if(tx)d.text=tx.value;
     save();closeSheet();render();toast('Gesichert')});
   armDelete($('#d-del'),async()=>{await blobDel(d.id).catch(()=>{});S.docs=S.docs.filter(x=>x.id!==id);save();closeSheet();render();toast('Dokument gelöscht')});
-  $('#d-open').onclick=()=>docOpen(d);$('#d-share').onclick=()=>docShare(d);
+  docPrep(d);$('#d-open').onclick=()=>docOpen(d);$('#d-share').onclick=()=>docShare(d);
   const v=$('#viewer');
   try{
     if(d.typ==='text'){v.innerHTML=`<textarea class="text-doc input" id="d-text" aria-label="Text" style="min-height:260px">${esc(d.text)}</textarea>${d.kat==='inserat'&&!d.bewerbungId?'<button type="button" class="btn btn-primary" id="d-tobew" style="align-self:flex-start">Bewerbung daraus erfassen</button>':''}`;
@@ -2251,7 +2258,10 @@ function saveBlob(blob,name){if(NATIVE&&typeof NATIVE.savePdf==='function'){blob
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),5000)}
 async function shareBlob(blob,name){if(NATIVE&&typeof NATIVE.sharePdf==='function'){native('sharePdf',await blobB64(blob),name,blob.type||'application/pdf');return}
   const file=new File([blob],name,{type:blob.type||'application/pdf'});
-  try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:name});return}}catch(e){if(e&&e.name==='AbortError')return}
+  try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:name});return}}
+  catch(e){if(e&&e.name==='AbortError')return;
+    /* Safari: Teilen nur direkt nach einem Tipp. Dann lieber nochmals tippen lassen als still herunterladen. */
+    if(e&&e.name==='NotAllowedError'){toast('Bitte nochmals auf „Senden“ tippen.');return}}
   saveBlob(blob,name);toast('Teilen geht hier nicht. Die Datei wurde gespeichert.')}
 const cleanName=s=>(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^\w-]+/g,'_').replace(/^_+|_+$/g,'');
 function b64ToBytes(b64){const s=atob(b64),a=new Uint8Array(s.length);for(let i=0;i<s.length;i++)a[i]=s.charCodeAt(i);return a}
@@ -4093,7 +4103,8 @@ function openSettings(){
       ${setRow('set-share','App weitergeben','QR-Code für iPhone oder Android')}
       ${setRow('set-tour','Rundgang durch alle Funktionen','Jedes Kapitel lässt sich überspringen.')}
       ${setRow('set-intro','Einrichtung nochmals durchgehen','Angaben, Unterschrift, Unterlagen, RAV und Kasse')}
-    </div>`,null);
+    </div>
+    <p class="muted" style="text-align:center">Stellenweg ${WEB_VERSION}${NATIVE&&native('appVersion')?' · Android-App Build '+native('appVersion'):''}</p>`,null);
   $('#set-big').onchange=e=>{S.meta.big=e.target.checked;save();applyBig()};
   $('#set-calm').onchange=e=>{S.meta.calm=e.target.checked;save();applyLook()};
   bindThemePicker($('#set-color'));
@@ -4492,6 +4503,8 @@ window.stellenwegGo=g=>{if(g)goTo(String(g))};
 /* ================= App weitergeben: QR-Code zur Installation ================= */
 /* Erst das System wählen, dann scannt die andere Person den QR-Code mit der Kamera. Der Code entsteht offline. */
 const APP_URL='https://erwachsenenbildungdidaktik-blip.github.io/stellenweg/';
+/* Sichtbar in den Einstellungen unten, damit man alte und neue Version unterscheiden kann */
+const WEB_VERSION='2.0';
 const OS_IC={
   ios:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M10.5 5h3M11 18.5h2"/></svg>',
   android:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16V11a7 7 0 0 1 14 0v5zM8 5.5 6.5 3.5M16 5.5l1.5-2"/><circle cx="9.5" cy="10.5" r=".6" fill="currentColor"/><circle cx="14.5" cy="10.5" r=".6" fill="currentColor"/><path d="M8 16v3.5M16 16v3.5"/></svg>'};
