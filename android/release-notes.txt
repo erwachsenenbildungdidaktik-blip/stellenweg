@@ -1,1 +1,1 @@
-Schlanker: nur noch Heute, Dossier und RAV. Bewerbungen auf der Startseite, Dokumente öffnen und senden, breiterer Seitenbalken, Widgets machen beim Verschieben Platz.
+Dossier: Senden, Bearbeiten und Löschen direkt unter dem Stapel, Ablage mit allen Ordnern. Erinnerung an die Unterlagen bei jeder neuen Bewerbung. Lebenslauf mit wählbarer Farbe und Schreibweise der Überschriften und Textfarbe.

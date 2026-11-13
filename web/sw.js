@@ -1,6 +1,6 @@
 // Offline-Cache: App einmal mit Internet öffnen, danach läuft sie ohne.
 // Copyright (c) 2026 Hugo Rohrbacher. Alle Rechte vorbehalten.
-const CACHE = 'stellenweg-v10';
+const CACHE = 'stellenweg-v11';
 const FILES = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png',
   'vendor/pdf.min.js', 'vendor/pdf.worker.min.js', 'vendor/pdf-lib.min.js', 'vendor/jszip.min.js', 'vendor/qrcode.min.js'];
 self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting())));

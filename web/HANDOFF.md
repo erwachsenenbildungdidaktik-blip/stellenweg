@@ -30,6 +30,15 @@ Nach einem Testwochenende war die volle App zu viel. Entscheid Hugo: Die App die
 - **Seitenbalken:** Griff sichtbar 20 × 104 px statt 11 × 76 px, Tippfläche 48 × 120 px. In der Android-App meldet die Seite den Bereich des Griffs als Ausnahme von der Zurück-Geste (`sideGesture()` → Brücke `setGestureExclusion`, Android 10+). Im Browser (Chrome) geht das technisch nicht; dort hilft nur die grössere Fläche und das Antippen.
 - **Widgets mit Kollision:** siehe Bedienung.
 
+## Stand 13. November 2026: Version 2.1
+
+- **Dossier-Leiste** unter dem Stapel (`#doc-bar`, `renderDocBar`): Senden, Bearbeiten, Löschen (zweimal tippen) für das vorderste Dokument. Die Datei wird beim Zeichnen vorgeladen (`docPrep`), damit Safari den Teilen-Dialog erlaubt.
+- **Ablage** (`openAblage`, Knopf „Ablage öffnen: alle Ordner“): alle Unterlagen nach Art (`KAT`) als Ordner, jede Zeile mit Senden, Bearbeiten (Tipp auf den Namen) und Löschen; leere Ordner mit „hinzufügen“. Einen Ordner im Dateimanager des Handys kann eine Web-App nicht öffnen.
+- **Löschen:** In der Vorschau steht „Löschen“ neben Öffnen und Senden (`delDoc`). Beim Erfassen erscheinen gewählte Dateien als Liste mit × zum Entfernen; weitere Dateien lassen sich dazuwählen.
+- **Unterlagen pro Bewerbung** (`openUnterlagen`, `untList`, `untCount`, gespeichert in `b.unt`): Nach dem Erfassen einer neuen Bewerbung erscheint die Checkliste: Bewerbungsschreiben für diese Stelle, Lebenslauf, Arbeitszeugnisse, Diplome; dazu, was im Text-Inserat der Bewerbung steht (`UNT_EXTRA`: Foto, Referenzen, Strafregister-, Betreibungsregisterauszug, Führerausweis, Staplerausweis, Sprachzertifikat, Arbeitsproben). Pro Punkt „Im Dossier vorhanden“ oder ein Knopf zum Ablegen bzw. Schreiben. Solange die Bewerbung „In Arbeit“ ist und nicht alles abgehakt: Hinweis „Unterlagen x/y“ in der Liste und ein Eintrag unter „Nächste Schritte“ (Sprungziel `unt:<id>`). Im Bewerbungsformular Knopf „Unterlagen x / y“.
+- **Lebenslauf, Gestaltung:** Farbe der Überschriften (`S.cv.headCol`, Standard wie Akzentfarbe, sonst dunkle Töne aus `CV_INKS` oder eigene), Schreibweise (`headCase`: Grossbuchstaben oder normal), Textfarbe (`ink`, nur dunkle Töne; Grau für Nebentexte wird daraus aufgehellt). „Mit Beispiel ausfüllen“ behält jetzt die gewählte Gestaltung (`CV_LOOK`).
+- Version 2.1: `WEB_VERSION`, Service-Worker-Cache v11, Android `versionCode 5` / `2.1`. **Die APK muss zu Hause neu gebaut werden** (`APK-bauen.cmd`).
+
 ## Was die App ist
 
 Ersetzt ein Arbeitsbuch für Stellensuchende in der AMM (BIN-Programm, CSP Biel). Zielgruppe: RAV-Kundinnen und -Kunden, teils wenig PC-erfahren. Läuft auf Android, iOS (Home-Bildschirm-Web-App) und später als HTML in Moodle.

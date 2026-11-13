@@ -916,6 +916,26 @@ h1 .tip{width:26px;height:26px;font-size:15px}
 .tp-custom[aria-checked="true"] .tp-sw{background:conic-gradient(var(--a) 0 50%,var(--c) 50% 75%,var(--b) 75% 100%)}
 .toast{z-index:90}
 /* Seitenleiste */
+.doc-bar{display:flex;gap:8px;width:100%;max-width:420px}
+.doc-bar .btn{flex:1;gap:6px;min-height:48px;padding:10px 8px;font-size:15px}
+.doc-bar svg,.ablage-btn svg,.ab-row svg{width:19px;height:19px;flex:none}
+.db-del,.ab-del{color:var(--bad)}
+.ablage-btn{gap:8px;min-height:48px;width:100%;max-width:420px}
+.ab-folder{display:flex;align-items:center;gap:10px;margin:14px 0 4px;font-weight:700}
+.ab-folder svg{width:22px;height:22px;flex:none;color:var(--accent)}
+.ab-folder small{font-weight:500;color:var(--fg3)}
+.ab-row{display:flex;align-items:center;gap:6px;border-top:1px solid var(--hair);padding:6px 0}
+.ab-row .ab-main{flex:1;min-width:0;background:none;border:none;text-align:left;padding:8px 4px;cursor:pointer;color:var(--fg);font:inherit}
+.ab-row .ab-main b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ab-row .ab-main span{font-size:13px;color:var(--fg3)}
+.ab-row .icon-btn{flex:none;width:44px;height:44px}
+.ab-empty{color:var(--fg3);font-size:14px;padding:6px 0 2px}
+.u-files{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.u-file{display:inline-flex;align-items:center;gap:6px;background:var(--glass-strong);border:1px solid var(--hair);border-radius:999px;padding:4px 4px 4px 12px;font-size:14px;max-width:100%}
+.u-file span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.u-file button{border:none;background:var(--hair);color:var(--fg);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;line-height:1;flex:none}
+.unt-row{display:flex;align-items:center;gap:10px;border-top:1px solid var(--hair);padding:10px 0}
+.unt-row .row-main{flex:1;min-width:0}
 .doc-acts{display:flex;gap:10px}.doc-acts .btn{flex:1;gap:8px}.doc-acts svg{width:18px;height:18px}
 .side-handle{position:fixed;z-index:30;right:0;top:42%;width:48px;height:120px;translate:0 -50%;border:none;background:transparent;padding:0;cursor:grab;touch-action:none;display:flex;align-items:center;justify-content:flex-end;transition:opacity .25s}
 .side-handle i{display:block;width:20px;height:104px;border-radius:10px 0 0 10px;background:color-mix(in srgb,var(--accent) 70%,var(--glass-strong));box-shadow:-2px 4px 14px -4px rgba(0,0,0,.35),inset 1px 0 0 rgba(255,255,255,.35);transition:width .3s var(--spring)}
@@ -1219,7 +1239,7 @@ html.editing .tab:nth-child(2n){animation-delay:-.17s}
         <button class="btn btn-primary" id="btn-add-doc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Hinzufügen</button>
       </div>
       <div class="backup-remind"></div>
-      <p class="lead">Alle Unterlagen für Ihre Bewerbungen. Wischen Sie durch den Stapel und tippen Sie auf ein Dokument, um es zu öffnen oder zu senden.</p>
+      <p class="lead">Alle Unterlagen für Ihre Bewerbungen. Wischen Sie durch den Stapel. Unter dem Stapel senden, bearbeiten oder löschen Sie das vorderste Dokument.</p>
       <div class="seg glass" role="tablist" aria-label="Bereich" id="dos-seg">
         <button role="tab" data-d="unterlagen" aria-selected="true">Unterlagen</button>
         <button role="tab" data-d="init" aria-selected="false">Initiativbewerbung</button>
@@ -1232,11 +1252,17 @@ html.editing .tab:nth-child(2n){animation-delay:-.17s}
 
       <div class="stack-wrap" data-dp="unterlagen">
         <div class="stack" id="stack" aria-roledescription="Dokumentstapel"></div>
+        <div class="doc-bar" id="doc-bar" hidden>
+          <button type="button" class="btn btn-primary" id="db-send"></button>
+          <button type="button" class="btn btn-glass" id="db-edit"></button>
+          <button type="button" class="btn btn-glass db-del" id="db-del"></button>
+        </div>
         <div class="stack-ctrl" id="stack-ctrl">
           <button class="icon-btn btn-glass" id="st-prev" aria-label="Vorheriges Dokument"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg></button>
           <span class="count" id="st-count"></span>
           <button class="icon-btn btn-glass" id="st-next" aria-label="Nächstes Dokument"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></button>
         </div>
+        <button type="button" class="btn btn-glass ablage-btn" id="db-ablage"></button>
       </div>
 
       <div class="banner glass" data-dp="unterlagen">
@@ -1884,7 +1910,7 @@ function renderTracker(){
         <div class="row-title">${esc(b.firma)}</div>
         <div class="row-sub">${esc(b.stelle)}</div>
         ${b.naechster?`<div class="row-sub" style="color:var(--fg)">→ ${esc(b.naechster)}</div>`:''}
-        <div class="row-meta"><span class="pill s-${b.status}">${stLabel(b.status)}</span><span class="tag">${esc(b.kanal)}</span><span class="tag">${fmt(b.datum)}</span>${nd?`<span class="tag">📎 ${nd}</span>`:''}${b.status!=='arbeit'&&!b.adresse?'<span class="tag" style="color:var(--warn)">Adresse fehlt fürs RAV</span>':''}${b.beispiel?'<span class="tag example">Beispiel</span>':''}</div>
+        <div class="row-meta"><span class="pill s-${b.status}">${stLabel(b.status)}</span><span class="tag">${esc(b.kanal)}</span><span class="tag">${fmt(b.datum)}</span>${nd?`<span class="tag">📎 ${nd}</span>`:''}${b.status==='arbeit'&&(()=>{const c=untCount(b);return c.ok<c.n})()?`<span class="tag" style="color:var(--warn)">Unterlagen ${untCount(b).ok}/${untCount(b).n}</span>`:''}${b.status!=='arbeit'&&!b.adresse?'<span class="tag" style="color:var(--warn)">Adresse fehlt fürs RAV</span>':''}${b.beispiel?'<span class="tag example">Beispiel</span>':''}</div>
       </div></div>`}).join(''):`<div class="empty">Noch keine Bewerbungen in dieser Ansicht.<br>Tippen Sie auf „Neu“, um die erste zu erfassen.</div>`;
   $$('#bew-list .row').forEach(r=>{r.onclick=()=>openBew(r.dataset.id);r.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openBew(r.dataset.id)}}});
   const hasEx=hasExamples();
@@ -1932,7 +1958,7 @@ function openBew(id,pre){
     <div class="field"><label for="f-next">Nächster Schritt</label><input class="input" id="f-next" value="${esc(b.naechster)}" placeholder="z.B. Am Freitag nachfragen"></div>
     ${id?`<div class="field"><label>Dokumente zu dieser Bewerbung</label>
       <div class="list">${linked.map(d=>`<div class="row row-click" data-doc="${d.id}" tabindex="0" role="button"><div class="row-main"><div class="row-title">${esc(d.name)}</div><div class="row-meta"><span class="tag">${katLabel(d.kat)}</span></div></div></div>`).join('')||'<div class="muted">Noch nichts verknüpft. Legen Sie das Inserat hier ab, damit Sie es vor dem Gespräch wiederfinden.</div>'}</div>
-      <div class="chips"><button type="button" class="btn btn-glass" id="f-add-inserat">Inserat ablegen</button><button type="button" class="btn btn-primary" id="f-brief">Brief erstellen</button></div></div>
+      <div class="chips"><button type="button" class="btn btn-glass" id="f-add-inserat">Inserat ablegen</button><button type="button" class="btn btn-primary" id="f-brief">Brief erstellen</button><button type="button" class="btn btn-glass" id="f-unt">Unterlagen ${untCount(b).ok} / ${untCount(b).n}</button></div></div>
       <div class="sheet-actions"><span></span><button class="btn btn-ghost" id="f-del" style="color:var(--bad)">Bewerbung löschen</button></div>`:''}`,
   ()=>{
     const firma=$('#f-firma').value.trim(); if(!firma){$('#f-firma').focus();toast('Bitte Firma eintragen');return}
@@ -1942,6 +1968,8 @@ function openBew(id,pre){
     delete rec.beispiel;if(b.beispiel)rec.beispiel=true;
     delete rec.docId;if(id){const i=S.bewerbungen.findIndex(x=>x.id===id);S.bewerbungen[i]=rec}else{S.bewerbungen.push(rec);if(pre&&pre.docId){const dd=S.docs.find(x=>x.id===pre.docId);if(dd)dd.bewerbungId=rec.id}}
     save();closeSheet();render();toast(id?'Gesichert':'Bewerbung erfasst');
+    /* Neue Bewerbung: gleich an die verlangten Unterlagen erinnern */
+    if(!id&&!['absage','zusage'].includes(st))setTimeout(()=>openUnterlagen(rec.id,true),380);
   });
   $$('#f-status button').forEach(btn=>btn.onclick=()=>{$$('#f-status button').forEach(x=>{x.setAttribute('aria-pressed',x===btn);x.style.borderColor=x===btn?'currentColor':'transparent'});$('#f-ag-wrap').hidden=btn.dataset.s!=='absage'});
   $('#f-kanal').onchange=e=>{const v=e.target.value;$('#f-art').value=v==='Telefonisch'?'telefonisch':v==='Persönlich vorbeigegangen'?'persoenlich':'brieflich'};
@@ -1949,10 +1977,36 @@ function openBew(id,pre){
     armDelete($('#f-del'),()=>{S.bewerbungen=S.bewerbungen.filter(x=>x.id!==id);S.docs.forEach(d=>{if(d.bewerbungId===id)delete d.bewerbungId});save();closeSheet();render();toast('Gelöscht')});
     $('#f-add-inserat').onclick=()=>{closeSheet();setTimeout(()=>openUpload({kat:'inserat',bewerbungId:id}),340)};
     $('#f-brief').onclick=()=>{closeSheet();setTimeout(()=>openBrief(id),340)};
+    $('#f-unt').onclick=()=>{closeSheet();setTimeout(()=>openUnterlagen(id),340)};
     $$('#sheet-body [data-doc]').forEach(r=>r.onclick=()=>{closeSheet();setTimeout(()=>openDoc(r.dataset.doc),340)});
   }
 }
 $('#btn-add-bew').onclick=()=>openBew(null);
+
+/* ================= Unterlagen pro Bewerbung ================= */
+/* Grundsatz: Bewerbungsschreiben, Lebenslauf, Arbeitszeugnisse, Diplome. Was im Inserat zusätzlich verlangt wird, kommt dazu. */
+const UNT_STD=[['brief','Bewerbungsschreiben für diese Stelle'],['cv','Lebenslauf (aktuell)'],['zeugnis','Arbeitszeugnisse'],['diplom','Diplome & Zertifikate']];
+const UNT_EXTRA=[[/foto/i,'foto','Bewerbungsfoto'],[/referenz/i,'referenz','Referenzen'],[/strafregister/i,'andere','Strafregisterauszug'],
+  [/betreibung/i,'andere','Betreibungsregisterauszug'],[/f(ü|ue)hrerausweis|fahrausweis/i,'andere','Kopie Führerausweis'],[/staplerausweis|stapler-ausweis/i,'andere','Staplerausweis'],
+  [/sprachzertifikat|sprachnachweis/i,'diplom','Sprachzertifikat'],[/arbeitsprobe|portfolio/i,'andere','Arbeitsproben']];
+function untList(b){const L=UNT_STD.map(([k,l])=>({k,l}));
+  const txt=S.docs.filter(d=>d.bewerbungId===b.id&&d.typ==='text').map(d=>d.text||'').join('\n');
+  UNT_EXTRA.forEach(([re,k,l])=>{if(re.test(txt)&&!L.some(x=>x.l===l))L.push({k,l,ins:true})});return L}
+function untHas(b,u){if(u.k==='brief')return S.docs.some(d=>d.kat==='brief'&&d.bewerbungId===b.id);
+  if(u.k==='andere')return false;return S.docs.some(d=>!d.bereich&&d.kat===u.k)}
+function untCount(b){const L=untList(b),ok=(b.unt||{});return{n:L.length,ok:L.filter(u=>ok[u.l]).length}}
+function openUnterlagen(id,neu){const b=S.bewerbungen.find(x=>x.id===id);if(!b)return;b.unt=b.unt||{};
+  const L=untList(b);
+  openSheet('Unterlagen',`<p class="lead" style="color:var(--fg)">${neu?'Bewerbung erfasst. ':''}Diese Unterlagen braucht <b>${esc(b.firma)}</b>.</p>
+    <p class="muted">Haken Sie ab, was bereit ist. Was im Dossier fehlt, legen Sie gleich ab. ${L.some(u=>u.ins)?'Zusätzlich verlangt laut Inserat: markiert mit „Inserat“.':'Steht im Inserat mehr (z.B. Strafregisterauszug)? Legen Sie das Inserat zur Bewerbung, dann erscheint es hier.'}</p>
+    <div>${L.map((u,i)=>{const has=untHas(b,u);return `<div class="unt-row"><input type="checkbox" class="check" data-unt="${i}" ${b.unt[u.l]?'checked':''} aria-label="${esc(u.l)} bereit">
+      <div class="row-main"><div class="row-title">${esc(u.l)}${u.ins?' <span class="tag">Inserat</span>':''}</div><div class="row-sub">${has?'Im Dossier vorhanden':u.k==='brief'?'Noch kein Brief für diese Stelle':u.k==='andere'?'Bei Bedarf als Dokument ablegen':'Fehlt im Dossier'}</div></div>
+      ${has?'':u.k==='brief'?`<button type="button" class="btn btn-primary" data-ubrief>Schreiben</button>`:`<button type="button" class="btn btn-glass" data-uadd="${u.k}">Ablegen</button>`}</div>`}).join('')}</div>
+    <div class="chips" style="margin-top:6px"><button type="button" class="btn btn-glass" id="u-ins">Inserat ablegen</button></div>`,()=>{save();closeSheet();render();const c=untCount(b);toast(c.ok===c.n?'Alle Unterlagen bereit':`Unterlagen ${c.ok} von ${c.n} bereit`)},'Fertig');
+  $$('#sheet-body [data-unt]').forEach(c=>c.onchange=()=>{b.unt[L[+c.dataset.unt].l]=c.checked;save()});
+  $$('#sheet-body [data-uadd]').forEach(x=>x.onclick=()=>{save();closeSheet();setTimeout(()=>openUpload({kat:x.dataset.uadd,bewerbungId:id}),340)});
+  $$('#sheet-body [data-ubrief]').forEach(x=>x.onclick=()=>{save();closeSheet();setTimeout(()=>openBrief(id),340)});
+  $('#u-ins').onclick=()=>{save();closeSheet();setTimeout(()=>openUpload({kat:'inserat',bewerbungId:id}),340)}}
 
 /* ================= Dossier: Stapel ================= */
 let katFilter=null, stackIdx=0;
@@ -1981,13 +2035,13 @@ function renderStack(){
       <b style="font-size:16px">${katFilter?katLabel(katFilter)+': noch leer':'Ihr Stapel ist noch leer'}</b>
       <span class="muted">Fotografieren Sie ein Dokument oder laden Sie ein PDF hoch.</span>
       <button class="btn btn-primary" id="empty-add">Dokument hinzufügen</button></div>`;
-    $('#empty-add').onclick=()=>openUpload({kat:katFilter||'cv'});return}
+    $('#empty-add').onclick=()=>openUpload({kat:katFilter||'cv'});renderDocBar(null);return}
   stackIdx=((stackIdx%n)+n)%n;
   const depth=Math.min(n,4);let html='';
   for(let i=depth-1;i>=0;i--){const d=L[(stackIdx+i)%n];
     html+=`<div class="doc" data-i="${i}" data-id="${d.id}" ${i?'aria-hidden="true"':'tabindex="0" role="button" aria-label="'+esc(d.name)+' öffnen"'} style="z-index:${10-i};transform:translateY(${-i*15}px) scale(${1-i*.05});opacity:${i===3?.55:1};${i?'pointer-events:none;':''}">${cardHTML(d)}</div>`}
   st.innerHTML=html;$('#st-count').textContent=`${stackIdx+1} / ${n}`;
-  const top=st.querySelector('[data-i="0"]');bindSwipe(top,L[stackIdx].id);
+  const top=st.querySelector('[data-i="0"]');bindSwipe(top,L[stackIdx].id);renderDocBar(L[stackIdx]);
 }
 function stackFlip(dir){const n=stackDocs().length;if(n<2)return;
   const top=$('#stack [data-i="0"]');if(top){top.style.transform=`translateX(${dir*-120}%) rotate(${dir*-14}deg)`;top.style.opacity=0}
@@ -2013,6 +2067,45 @@ function bindSwipe(el,id){
 $('#btn-add-doc').onclick=()=>openUpload({kat:katFilter||'cv'});
 $('#btn-cv').onclick=()=>openCv();
 
+/* ================= Dossier: Senden, Bearbeiten, Löschen, Ablage ================= */
+const ICO={
+  send:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3m0 0-4 4m4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>',
+  edit:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg>',
+  del:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>',
+  folder:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>'};
+$('#db-send').innerHTML=ICO.send+'Senden';$('#db-edit').innerHTML=ICO.edit+'Bearbeiten';$('#db-del').innerHTML=ICO.del+'Löschen';
+$('#db-ablage').innerHTML=ICO.folder+'Ablage öffnen: alle Ordner';
+async function delDoc(id){const d=S.docs.find(x=>x.id===id);if(!d)return;await blobDel(id).catch(()=>{});S.docs=S.docs.filter(x=>x.id!==id);save();render();toast('Dokument gelöscht')}
+/* Leiste unter dem Stapel: gilt immer für das vorderste Dokument */
+let dbArmed=null;
+function renderDocBar(d){const bar=$('#doc-bar');bar.hidden=!d;$('#db-ablage').hidden=!S.docs.some(x=>!x.bereich);if(!d)return;
+  docPrep(d);dbArmed=null;$('#db-del').innerHTML=ICO.del+'Löschen';
+  $('#db-send').onclick=()=>docShare(d);$('#db-edit').onclick=()=>openDoc(d.id);
+  $('#db-del').onclick=()=>{if(dbArmed!==d.id){dbArmed=d.id;$('#db-del').innerHTML=ICO.del+'Wirklich?';return}delDoc(d.id)}}
+$('#db-ablage').onclick=()=>openAblage();
+/* Ablage: alle Unterlagen nach Ordnern (Arten), je mit Senden, Bearbeiten und Löschen */
+function openAblage(){
+  const draw=()=>{const DD=S.docs.filter(d=>!d.bereich);
+    return KAT.map(k=>{const L=DD.filter(d=>d.kat===k.id).sort((a,b)=>(b.aktuell-a.aktuell)||(b.datum||'').localeCompare(a.datum||''));
+      return `<div class="ab-folder">${ICO.folder}<span>${k.l} <small>· ${L.length}</small></span></div>`+
+        (L.length?L.map(d=>`<div class="ab-row" data-id="${d.id}">
+          <button type="button" class="ab-main" data-ab="edit"><b>${esc(d.name)}</b><span>${fmt(d.datum)}${d.aktuell?' · aktuell':''}${d.beispiel?' · Beispiel':''}</span></button>
+          <button type="button" class="icon-btn btn-glass" data-ab="send" aria-label="${esc(d.name)} senden">${ICO.send}</button>
+          <button type="button" class="icon-btn btn-glass ab-del" data-ab="del" aria-label="${esc(d.name)} löschen">${ICO.del}</button></div>`).join('')
+        :`<div class="ab-empty">Noch leer · <button type="button" class="btn btn-ghost" data-ab-add="${k.id}" style="padding:4px 6px;min-height:0">hinzufügen</button></div>`)}).join('')};
+  openSheet('Ablage',`<p class="muted">Ihre Unterlagen nach Ordnern. Tippen Sie auf ein Dokument, um es anzusehen und zu bearbeiten.</p><div id="ab-list">${draw()}</div>`,null);
+  const bind=()=>{
+    $$('#ab-list .ab-row').forEach(r=>{const d=S.docs.find(x=>x.id===r.dataset.id);if(!d)return;
+      /* Datei schon beim Antippen laden, damit das iPhone den Teilen-Dialog erlaubt */
+      r.querySelector('[data-ab="send"]').addEventListener('pointerdown',()=>docPrep(d));
+      r.querySelector('[data-ab="send"]').onclick=()=>docShare(d);
+      r.querySelector('[data-ab="edit"]').onclick=()=>{closeSheet();setTimeout(()=>openDoc(d.id),340)};
+      const del=r.querySelector('[data-ab="del"]');let armed=false;
+      del.onclick=async()=>{if(!armed){armed=true;del.innerHTML='?';del.setAttribute('aria-label','Wirklich löschen?');toast('Nochmals tippen zum Löschen');return}
+        await delDoc(d.id);$('#ab-list').innerHTML=draw();bind()}});
+    $$('#ab-list [data-ab-add]').forEach(b=>b.onclick=()=>{closeSheet();setTimeout(()=>openUpload({kat:b.dataset.abAdd}),340)})};
+  bind()}
+
 /* ================= Dossier: Hochladen ================= */
 function bewOptions(sel){return `<option value="">Keine</option>`+[...S.bewerbungen].sort((a,b)=>(b.datum||'').localeCompare(a.datum||'')).map(b=>`<option value="${b.id}" ${b.id===sel?'selected':''}>${esc(b.firma)}</option>`).join('')}
 function openUpload(pre={}){
@@ -2025,6 +2118,7 @@ function openUpload(pre={}){
         <label class="btn btn-glass file-btn">Datei wählen<input type="file" id="u-file" accept="application/pdf,image/*,.doc,.docx" multiple></label>
       </div>
       <span class="muted" id="u-chosen">Noch nichts gewählt</span>
+      <div class="u-files" id="u-files"></div>
     </div>
     <div class="field"><label for="u-kat">Art</label><select class="input" id="u-kat">${KAT.map(k=>`<option value="${k.id}" ${k.id===pre.kat?'selected':''}>${k.l}</option>`).join('')}</select></div>
     <div class="field"><label for="u-name">Bezeichnung</label><input class="input" id="u-name" placeholder="z.B. Arbeitszeugnis Muster AG"></div>
@@ -2046,7 +2140,11 @@ function openUpload(pre={}){
       if(location.hash!=='#dossier'&&!bew)location.hash='dossier';
     }catch(e){console.error(e);$('#sheet-save').textContent='Sichern';toast('Speichern fehlgeschlagen. Ist der Speicher voll?')}
   });
-  const pick=e=>{files=[...e.target.files];$('#u-chosen').textContent=files.length?files.map(f=>f.name).join(', '):'Noch nichts gewählt';
+  /* Gewählte Dateien als Liste mit × zum Entfernen, falls etwas Falsches gewählt wurde */
+  const showFiles=()=>{$('#u-chosen').textContent=files.length?(files.length===1?'1 Datei gewählt':files.length+' Dateien gewählt'):'Noch nichts gewählt';
+    $('#u-files').innerHTML=files.map((f,i)=>`<span class="u-file"><span>${esc(f.name)}</span><button type="button" data-urm="${i}" aria-label="${esc(f.name)} entfernen">×</button></span>`).join('');
+    $$('#u-files [data-urm]').forEach(b=>b.onclick=()=>{files.splice(+b.dataset.urm,1);if(!files.length)$('#u-name').value='';showFiles()})};
+  const pick=e=>{files=[...files,...e.target.files];e.target.value='';showFiles();
     if(files.length===1&&!$('#u-name').value)$('#u-name').value=files[0].name.replace(/\.[^.]+$/,'')};
   $('#u-cam').onchange=pick;$('#u-file').onchange=pick;
   const drop=$('#u-drop');drop.ondragover=e=>{e.preventDefault()};drop.ondrop=e=>{e.preventDefault();pick({target:{files:e.dataTransfer.files}})};
@@ -2081,20 +2179,20 @@ async function openDoc(id){
   const d=S.docs.find(x=>x.id===id);if(!d)return;
   openSheet(d.name,`
     <div class="viewer" id="viewer"><div class="muted">Wird geladen …</div></div>
-    <div class="doc-acts"><button type="button" class="btn btn-glass" id="d-open"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg>Öffnen</button><button type="button" class="btn btn-primary" id="d-share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3m0 0-4 4m4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>Senden</button></div>
+    <div class="doc-acts"><button type="button" class="btn btn-glass" id="d-open"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg>Öffnen</button><button type="button" class="btn btn-primary" id="d-share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3m0 0-4 4m4-4 4 4M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>Senden</button><button type="button" class="btn btn-glass db-del" id="d-del"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>Löschen</button></div>
     <div class="field"><label for="d-name">Bezeichnung</label><input class="input" id="d-name" value="${esc(d.name)}"></div>
     ${d.bereich?'':`<div class="grid2">
       <div class="field"><label for="d-kat">Art</label><select class="input" id="d-kat">${KAT.map(k=>`<option value="${k.id}" ${k.id===d.kat?'selected':''}>${k.l}</option>`).join('')}</select></div>
       <div class="field"><label for="d-bew">Gehört zur Bewerbung</label><select class="input" id="d-bew">${bewOptions(d.bewerbungId)}</select></div>
     </div>
     <label class="row" style="cursor:pointer;border:none"><input type="checkbox" class="check" id="d-akt" ${d.aktuell?'checked':''}><div class="row-main"><div class="row-title">Aktuelle Version</div><div class="row-sub">Diese Fassung verwenden Sie für neue Bewerbungen.</div></div></label>`}
-    <div class="sheet-actions"><span class="muted">${fmt(d.datum)}${d.size?' · '+(d.size/1024>1024?(d.size/1048576).toFixed(1)+' MB':Math.round(d.size/1024)+' KB'):''}</span><button class="btn btn-ghost" id="d-del" style="color:var(--bad)">Dokument löschen</button></div>`,
+    <div class="sheet-actions"><span class="muted">${fmt(d.datum)}${d.size?' · '+(d.size/1024>1024?(d.size/1048576).toFixed(1)+' MB':Math.round(d.size/1024)+' KB'):''}</span></div>`,
   ()=>{
     d.name=$('#d-name').value.trim()||d.name;if(!d.bereich){d.kat=$('#d-kat').value;d.bewerbungId=$('#d-bew').value||undefined;
     const akt=$('#d-akt').checked;if(akt&&VERSIONED.includes(d.kat))S.docs.forEach(x=>{if(x.kat===d.kat&&!x.bereich)x.aktuell=false});d.aktuell=akt}
     const tx=$('#d-text');if(tx)d.text=tx.value;
     save();closeSheet();render();toast('Gesichert')});
-  armDelete($('#d-del'),async()=>{await blobDel(d.id).catch(()=>{});S.docs=S.docs.filter(x=>x.id!==id);save();closeSheet();render();toast('Dokument gelöscht')});
+  {const del=$('#d-del');let armed=false;del.onclick=async()=>{if(!armed){armed=true;del.lastChild.textContent='Wirklich?';return}closeSheet();await delDoc(id)}}
   docPrep(d);$('#d-open').onclick=()=>docOpen(d);$('#d-share').onclick=()=>docShare(d);
   const v=$('#viewer');
   try{
@@ -2650,7 +2748,7 @@ const cvF=(path,label,attrs='',ph='')=>`<div class="field"><label>${label}</labe
 const cvT=(path,label,ph='',rows=3)=>`<div class="field"><label>${label}</label><textarea class="input" data-cv="${path}" rows="${rows}" placeholder="${esc(ph)}">${esc(cvGet(path)??'')}</textarea></div>`;
 const cvChips=(key,opts)=>`<div class="chips" data-cvchips="${key}">${opts.map(o=>`<button type="button" class="kat" data-v="${esc(o)}" aria-pressed="${(cvData()[key]||[]).includes(o)}">${esc(o)}</button>`).join('')}</div>`;
 /* Zum Ausprobieren: die Angaben von Marco Beispiel (erfundene Person) */
-function cvExample(){S.cv={geb:'14.03.1980',nat:'Italien',bew:'Niederlassungsbewilligung C',kinder:'Jahrgang 2014 und 2017',betreuung:true,fa:['B'],auto:true,stapler:'SUVA, Kategorie R1',
+function cvExample(){const g0=S.cv||{},keep={};CV_LOOK.forEach(k=>{if(g0[k]!=null)keep[k]=g0[k]});S.cv={geb:'14.03.1980',nat:'Italien',bew:'Niederlassungsbewilligung C',kinder:'Jahrgang 2014 und 2017',betreuung:true,fa:['B'],auto:true,stapler:'SUVA, Kategorie R1',
   verf:'per sofort',pensum:'80–100 %',schicht:true,langs:[{l:'Deutsch',n:'C1'},{l:'Italienisch',n:'Muttersprache'},{l:'Französisch',n:'B1'},{l:'Englisch',n:'A2'}],
   ikt:['SAP','Handscanner','Lagerleitsystem','MS Office'],iktFrei:'',titel:'Logistiker EFZ · Staplerfahrer',slogan:'Die richtige Ware, zur richtigen Zeit, am richtigen Ort.',
   profil:'Erfahrener Logistiker mit über 20 Jahren Praxis und SUVA-Staplerausweis. Genau, auch in Spitzenzeiten ruhig, sicher mit SAP und Handscanner.',
@@ -2660,6 +2758,8 @@ function cvExample(){S.cv={geb:'14.03.1980',nat:'Italien',bew:'Niederlassungsbew
   bildung:[{von:'2023',bis:'',f:'Lagerbewirtschaftung mit SAP',firma:'Logistikschule Bern',ort:'',pts:''},{von:'2015',bis:'',f:'Staplerausweis SUVA, Kategorie R1',firma:'SUVA',ort:'',pts:''},
     {von:'1996',bis:'1999',f:'Lehre als Lagerist (heute Logistiker EFZ)',firma:'Berufsfachschule Biel',ort:'',pts:''}],
   engag:'Juniorentrainer FC Aurore, Biel\nBegleitet Lernende im Betrieb',ref:true,foto:null};
+  /* Beispiel füllt nur den Inhalt, die gewählte Gestaltung bleibt */
+  Object.assign(S.cv,keep);
   if(!S.profil.meName){Object.assign(S.profil,{meName:EXP.name,meStrasse:EXP.str,mePlzOrt:EXP.ort,meTel:EXP.tel,meMail:EXP.mail})}save()}
 
 function openCv(){cvData();lastCv=null;cvStep=0;
@@ -2674,7 +2774,10 @@ function cvGo(n){cvStep=n;$$('#cv-steps button').forEach((b,i)=>b.setAttribute('
     if(i>=0)L.splice(i,1);else L.push(v);b.setAttribute('aria-pressed',i<0);save()}));
   const nx=body.querySelector('[data-cvnext]');if(nx)nx.onclick=()=>cvGo(n+1);
   [cvB0,null,null,cvB3,null,()=>cvBList('jobs'),()=>cvBList('bildung'),cvB7][n]?.()}
-/* Gestaltung: Spalte links oder rechts, Farbe (Standard wie Briefkopf), Schrift */
+/* Gestaltung: Spalte links oder rechts, Farbe (Standard wie Briefkopf), Überschriften (Farbe, Schreibweise), Textfarbe, Schrift */
+/* Text- und Überschriftenfarben: nur dunkle Töne, damit der Lebenslauf lesbar bleibt */
+const CV_LOOK=['side','font','color','page2','headCol','headCase','ink'];
+const CV_INKS=[['#1f1c1a','Schwarz'],['#3d3d3d','Anthrazit'],['#1f3a5f','Dunkelblau'],['#1f4d3a','Dunkelgrün'],['#5a1f24','Bordeaux']];
 const cvAccent=()=>{const c=cvData(),P=S.profil;return c.color||(P.bar&&P.barColor?P.barColor:'#e0821a')};
 function cvS0(){const c=cvData(),right=c.side==='right',side=c.side||'left',font=c.font||'sans',cur=cvAccent(),own=c.color&&!BAR_COLORS.some(b=>b[0]===c.color)&&c.color!=='#e0821a';
   const mini=r=>`<span class="cvmini ${r?'r':''}"><em style="background:${cur}"></em><i></i><i></i><i></i></span>`;
@@ -2686,6 +2789,16 @@ function cvS0(){const c=cvData(),right=c.side==='right',side=c.side||'left',font
     <button type="button" class="kat" data-col="" aria-pressed="${!c.color}">Wie Briefkopf</button>
     ${[['#e0821a'],...BAR_COLORS].map(b=>b[0]).filter((v,i,a)=>a.indexOf(v)===i).map(col=>`<button type="button" data-col="${col}" aria-label="Farbe ${col}" style="width:34px;height:34px;border-radius:50%;border:1px solid var(--hair);background:${col};cursor:pointer;outline-offset:2px;outline:${c.color===col?'3px solid var(--accent)':'none'}"></button>`).join('')}
     <label class="sw-custom ${own?'on':''}" title="Eigene Farbe" style="--c:${cur}"><input type="color" value="${cur}" aria-label="Eigene Farbe wählen"></label></div></div>
+  <div class="field"><label>Farbe der Überschriften</label><div class="chips" id="cv-hcol">
+    <button type="button" class="kat" data-hcol="" aria-pressed="${!c.headCol}">Wie oben</button>
+    ${CV_INKS.map(([v,l])=>`<button type="button" data-hcol="${v}" aria-label="Überschriften ${l}" title="${l}" style="width:34px;height:34px;border-radius:50%;border:1px solid var(--hair);background:${v};cursor:pointer;outline-offset:2px;outline:${c.headCol===v?'3px solid var(--accent)':'none'}"></button>`).join('')}
+    <label class="sw-custom ${c.headCol&&!CV_INKS.some(x=>x[0]===c.headCol)?'on':''}" title="Eigene Farbe" style="--c:${c.headCol||cur}"><input type="color" value="${c.headCol||cur}" aria-label="Eigene Farbe für Überschriften"></label></div></div>
+  <div class="field"><label>Schreibweise der Überschriften</label><div class="seg" style="background:var(--hair)" role="radiogroup" id="cv-hcase">
+    <button type="button" role="radio" data-hcase="upper" aria-selected="${(c.headCase||'upper')==='upper'}" aria-checked="${(c.headCase||'upper')==='upper'}">GROSSBUCHSTABEN</button>
+    <button type="button" role="radio" data-hcase="normal" aria-selected="${c.headCase==='normal'}" aria-checked="${c.headCase==='normal'}">Normal</button></div></div>
+  <div class="field"><label>Textfarbe</label><div class="chips" id="cv-ink">
+    ${CV_INKS.map(([v,l])=>`<button type="button" class="kat" data-ink="${v}" aria-pressed="${(c.ink||CV_INKS[0][0])===v}"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${v};margin-right:6px;vertical-align:-1px"></span>${l}</button>`).join('')}</div>
+    <span class="muted">Dunkle Farben bleiben gut lesbar, auch für Bewerbungssysteme.</span></div>
   <div class="field"><label>Schrift</label><div class="headpick" role="radiogroup">
     <button type="button" role="radio" data-font="sans" aria-checked="${font==='sans'}"><span style="font:700 28px Helvetica,Arial,sans-serif">Aa</span><b>Modern</b><small>Ohne Serifen, klar</small></button>
     <button type="button" role="radio" data-font="serif" aria-checked="${font==='serif'}"><span style="font:700 28px 'Times New Roman',Times,serif">Aa</span><b>Klassisch</b><small>Mit Serifen, seriös</small></button></div>
@@ -2698,7 +2811,11 @@ function cvB0(){const c=cvData();
   $$('#cv-body [data-font]').forEach(b=>b.onclick=()=>{c.font=b.dataset.font;save();cvGo(0)});
   $$('#cv-body [data-p2]').forEach(b=>b.onclick=()=>{c.page2=b.dataset.p2;save();cvGo(0)});
   $$('#cv-col [data-col]').forEach(b=>b.onclick=()=>{c.color=b.dataset.col||null;save();cvGo(0)});
-  const inp=$('#cv-col input[type=color]');inp.onchange=()=>{c.color=inp.value;save();cvGo(0)}}
+  const inp=$('#cv-col input[type=color]');inp.onchange=()=>{c.color=inp.value;save();cvGo(0)};
+  $$('#cv-hcol [data-hcol]').forEach(b=>b.onclick=()=>{c.headCol=b.dataset.hcol||null;save();cvGo(0)});
+  const hin=$('#cv-hcol input[type=color]');hin.onchange=()=>{c.headCol=hin.value;save();cvGo(0)};
+  $$('#cv-hcase [data-hcase]').forEach(b=>b.onclick=()=>{c.headCase=b.dataset.hcase;save();cvGo(0)});
+  $$('#cv-ink [data-ink]').forEach(b=>b.onclick=()=>{c.ink=b.dataset.ink;save();cvGo(0)})}
 function cvS1(){const c=cvData(),empty=!c.geb&&!(c.jobs||[]).length;return `
   <p class="muted">Name, Adresse und Kontakt kommen aus „Meine Angaben“. Alles bleibt auf diesem Gerät.</p>
   ${empty?'<button type="button" class="btn btn-glass" id="cv-ex" style="align-self:flex-start">Mit Beispiel ausfüllen (Marco Beispiel)</button>':''}
@@ -2823,7 +2940,9 @@ function cvLayout(photo){const BOT=PH-40,run=o=>cvLayoutRaw(photo,o),ok=r=>r.len
   gR=bs(0,f>=.99?130:C,m=>{const r=run({f,gL:0,gR:m});return r.length===1&&r.rightY<=BOT});
   return run({f,gL,gR})}
 function cvLayoutRaw(photo,{f,gL,gR}){const c=cvData(),P=S.profil;lossy.clear();
-  const acc=hexRgb(cvAccent()),side=acc.map(v=>v+(1-v)*.9),ink=[.12,.11,.1],grey=[.40,.37,.34],serif=c.font==='serif',right=c.side==='right';
+  const acc=hexRgb(cvAccent()),side=acc.map(v=>v+(1-v)*.9),ink=c.ink?hexRgb(c.ink):[.12,.11,.1],grey=ink.map(v=>v+(1-v)*.38),serif=c.font==='serif',right=c.side==='right';
+  /* Überschriften: Farbe (Standard wie Akzent) und Schreibweise wählbar */
+  const hc=c.headCol?hexRgb(c.headCol):acc,hcase=t=>c.headCase==='normal'?t:t.toUpperCase();
   const b=10+f,H=Math.min(16,12+4*f),JT=Math.min(16,b+2),NM=26+10*f,LH=1.32;
   /* Seitenband links oder rechts; für Times gelten die Masse von Helvetica (Times ist schmaler, also bricht nichts zu spät um) */
   const SW=170,BW=SW+40,BX=right?PW-BW:0,SX=right?BX+12:28,BOT=PH-40;
@@ -2842,7 +2961,7 @@ function cvLayoutRaw(photo,{f,gL,gR}){const c=cvData(),P=S.profil;lossy.clear();
     if(ini){const fs=40+20*f,tw=textW(enc(ini),true,fs);T(ini,SX+(SW-tw)/2,y+fs*1.15,fs,true,acc.map(v=>v*.75+.2));y+=fs*2}}
   /* gleiche Grösse für alle Überschriften einer Spalte */
   const SHF=Math.min(...['IKT-KENNTNISSE','PERSÖNLICH','ENGAGEMENT','MOBILITÄT'].map(s=>fit(s,H*.85,SW,9))),RHF=fit('AUS- UND WEITERBILDUNG',H,RW,10);
-  const sh=t=>{y+=8+gL;const s=t.toUpperCase(),fs=SHF;T(s,SX,y,fs,true,acc);y+=5;pg.push({t:'rect',x:SX,y,w:SW,h:.7,c:acc.map(v=>v+(1-v)*.6)});y+=b*1.4};
+  const sh=t=>{y+=8+gL;const s=hcase(t),fs=SHF;T(s,SX,y,fs,true,hc);y+=5;pg.push({t:'rect',x:SX,y,w:SW,h:.7,c:hc.map(v=>v+(1-v)*.6)});y+=b*1.4};
   const ln=(s,bold=false,col)=>{lines(s,SW,b,bold).forEach(l=>{T(l,SX,y,b,bold,col);y+=b*LH})};
   const kv=(k,v)=>{if(!v)return;ln(k,true,grey);ln(v);y+=4};
   const li=v=>{lines(v,SW-9,b,false).forEach((l,i)=>{if(!i)T('·',SX,y,b,true);T(l,SX+9,y,b);y+=b*LH});y+=1};
@@ -2875,7 +2994,7 @@ function cvLayoutRaw(photo,{f,gL,gR}){const c=cvData(),P=S.profil;lossy.clear();
   if(c.slogan){const fs=Math.min(16,b+2),sl=lines('«'+c.slogan.replace(/^[«"„]|[»"“]$/g,'')+'»',RW-12,fs,true);ry+=8+gR;
     pg.push({t:'rect',x:RX,y:ry-fs*.95,w:2.5,h:(sl.length-1)*fs*LH+fs*1.25,c:acc});sl.forEach(l=>{T(l,RX+12,ry,fs,true);ry+=fs*LH});ry+=4}
   if(c.profil){ry+=6+gR;lines(c.profil,RW,b,false).forEach(l=>{T(l,RX,ry,b);ry+=b*LH})}
-  const rh=t=>{need(H*3);ry+=12+gR;const s=t.toUpperCase(),fs=RHF;T(s,RX,ry,fs,true,acc);ry+=6;pg.push({t:'rect',x:RX,y:ry,w:RW,h:.7,c:[.88,.86,.84]});ry+=b*1.7};
+  const rh=t=>{need(H*3);ry+=12+gR;const s=hcase(t),fs=RHF;T(s,RX,ry,fs,true,hc);ry+=6;pg.push({t:'rect',x:RX,y:ry,w:RW,h:.7,c:[.88,.86,.84]});ry+=b*1.7};
   const entry=(x,i)=>{const pts=String(x.pts||'').split('\n').map(s=>s.trim()).filter(Boolean),firm=[x.firma,x.ort].filter(Boolean).join(', ');
     need(JT*2+b*(2+pts.length)*LH);if(i)ry+=6+gR*.7;const when=[x.von,x.bis].filter(Boolean).join(' – ');if(when){T(when,RX,ry,b,false,grey);ry+=b*LH}
     lines(x.f||'',RW,JT,true).forEach(l=>{T(l,RX,ry,JT,true);ry+=JT*1.25});if(firm){T(firm,RX,ry,b,false,grey);ry+=b*LH}
@@ -3678,6 +3797,7 @@ function goTo(spec){spec=GO_ALIAS[spec]||spec;
   if(spec==='dossier:firmen'){goTo('dossier:init');setTimeout(()=>{const b=document.querySelector('#fr-root [data-tab="tab-firmen"]');b&&b.click()},120);return}
 let [tab,sub]=spec.split(':');
   if(tab==='bew'){openBew(sub);return}
+  if(tab==='unt'){openUnterlagen(sub);return}
   if(location.hash!=='#'+tab)location.hash=tab;else route();
   if(!sub)return;
   setTimeout(()=>{const b=subBtn(tab,sub);b&&b.click()},40)}
@@ -3708,6 +3828,7 @@ function wizard(box){if(!box)return null;
 
 /* ================= Heute ================= */
 function nextSteps(){const t=iso(today),L=[];
+  S.bewerbungen.filter(b=>b.status==='arbeit'&&!b.beispiel).forEach(b=>{const c=untCount(b);if(c.ok<c.n)L.push({txt:`Unterlagen zusammenstellen (${c.ok}/${c.n})`,ctx:b.firma,src:'Bewerbung',go:'unt:'+b.id})});
   S.bewerbungen.filter(b=>b.naechster&&['arbeit','versendet','gespraech'].includes(b.status)).forEach(b=>L.push({txt:b.naechster,ctx:b.firma,src:'Bewerbung',go:'bew:'+b.id,ex:b.beispiel}));
   (S.fr.firmen||[]).filter(f=>f.next&&f.next.was&&(f.status||0)<5).forEach(f=>L.push({txt:f.next.was,ctx:f.name,due:f.next.datum,src:'Firma',go:'dossier:firmen',ex:f.beispiel}));
   return L.sort((a,b)=>(a.due||'9999').localeCompare(b.due||'9999'))}
@@ -4312,7 +4433,9 @@ const TOUR=[
     ['heute','#h-settings','Einstellungen','Farbe, grosse Schrift, Ihre Angaben und Daten sichern. Hier starten Sie diesen Rundgang jederzeit wieder.']]},
   {l:'Dossier',d:'Unterlagen, Brief, Lebenslauf, Initiativbewerbung',steps:[
     ['dossier:unterlagen',tourCard('#kats'),'Vollständigkeit','Welche Unterlagen schon da sind und welche noch fehlen.'],
-    ['dossier:unterlagen','.stack-wrap','Der Dokumentstapel','Wischen Sie durch Ihre Dokumente. Ein Tipp zeigt ein Dokument gross. Dort öffnen Sie es oder senden es per Mail oder WhatsApp.'],
+    ['dossier:unterlagen','.stack-wrap','Der Dokumentstapel','Wischen Sie durch Ihre Dokumente. Ein Tipp zeigt ein Dokument gross.'],
+    ['dossier:unterlagen','#doc-bar','Senden, Bearbeiten, Löschen','Diese Knöpfe gelten für das vorderste Dokument im Stapel. Senden öffnet Mail, WhatsApp und Co.'],
+    ['dossier:unterlagen','#db-ablage','Die Ablage','Alle Unterlagen nach Ordnern sortiert, jede mit Senden, Bearbeiten und Löschen.'],
     ['dossier:unterlagen','#btn-add-doc','Dokument hinzufügen','Fotografieren Sie ein Zeugnis oder laden Sie ein PDF hoch.'],
     ['dossier:unterlagen',tourCard('#btn-brief'),'Brief-Assistent','Bewerbungsbrief schreiben oder einfügen, unterschreiben und als PDF senden.'],
     ['dossier:unterlagen',tourCard('#btn-cv'),'Lebenslauf-Assistent','Schritt für Schritt zum zweispaltigen Lebenslauf. Das PDF ist gut lesbar für Bewerbungssysteme.'],
@@ -4504,7 +4627,7 @@ window.stellenwegGo=g=>{if(g)goTo(String(g))};
 /* Erst das System wählen, dann scannt die andere Person den QR-Code mit der Kamera. Der Code entsteht offline. */
 const APP_URL='https://erwachsenenbildungdidaktik-blip.github.io/stellenweg/';
 /* Sichtbar in den Einstellungen unten, damit man alte und neue Version unterscheiden kann */
-const WEB_VERSION='2.0';
+const WEB_VERSION='2.1';
 const OS_IC={
   ios:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M10.5 5h3M11 18.5h2"/></svg>',
   android:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 16V11a7 7 0 0 1 14 0v5zM8 5.5 6.5 3.5M16 5.5l1.5-2"/><circle cx="9.5" cy="10.5" r=".6" fill="currentColor"/><circle cx="14.5" cy="10.5" r=".6" fill="currentColor"/><path d="M8 16v3.5M16 16v3.5"/></svg>'};
