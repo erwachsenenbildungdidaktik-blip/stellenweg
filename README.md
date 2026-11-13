@@ -26,6 +26,7 @@ In der Web-App (iPhone) gibt es dafür das **Notizfenster** (Seitenleiste → No
 
 - **Web-App / iPhone:** Beim Start mit Internet lädt der Service Worker automatisch die neueste Version; danach erscheint kurz „Stellenweg wurde auf Version … aktualisiert“.
 - **Android-App:** Beim Start vergleicht die App ihre `versionCode` mit `web/version.json` auf GitHub Pages. Ist eine neuere APK da, erscheint „Neue Version“ mit „Jetzt aktualisieren“: Die App lädt die APK und startet die Installation. Android verlangt bei Apps ausserhalb des Play Stores immer eine Bestätigung; beim ersten Mal zusätzlich „Apps aus dieser Quelle erlauben“. Daten bleiben erhalten (gleicher Schlüssel). „Später“ fragt einen Tag lang nicht mehr.
+- **Was ist neu:** Der Update-Hinweis listet jede Zeile aus `android/release-notes.txt` als Punkt. Nach dem Update zeigt die App einmal „Neu in Version …“ (Liste `NEWS` in `web/index.html`, für Web und Android).
 - **Neue Version veröffentlichen:** in `android/app/build.gradle` `versionCode` (+1) und `versionName` erhöhen, „Was ist neu“ in `android/release-notes.txt`, dann `APK-bauen.cmd` (schreibt auch `web/version.json`), committen und pushen.
 - Version 1.0 hatte noch kein Auto-Update: Wer sie installiert hat, muss 1.1 einmal von Hand installieren.
 

@@ -936,6 +936,14 @@ h1 .tip{width:26px;height:26px;font-size:15px}
 .u-file button{border:none;background:var(--hair);color:var(--fg);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:18px;line-height:1;flex:none}
 .unt-row{display:flex;align-items:center;gap:10px;border-top:1px solid var(--hair);padding:10px 0}
 .unt-row .row-main{flex:1;min-width:0}
+.news{display:flex;flex-direction:column;gap:12px}
+.news .upd-ic{align-self:center}
+.news-v{font-weight:700;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--fg3);margin-top:4px}
+.news-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.news-list li{display:flex;align-items:center;gap:10px;border-top:1px solid var(--hair);padding:9px 0}
+.news-list li::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none}
+.news-list li span{flex:1}
+.news-list li .btn{flex:none;padding:6px 8px;min-height:40px}
 .doc-acts{display:flex;gap:10px}.doc-acts .btn{flex:1;gap:8px}.doc-acts svg{width:18px;height:18px}
 .side-handle{position:fixed;z-index:30;right:0;top:42%;width:48px;height:120px;translate:0 -50%;border:none;background:transparent;padding:0;cursor:grab;touch-action:none;display:flex;align-items:center;justify-content:flex-end;transition:opacity .25s}
 .side-handle i{display:block;width:20px;height:104px;border-radius:10px 0 0 10px;background:color-mix(in srgb,var(--accent) 70%,var(--glass-strong));box-shadow:-2px 4px 14px -4px rgba(0,0,0,.35),inset 1px 0 0 rgba(255,255,255,.35);transition:width .3s var(--spring)}
@@ -4222,6 +4230,7 @@ function openSettings(){
     ${setHead('Hilfe')}
     <div class="list">
       ${setRow('set-share','App weitergeben','QR-Code für iPhone oder Android')}
+      ${setRow('set-news','Neuigkeiten','Was in den letzten Versionen dazugekommen ist')}
       ${setRow('set-tour','Rundgang durch alle Funktionen','Jedes Kapitel lässt sich überspringen.')}
       ${setRow('set-intro','Einrichtung nochmals durchgehen','Angaben, Unterschrift, Unterlagen, RAV und Kasse')}
     </div>
@@ -4236,6 +4245,7 @@ function openSettings(){
   $('#set-side').onclick=()=>{closeSheet();setTimeout(openSideEdit,340)};
   $('#set-backup').onclick=()=>{closeSheet();setTimeout(openBackup,340)};
   $('#set-tour').onclick=()=>{closeSheet();setTimeout(startTour,340)};
+  $('#set-news').onclick=()=>{closeSheet();setTimeout(()=>openNews(true),340)};
   $('#set-share').onclick=()=>{closeSheet();setTimeout(openShareApp,340)};
   $('#set-intro').onclick=()=>{closeSheet();setTimeout(openIntro,340)};
   $('#set-ex')&&($('#set-ex').onclick=async()=>{await clearExamples();closeSheet();toast('Beispiele entfernt')});
@@ -4861,6 +4871,39 @@ if(navigator.serviceWorker)navigator.serviceWorker.addEventListener('message',e=
 {const q=new URLSearchParams(location.search).get('go');if(q){history.replaceState(null,'',location.pathname+'#'+q.split(':')[0]);setTimeout(()=>goTo(q),700)}}
 
 /* ================= Updates beim Start ================= */
+/* ================= Neu in dieser Version ================= */
+/* Nach einem Update erscheint einmal ein Blatt mit den Neuerungen seit der zuletzt gesehenen Version.
+   Neue Version: oben in NEWS einen Eintrag ergänzen und WEB_VERSION erhöhen. „zeigen“ führt direkt hin. */
+const NEWS=[
+  {v:'2.1',items:[
+    {t:'Senden, Bearbeiten und Löschen direkt unter dem Dokumentstapel',go:'dossier:unterlagen'},
+    {t:'Ablage: alle Unterlagen nach Ordnern sortiert',run:()=>{goTo('dossier:unterlagen');setTimeout(openAblage,350)}},
+    {t:'Bei jeder neuen Bewerbung erinnert eine Checkliste an die verlangten Unterlagen',go:'heute:bew'},
+    {t:'Falsch gewählte Datei beim Ablegen mit × wieder entfernen'},
+    {t:'Lebenslauf: Farbe und Schreibweise der Überschriften und die Textfarbe wählbar',run:()=>openCv()},
+    {t:'Nach einem Update zeigt die App, was neu ist'}]},
+  {v:'2.0',items:[
+    {t:'Schlanker: nur noch Heute, Dossier sowie RAV und Kasse'},
+    {t:'Ihre Bewerbungen stehen auf der Startseite',go:'heute:bew'},
+    {t:'Dokumente öffnen und senden'},
+    {t:'Kacheln auf der Startseite machen beim Verschieben Platz'},
+    {t:'Breiterer Balken für die Schnellauswahl am rechten Rand'}]}];
+const vNum=v=>String(v||'0').split('.').map(Number);
+const vNewer=(a,b)=>{const x=vNum(a),y=vNum(b);for(let i=0;i<Math.max(x.length,y.length);i++){const d=(x[i]||0)-(y[i]||0);if(d)return d>0}return false};
+/* Wer die schlanke App schon hatte, aber noch keine gesehene Version kennt, war auf 2.0 */
+const newsSince=()=>S.meta.seenVer||(S.meta.slim===1?'2.0':WEB_VERSION);
+const newsPending=()=>NEWS.some(n=>vNewer(n.v,newsSince()));
+function openNews(all){const L=all?NEWS.slice(0,2):NEWS.filter(n=>vNewer(n.v,newsSince()));if(!L.length)return;
+  S.meta.seenVer=WEB_VERSION;save();
+  const flat=[];L.forEach(n=>n.items.forEach(it=>flat.push(it)));
+  openSheet(all?'Neuigkeiten':'Neu in Version '+L[0].v,`<div class="news">
+    <div class="upd-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z"/></svg></div>
+    <p class="lead" style="color:var(--fg)">${all?'Das ist neu in den letzten Versionen.':'Stellenweg wurde aktualisiert. Das ist neu:'}</p>
+    ${L.map(n=>`${L.length>1?`<div class="news-v">Version ${esc(n.v)}</div>`:''}<ul class="news-list">${n.items.map(it=>`<li><span>${esc(it.t)}</span>${it.go||it.run?`<button type="button" class="btn btn-ghost" data-news="${flat.indexOf(it)}">zeigen ›</button>`:''}</li>`).join('')}</ul>`).join('')}
+    <p class="muted">Ihre Daten sind erhalten geblieben.</p></div>`,()=>{closeSheet();setTimeout(maybeWarnPop,400)},'Alles klar');
+  $('#sheet-cancel').textContent='Schliessen';
+  $$('#sheet-body [data-news]').forEach(b=>b.onclick=()=>{const it=flat[+b.dataset.news];closeSheet();setTimeout(()=>{if(it.run)it.run();else goTo(it.go)},360)})}
+
 /* Web und iPhone: Der Service Worker lädt beim Start mit Internet die neueste Version (Netz zuerst); hier nur Bescheid geben.
    Android: Liegt auf GitHub Pages eine neuere APK (version.json), wird sie angeboten und mit einem Tipp installiert.
    Die Daten bleiben erhalten, weil die neue APK mit demselben Schlüssel signiert ist. */
@@ -4869,11 +4912,11 @@ async function checkUpdate(){if(!navigator.onLine)return;
   let v;try{const res=await fetch(APP_URL+'version.json?v='+Date.now(),{cache:'no-store'});if(!res.ok)return;v=await res.json()}catch(e){return}
   if(NATIVE){const cur=+native('appVersion')||0,sk=S.meta.skipUpdate||{};
     if(+v.versionCode>cur&&!(sk.vc===v.versionCode&&sk.until>Date.now()))showUpdate(v);return}
-  if(S.meta.webVer&&S.meta.webVer!==v.versionName)toast(`Stellenweg wurde auf Version ${v.versionName} aktualisiert`);
   if(S.meta.webVer!==v.versionName){S.meta.webVer=v.versionName;save()}}
 function showUpdate(v){if(!$('#sheet').hidden||tour||onb||editing){setTimeout(()=>showUpdate(v),4000);return}
   openSheet('Neue Version',`<div class="upd"><div class="upd-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V6M6 11l6-6 6 6"/></svg></div>
-    <p class="lead" style="color:var(--fg)">Stellenweg ${esc(v.versionName)} ist da.</p>${v.notes?`<p>${esc(v.notes)}</p>`:''}
+    <p class="lead" style="color:var(--fg)">Stellenweg ${esc(v.versionName)} ist da.</p>${(()=>{const L=String(v.notes||'').split(/\r?\n/).map(x=>x.replace(/^[-•*]\s*/,'').trim()).filter(Boolean);
+      return !L.length?'':L.length===1?`<p>${esc(L[0])}</p>`:`<p style="margin-bottom:0"><b>Das ist neu:</b></p><ul class="news-list">${L.map(x=>`<li><span>${esc(x)}</span></li>`).join('')}</ul>`})()}
     <p class="muted">Ihre Daten bleiben erhalten. Android fragt zur Sicherheit noch einmal, ob Sie installieren möchten.</p>
     <div class="meter" id="upd-bar" hidden style="height:8px"><div style="width:0%"></div></div>
     <div class="sheet-actions"><button class="btn btn-glass" id="upd-later">Später</button><button class="btn btn-primary" id="upd-now">Jetzt aktualisieren</button></div></div>`,null);
@@ -4902,7 +4945,9 @@ else if(await upgradeExampleDocs())render();
 S.meta.docsSeeded=true;save();
 if(!S.meta.onboarded)setTimeout(openIntro,500);
 else if(!S.meta.toured)setTimeout(startTour,500);
+else if(newsPending())setTimeout(()=>openNews(),700);
 else maybeWarnPop();
+if(!S.meta.onboarded||!S.meta.toured){S.meta.seenVer=WEB_VERSION;save()}
 setTimeout(checkUpdate,3000);
 })();
 </script>

@@ -1,1 +1,6 @@
-Dossier: Senden, Bearbeiten und Löschen direkt unter dem Stapel, Ablage mit allen Ordnern. Erinnerung an die Unterlagen bei jeder neuen Bewerbung. Lebenslauf mit wählbarer Farbe und Schreibweise der Überschriften und Textfarbe.
+Senden, Bearbeiten und Löschen direkt unter dem Dokumentstapel
+Ablage: alle Unterlagen nach Ordnern sortiert
+Checkliste der verlangten Unterlagen bei jeder neuen Bewerbung
+Falsch gewählte Datei beim Ablegen wieder entfernen
+Lebenslauf: Farbe und Schreibweise der Überschriften und Textfarbe wählbar
+Nach einem Update zeigt die App, was neu ist
