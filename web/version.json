@@ -1,6 +1,6 @@
 {
-    "versionCode": 4,
-    "versionName": "2.0",
+    "versionCode": 6,
+    "versionName": "2.2",
     "apk": "download/Stellenweg.apk",
-    "notes": "Schlanker: nur noch Heute, Dossier und RAV. Bewerbungen auf der Startseite, Dokumente \u00f6ffnen und senden, breiterer Seitenbalken, Widgets machen beim Verschieben Platz."
+    "notes": "Seitenleiste: mit \u201eBearbeiten\u201c Verkn\u00fcpfungen entfernen und ordnen\nStellenweg erscheint beim Teilen in anderen Apps: PDF, Fotos und Word-Dateien landen im Dossier\nDazu alles aus 2.1: Ablage im Dossier, Unterlagen-Checkliste, Lebenslauf-Farben"
 }

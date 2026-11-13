@@ -1,6 +1,3 @@
-Senden, Bearbeiten und Löschen direkt unter dem Dokumentstapel
-Ablage: alle Unterlagen nach Ordnern sortiert
-Checkliste der verlangten Unterlagen bei jeder neuen Bewerbung
-Falsch gewählte Datei beim Ablegen wieder entfernen
-Lebenslauf: Farbe und Schreibweise der Überschriften und Textfarbe wählbar
-Nach einem Update zeigt die App, was neu ist
+Seitenleiste: mit „Bearbeiten“ Verknüpfungen entfernen und ordnen
+Stellenweg erscheint beim Teilen in anderen Apps: PDF, Fotos und Word-Dateien landen im Dossier
+Dazu alles aus 2.1: Ablage im Dossier, Unterlagen-Checkliste, Lebenslauf-Farben

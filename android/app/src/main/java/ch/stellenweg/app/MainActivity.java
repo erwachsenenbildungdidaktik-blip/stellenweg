@@ -23,6 +23,8 @@ import android.os.Environment;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
+import android.database.Cursor;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
@@ -39,6 +41,10 @@ import android.widget.Toast;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.FileProvider;
 import androidx.webkit.WebViewAssetLoader;
+
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -67,6 +73,8 @@ public class MainActivity extends Activity {
     private Uri cameraUri;
     private String sharedText, pendingGo;
     private boolean loaded;
+    /** Geteilte Dateien als JSON [{name,type,b64}], abgeholt mit takeSharedFiles */
+    private String sharedFiles;
 
     @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
     @Override
@@ -155,7 +163,21 @@ public class MainActivity extends Activity {
     /** Geteilter Text oder ein Tipp auf eine Erinnerung */
     private void handleIntent(Intent i) {
         if (i == null) return;
-        if (Intent.ACTION_SEND.equals(i.getAction()) && "text/plain".equals(i.getType())) {
+        String act = i.getAction();
+        if (Intent.ACTION_SEND.equals(act) || Intent.ACTION_SEND_MULTIPLE.equals(act)) {
+            ArrayList<Uri> uris = new ArrayList<>();
+            try {
+                if (Intent.ACTION_SEND_MULTIPLE.equals(act)) {
+                    ArrayList<Uri> l = i.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+                    if (l != null) uris.addAll(l);
+                } else {
+                    Uri u = i.getParcelableExtra(Intent.EXTRA_STREAM);
+                    if (u != null) uris.add(u);
+                }
+            } catch (Exception ignored) { }
+            if (!uris.isEmpty()) { readShared(uris, i.getType()); return; }
+        }
+        if (Intent.ACTION_SEND.equals(act) && "text/plain".equals(i.getType())) {
             String t = i.getStringExtra(Intent.EXTRA_TEXT);
             String sub = i.getStringExtra(Intent.EXTRA_SUBJECT);
             if (t != null) sharedText = (sub != null && !t.contains(sub) ? sub + "\n" : "") + t;
@@ -164,8 +186,45 @@ public class MainActivity extends Activity {
         if (go != null) pendingGo = go;
     }
 
+    /** Geteilte Dateien im Hintergrund lesen (höchstens 25 MB je Datei), danach an die Web-App geben */
+    private void readShared(final ArrayList<Uri> uris, final String type) {
+        new Thread(() -> {
+            JSONArray out = new JSONArray();
+            for (Uri u : uris) {
+                try {
+                    String name = "Dokument", mime = getContentResolver().getType(u);
+                    try (Cursor c = getContentResolver().query(u, new String[]{OpenableColumns.DISPLAY_NAME}, null, null, null)) {
+                        if (c != null && c.moveToFirst() && c.getString(0) != null) name = c.getString(0);
+                    } catch (Exception ignored) { }
+                    if (mime == null) mime = type != null && !type.contains("*") ? type : "application/octet-stream";
+                    ByteArrayOutputStream bo = new ByteArrayOutputStream();
+                    try (InputStream in = getContentResolver().openInputStream(u)) {
+                        byte[] buf = new byte[65536]; int n; long total = 0;
+                        while ((n = in.read(buf)) > 0) { total += n; if (total > 25L * 1024 * 1024) throw new Exception("zu gross"); bo.write(buf, 0, n); }
+                    }
+                    out.put(new JSONObject().put("name", name).put("type", mime)
+                            .put("b64", Base64.encodeToString(bo.toByteArray(), Base64.NO_WRAP)));
+                } catch (Exception e) {
+                    runOnUiThread(() -> Toast.makeText(this, "Eine Datei liess sich nicht übernehmen (zu gross oder gesperrt).", Toast.LENGTH_LONG).show());
+                }
+            }
+            if (out.length() == 0) return;
+            synchronized (MainActivity.this) { sharedFiles = out.toString(); }
+            runOnUiThread(this::flushPending);
+        }).start();
+    }
+
+    private synchronized String takeFiles() {
+        String f = sharedFiles;
+        sharedFiles = null;
+        return f;
+    }
+
     private void flushPending() {
         if (!loaded) return;
+        boolean files;
+        synchronized (this) { files = sharedFiles != null; }
+        if (files) web.postDelayed(() -> web.evaluateJavascript("window.stellenwegFiles&&window.stellenwegFiles()", null), 600);
         if (sharedText != null) {
             final String t = JSONObject.quote(sharedText);
             sharedText = null;
@@ -547,6 +606,13 @@ public class MainActivity extends Activity {
                 }
             }).start();
             return true;
+        }
+
+        /** Geteilte Dateien als JSON (danach leer) */
+        @JavascriptInterface
+        public String takeSharedFiles() {
+            String f = takeFiles();
+            return f == null ? "" : f;
         }
 
         /** Beim Kaltstart geteilter Text (danach leer) */
